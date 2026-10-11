@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [loading,  setLoading]  = useState(false);
   const [showPass, setShowPass] = useState(false);
 
-  const { login }                               = useAuthStore();
+  const { login }                                        = useAuthStore();
   const { customerProfile, merchantProfile, setAppMode } = useAppStore();
   const navigate = useNavigate();
 
@@ -20,7 +20,6 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
 
-    // Small delay so the loading state is visible
     setTimeout(() => {
       const result = login(username, password);
       setLoading(false);
@@ -30,18 +29,18 @@ export default function LoginPage() {
         return;
       }
 
-      // Admin skips onboarding — goes straight to mode select
+      // Admin goes straight to mode select
       if (result.role === 'admin') {
         navigate('/');
         return;
       }
 
       // Returning users go to their last-used view
-      if (result.role === 'merchant' && merchantProfile) {
-        setAppMode('business');
+      if ((result.role === 'working' || result.role === 'merchant') && merchantProfile) {
+        setAppMode('working');
         navigate('/business');
-      } else if (result.role === 'customer' && customerProfile) {
-        setAppMode('customer');
+      } else if ((result.role === 'student' || result.role === 'customer') && customerProfile) {
+        setAppMode('student');
         navigate('/customer');
       } else {
         navigate('/');

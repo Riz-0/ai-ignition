@@ -4,17 +4,17 @@ import useAuthStore from '../store/authStore.js';
 import styles from './AuthPage.module.css';
 
 export default function SignupPage() {
-  const [username,   setUsername]   = useState('');
-  const [email,      setEmail]      = useState('');
-  const [password,   setPassword]   = useState('');
-  const [confirm,    setConfirm]    = useState('');
-  const [role,       setRole]       = useState('customer');
-  const [showPass,   setShowPass]   = useState(false);
-  const [error,      setError]      = useState('');
-  const [loading,    setLoading]    = useState(false);
+  const [username, setUsername] = useState('');
+  const [email,    setEmail]    = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm,  setConfirm]  = useState('');
+  const [role,     setRole]     = useState('student'); // 'student' | 'working'
+  const [showPass, setShowPass] = useState(false);
+  const [error,    setError]    = useState('');
+  const [loading,  setLoading]  = useState(false);
 
-  const { signup }   = useAuthStore();
-  const navigate     = useNavigate();
+  const { signup } = useAuthStore();
+  const navigate   = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -35,12 +35,8 @@ export default function SignupPage() {
         return;
       }
 
-      // New users go to onboarding for their chosen role
-      if (result.role === 'merchant') {
-        navigate('/business/onboarding');
-      } else {
-        navigate('/customer/onboarding');
-      }
+      // All new shopper types go to customer onboarding
+      navigate('/customer/onboarding');
     }, 400);
   }
 
@@ -50,12 +46,12 @@ export default function SignupPage() {
         <div className={styles.header}>
           <Link to="/" className={styles.logo}>🛒 2am Shoppers</Link>
           <h1 className={styles.title}>Create your account</h1>
-          <p className={styles.sub}>Join as a shopper or a merchant</p>
+          <p className={styles.sub}>Are you a student or a working adult?</p>
         </div>
 
         <form className={styles.form} onSubmit={handleSubmit}>
 
-          {/* Role toggle */}
+          {/* Role toggle — student / working adult */}
           <div className={styles.roleToggle}>
             <button
               type="button"

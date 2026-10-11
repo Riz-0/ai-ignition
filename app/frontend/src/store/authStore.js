@@ -68,7 +68,7 @@ const useAuthStore = create(
           password,
           email:     email?.trim() ?? '',
           name:      username.trim(),
-          role:      role ?? 'customer',
+          role:      role ?? 'student',  // 'student' | 'working' | 'admin'
           createdAt: new Date().toISOString(),
         };
 

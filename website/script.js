@@ -188,7 +188,7 @@ document.querySelectorAll('.inspo-chip').forEach((chip) => {
    ============================================================ */
 
 // ── State ──────────────────────────────────────────────────
-let currentRole = 'customer'; // 'customer' | 'merchant'
+let currentRole = 'student'; // 'student' | 'working'
 
 // ── Tab switching ──────────────────────────────────────────
 window.switchTab = function (tab) {
@@ -218,8 +218,8 @@ window.switchTab = function (tab) {
 // ── Role toggle ────────────────────────────────────────────
 window.setRole = function (role) {
   currentRole = role;
-  document.getElementById('role-customer')?.classList.toggle('role-active', role === 'customer');
-  document.getElementById('role-merchant')?.classList.toggle('role-active', role === 'merchant');
+  document.getElementById('role-customer')?.classList.toggle('role-active', role === 'student');
+  document.getElementById('role-merchant')?.classList.toggle('role-active', role === 'working');
 };
 
 // ── Password visibility toggle ─────────────────────────────

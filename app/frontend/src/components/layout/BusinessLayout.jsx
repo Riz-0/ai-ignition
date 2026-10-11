@@ -27,7 +27,7 @@ export default function BusinessLayout() {
           <span>🛒</span><span>2am Shoppers</span>
         </div>
         <div className={styles.modeChip} style={{ background: 'rgba(245,158,11,.12)', color: 'var(--amber-light)', borderColor: 'rgba(245,158,11,.25)' }}>
-          💼 Business
+          💼 Working Adult
         </div>
         <nav className={styles.nav}>
           {NAV.map(({ to, icon, label, end }) => (
@@ -49,8 +49,8 @@ export default function BusinessLayout() {
               {merchantProfile?.name?.[0]?.toUpperCase() ?? 'M'}
             </div>
             <div>
-              <div className={styles.userName}>{merchantProfile?.name ?? 'Merchant'}</div>
-              <div className={styles.userSub}>Business</div>
+              <div className={styles.userName}>{merchantProfile?.name ?? 'Working Adult'}</div>
+              <div className={styles.userSub}>Working Adult</div>
             </div>
           </div>
           <button className={styles.switchBtn} title="Switch view"
