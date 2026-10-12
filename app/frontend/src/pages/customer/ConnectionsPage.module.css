@@ -1,0 +1,92 @@
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.legendChip {
+  font-size: .74rem; font-weight: 600; padding: 4px 12px;
+  border-radius: 99px; border: 1px solid rgba(255,255,255,.08);
+}
+
+.toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+
+/* Link form */
+.linkForm  { margin-bottom: 20px; border-top: 2px solid var(--teal-light); }
+.formTitle { font-size: .95rem; color: var(--text); margin-bottom: 14px; }
+.formGrid  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }
+.flabel    { display: flex; flex-direction: column; gap: 5px; font-size: .8rem; font-weight: 500; color: var(--text-muted); }
+.finput {
+  background: var(--bg-card2); border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm); color: var(--text); font-family: var(--font);
+  font-size: .875rem; padding: 8px 11px; outline: none; transition: border-color .2s; width: 100%;
+}
+.finput:focus { border-color: var(--teal-light); }
+.fnote { font-size: .75rem; color: var(--text-dim); font-style: italic; margin-bottom: 12px; }
+
+/* Platform grid */
+.platformGrid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+
+.platformCard {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden; transition: border-color .2s;
+}
+.platformCard:hover { border-color: var(--teal); }
+
+.cardTop {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px; user-select: none;
+}
+.pEmoji { font-size: 1.8rem; flex-shrink: 0; }
+.pInfo  { flex: 1; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pName  { font-size: .95rem; font-weight: 600; color: var(--text); }
+.statusChip {
+  font-size: .72rem; font-weight: 700; padding: 3px 10px;
+  border-radius: 99px; border: 1px solid rgba(255,255,255,.08);
+}
+.linkCount { font-size: .72rem; color: var(--text-dim); }
+.toggle    { font-size: .7rem; color: var(--text-dim); flex-shrink: 0; }
+
+.cardBody { padding: 0 18px 16px; border-top: 1px solid var(--border); padding-top: 14px; }
+
+.infoRow  { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px; }
+.infoBlock {}
+.infoLabel { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); margin-bottom: 5px; }
+.infoBlock p { font-size: .82rem; }
+
+.routeChips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.routeChip {
+  font-size: .72rem; background: rgba(8,145,178,.1); color: var(--teal-light);
+  border: 1px solid rgba(8,145,178,.22); border-radius: 99px; padding: 2px 10px;
+}
+
+.cardActions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+
+/* Import panel */
+.importPanel {
+  background: var(--bg-card2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 14px; margin-bottom: 12px;
+}
+.importNote { font-size: .8rem; margin-bottom: 10px; }
+.importArea {
+  width: 100%; background: var(--bg-card); border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm); color: var(--text); font-family: var(--font);
+  font-size: .85rem; padding: 9px 12px; outline: none; resize: vertical;
+  transition: border-color .2s; margin-bottom: 10px; display: block;
+}
+.importArea:focus { border-color: var(--teal-light); }
+.importResult {
+  background: rgba(5,150,105,.08); border: 1px solid rgba(5,150,105,.25);
+  border-radius: 8px; padding: 9px 13px; font-size: .84rem;
+  color: var(--green-light); margin-bottom: 12px;
+}
+
+/* Saved links */
+.savedLinks { border-top: 1px solid var(--border); padding-top: 12px; }
+.linkRow { display: flex; align-items: center; gap: 10px; padding: 6px 0; flex-wrap: wrap; font-size: .82rem; }
+.linkUrl  { color: var(--teal-light); text-decoration: none; flex: 1; min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.linkUrl:hover { color: var(--text); }
+.linkPrice { color: var(--text); font-weight: 600; flex-shrink: 0; }
+.linkNote  { font-size: .72rem; color: var(--text-dim); font-style: italic; }
+
+.footer { font-size: .75rem; color: var(--text-dim); font-style: italic; margin-top: 8px; }
+
+@media (max-width: 540px) {
+  .formGrid { grid-template-columns: 1fr; }
+  .infoRow  { grid-template-columns: 1fr; }
+}

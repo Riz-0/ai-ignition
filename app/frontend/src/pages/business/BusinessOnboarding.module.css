@@ -3,67 +3,52 @@
   padding: 24px; background: var(--bg);
   background-image: radial-gradient(ellipse 70% 55% at 50% 25%, rgba(245,158,11,.1) 0%, transparent 70%);
 }
-
 .card {
   width: 100%; max-width: 520px; background: var(--bg-card);
   border: 1px solid var(--border); border-radius: 16px;
   overflow: hidden; box-shadow: 0 8px 48px rgba(0,0,0,.5);
 }
-
-.header  { padding: 28px 28px 20px; border-bottom: 1px solid var(--border); }
-.logo    { font-weight: 700; font-size: .88rem; color: var(--text); margin-bottom: 18px; }
-.progress { display: flex; gap: 5px; margin-bottom: 14px; }
+.header  { padding: 26px 28px 18px; border-bottom: 1px solid var(--border); }
+.logo    { font-weight: 700; font-size: .88rem; color: var(--text); margin-bottom: 16px; }
+.progress { display: flex; gap: 5px; margin-bottom: 12px; }
 .dot     { height: 3px; flex: 1; border-radius: 2px; background: var(--border-light); transition: background .3s; }
 .dotOn   { background: var(--amber-light); }
 .title   { font-size: 1.3rem; color: var(--text); margin-bottom: 3px; }
 .stepLabel { font-size: .78rem; color: var(--text-dim); }
 
-.body    { padding: 24px 28px; min-height: 260px; }
+.body    { padding: 22px 28px; min-height: 260px; }
 .stack   { display: flex; flex-direction: column; gap: 16px; }
-.bodyText { font-size: .9rem; }
-.subtle  { font-size: .78rem; color: var(--text-dim); font-style: italic; }
+.bodyText { font-size: .88rem; }
+.subtle  { font-size: .76rem; color: var(--text-dim); font-style: italic; }
 
-.label {
-  display: flex; flex-direction: column; gap: 6px;
-  font-size: .82rem; font-weight: 500; color: var(--text-muted);
-}
+.label   { display: flex; flex-direction: column; gap: 5px; font-size: .8rem; font-weight: 500; color: var(--text-muted); }
 .input {
   background: var(--bg-card2); border: 1px solid var(--border-light);
   border-radius: var(--radius-sm); color: var(--text); font-family: var(--font);
-  font-size: .875rem; padding: 9px 12px; outline: none; transition: border-color .2s; width: 100%;
+  font-size: .875rem; padding: 9px 12px; outline: none;
+  transition: border-color .2s; width: 100%;
 }
 .input:focus { border-color: var(--amber-light); }
 
 .goalGrid { display: flex; flex-direction: column; gap: 10px; }
 .goalCard {
   background: var(--bg-card2); border: 2px solid var(--border);
-  border-radius: var(--radius); padding: 16px 18px;
-  text-align: left; cursor: pointer; font-family: var(--font);
-  transition: all .2s;
+  border-radius: var(--radius); padding: 15px 17px;
+  text-align: left; cursor: pointer; font-family: var(--font); transition: all .2s;
 }
 .goalCard:hover  { border-color: var(--amber); }
 .goalSelected    { border-color: var(--amber-light); background: rgba(245,158,11,.08); }
-.goalLabel { font-size: .92rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-.goalDesc  { font-size: .8rem; color: var(--text-muted); }
-
-.checkLabel {
-  display: flex; align-items: center; gap: 9px;
-  font-size: .88rem; color: var(--text-muted); cursor: pointer;
-}
-.checkLabel input { accent-color: var(--amber); width: 16px; height: 16px; }
+.goalLabel { font-size: .9rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.goalDesc  { font-size: .78rem; color: var(--text-muted); }
 
 .demoTable { display: flex; flex-direction: column; gap: 6px; }
-.demoRow {
-  display: flex; align-items: center; gap: 12px;
-  background: var(--bg-card2); border: 1px solid var(--border);
-  border-radius: 6px; padding: 9px 12px;
-  flex-wrap: wrap;
-}
-.demoName     { flex: 1; min-width: 120px; font-size: .875rem; color: var(--text); font-weight: 500; }
+.demoRow   { display: flex; align-items: center; gap: 10px; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; flex-wrap: wrap; }
+.demoName  { flex: 1; min-width: 110px; font-size: .875rem; color: var(--text); font-weight: 500; }
 .demoCategory { font-size: .78rem; color: var(--text-dim); }
-.demoPrice    { font-size: .82rem; color: var(--text-muted); margin-left: auto; }
+.demoPrice { font-size: .82rem; color: var(--text-muted); margin-left: auto; }
 
-.footer {
-  padding: 18px 28px; border-top: 1px solid var(--border);
-  display: flex; justify-content: space-between; align-items: center;
-}
+.checkLabel  { display: flex; align-items: center; gap: 9px; font-size: .85rem; color: var(--text-muted); cursor: pointer; }
+.checkLabel input { accent-color: var(--amber); width: 16px; height: 16px; }
+.checkStack  { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+
+.footer { padding: 18px 28px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }

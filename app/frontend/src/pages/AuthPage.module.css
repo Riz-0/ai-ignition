@@ -122,27 +122,36 @@
 }
 .togglePass:hover { color: var(--text); }
 
-/* ── Role toggle ── */
+/* ── Role toggle (3 roles) ── */
 .roleToggle {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
 }
 
 .roleBtn {
   background: var(--bg-card2);
   border: 2px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 10px;
-  font-size: .88rem;
+  padding: 9px 6px;
+  font-size: .8rem;
   font-weight: 600;
   color: var(--text-muted);
   cursor: pointer;
   font-family: var(--font);
   transition: all .15s;
+  text-align: center;
 }
-.roleBtn:hover   { border-color: var(--coral); color: var(--text); }
-.roleActive      { border-color: var(--coral-light); background: rgba(240,78,110,.1); color: var(--coral-light); }
+.roleBtn:hover { border-color: var(--violet); color: var(--text); }
+.roleActive    { border-color: var(--violet-light); background: rgba(124,58,237,.1); color: var(--violet-light); }
+
+.roleDesc {
+  font-size: .78rem;
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: -6px;
+  font-style: italic;
+}
 
 /* ── Error ── */
 .error {
