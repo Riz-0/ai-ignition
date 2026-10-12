@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The 2am Shoppers — AI Shopping Companion</title>
+  <title>The 2am Shoppers — Shopping, Savings &amp; Customer Conversations</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,9 +20,9 @@
       </a>
       <nav class="nav-links" id="nav-links">
         <a href="#problem">Problem</a>
-        <a href="#solution">Solution</a>
-        <a href="#eslitec">Eslitec Fit</a>
-        <a href="#features">Features</a>
+        <a href="#three-modes">Three Modes</a>
+        <a href="#savings">Savings</a>
+        <a href="#connections">Connections</a>
         <a href="#journey">Journey</a>
         <a href="#mvp">MVP</a>
       </nav>
@@ -45,21 +45,19 @@
     <div class="container hero-inner">
       <div class="hero-badge">
         <span class="badge-dot"></span>
-        Eslitec Hackathon · Problem Statement 1 · Conversational Commerce
+        Eslitec Hackathon · Problem Statement 1 · One Less Thing
       </div>
-      <h1 class="hero-title">
-        The <span class="gradient-text">2am Shoppers</span>
-      </h1>
-      <p class="hero-sub">An AI shopping companion that remembers your interests, follows your budget and adapts when you respond.</p>
-      <p class="hero-desc">For working youths who shop across multiple platforms and forget what they saved. For businesses that need to turn customer data into relevant conversations that lead to repeat purchases.</p>
+      <h1 class="hero-title">The <span class="gradient-text">2am Shoppers</span></h1>
+      <p class="hero-sub">One app for thoughtful shopping, savings goals and personalised customer conversations.</p>
+      <p class="hero-desc">Students get a weekly budget and goal pockets. Working adults get monthly planning and smart reminders. Businesses get retention tools that respect their customers' preferences.</p>
       <div class="hero-cta">
-        <a href="#journey" class="btn btn-primary">See the Demo Journey</a>
-        <a href="#solution" class="btn btn-ghost">How it works</a>
+        <a href="#three-modes" class="btn btn-primary">Explore the three modes</a>
+        <a href="#get-started" class="btn btn-ghost">Get started free</a>
       </div>
-      <div class="hero-meta">
-        <div class="meta-chip"><span class="chip-label">Target</span> Working youths (18–30)</div>
-        <div class="meta-chip"><span class="chip-label">Focus</span> Customer retention &amp; repeat purchase</div>
-        <div class="meta-chip"><span class="chip-label">Status</span> Proposed MVP</div>
+      <div class="hero-modes">
+        <div class="hero-mode hero-mode-student">🎓 Student</div>
+        <div class="hero-mode hero-mode-working">💼 Working Adult</div>
+        <div class="hero-mode hero-mode-business">🏪 Business</div>
       </div>
     </div>
   </section>
@@ -68,434 +66,359 @@
   <section class="section section-alt" id="problem">
     <div class="container">
       <div class="section-label">01 · Problem</div>
-      <h2 class="section-title">Shopping scattered. Follow-ups generic. Retention hard to measure.</h2>
-      <p class="section-desc">Working youths shop across multiple platforms, save products they later forget and struggle to track useful offers. Businesses hold customer data but can't turn it into relevant conversations.</p>
+      <h2 class="section-title">Scattered shopping. Generic promotions. No savings plan.</h2>
+      <p class="section-desc">Students and working adults shop across multiple platforms, forget saved products and have no single view of budget versus spending. Businesses hold customer data but can't turn it into relevant conversations.</p>
       <div class="pain-grid">
         <div class="pain-card">
           <div class="pain-icon">🛍️</div>
-          <h3>Scattered Shopping</h3>
-          <p>Products saved across Shopee, SHEIN, Taobao. Repeated searches for the same items. No way to track it all.</p>
+          <h3>No single view</h3>
+          <p>Products scattered across Shopee, SHEIN, TikTok, Taobao and Pinduoduo with no unified budget view.</p>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon">💸</div>
+          <h3>No savings structure</h3>
+          <p>Students need weekly allowance tracking. Working adults need monthly planning with savings goals alongside shopping.</p>
         </div>
         <div class="pain-card">
           <div class="pain-icon">📢</div>
-          <h3>Generic Promotions</h3>
-          <p>Businesses send the same message to everyone. Doesn't match actual needs, budget or timing.</p>
-        </div>
-        <div class="pain-card">
-          <div class="pain-icon">📊</div>
-          <h3>Unmeasured Retention</h3>
-          <p>Hard to tell whether outreach brings customers back. No clear link between engagement and repeat purchase.</p>
+          <h3>Generic promotions</h3>
+          <p>Businesses send the same message to everyone. Doesn't match the customer's budget, timing or readiness to buy.</p>
         </div>
       </div>
-      <div class="example-block">
-        <div class="example-label">What this looks like in practice</div>
-        <p><strong>Customer view:</strong> You save office shoes on three different sites, forget about them, then search again two weeks later.</p>
-        <p><strong>Business view:</strong> You know this customer bought coffee once. You send a generic "20% off" message. They don't respond. You can't tell why.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SOLUTION -->
-  <section class="section" id="solution">
-    <div class="container">
-      <div class="section-label">02 · Solution</div>
-      <h2 class="section-title">One app. Personalized conversations. Adaptive journeys.</h2>
-      <p class="section-desc">The 2am Shoppers brings shopping information together, remembers confirmed preferences and starts relevant conversations that adapt to customer responses.</p>
-      
-      <div class="simple-example">
-        <div class="simple-label">Simple example</div>
-        <div class="simple-content">
-          <p>You save office shoes, set a budget under $40 and ask for a payday reminder.</p>
-          <p>→ The app reminds you at your chosen time, checks product info and suggests suitable options.</p>
-          <p>→ If you say the style is wrong, it changes its suggestions.</p>
-        </div>
-      </div>
-
-      <div class="steps-grid">
-        <div class="step-card" data-step="1">
-          <div class="step-num">01</div>
-          <div class="step-icon">⚙️</div>
-          <h3>Learn Preferences</h3>
-          <p>Interests, budget, favorite shops, notification timing and quiet hours.</p>
-        </div>
-        <div class="step-card" data-step="2">
-          <div class="step-num">02</div>
-          <div class="step-icon">📥</div>
-          <h3>Bring Data Together</h3>
-          <p>Purchase records, saved links, in-app searches and merchant customer records.</p>
-        </div>
-        <div class="step-card" data-step="3">
-          <div class="step-num">03</div>
-          <div class="step-icon">🤖</div>
-          <h3>Decide What's Useful</h3>
-          <p>Saved item to revisit, recurring purchase, verified offer or replenishment check.</p>
-        </div>
-        <div class="step-card" data-step="4">
-          <div class="step-num">04</div>
-          <div class="step-icon">💬</div>
-          <h3>Send Casual Notification</h3>
-          <p>"Still thinking about that bag? It's now within your $30 budget."</p>
-        </div>
-        <div class="step-card" data-step="5">
-          <div class="step-num">05</div>
-          <div class="step-icon">🔄</div>
-          <h3>Adapt to Response</h3>
-          <p>Too expensive? Show alternatives. Wrong style? Update suggestions. Remind later? Schedule it.</p>
-        </div>
-        <div class="step-card" data-step="6">
-          <div class="step-num">06</div>
-          <div class="step-icon">🛒</div>
-          <h3>Help Next Step</h3>
-          <p>Show options, explain differences, open purchase link. User completes checkout.</p>
-        </div>
-        <div class="step-card" data-step="7">
-          <div class="step-num">07</div>
-          <div class="step-icon">✅</div>
-          <h3>Follow Up</h3>
-          <p>Check satisfaction. Route problems to support. Offer replenishment when relevant.</p>
+      <div class="guiding-rule">
+        <div class="guiding-icon">⚖️</div>
+        <div>
+          <div class="guiding-label">The guiding rule</div>
+          <p><strong>Help customers buy at a suitable time and within their chosen budget.</strong> Retention comes from relevant service, useful products and trust. Saving goals and essential expenses take priority over promotional prompts.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ESLITEC FIT -->
-  <section class="section section-alt" id="eslitec">
+  <!-- THREE MODES -->
+  <section class="section" id="three-modes">
     <div class="container">
-      <div class="section-label">03 · Positioning</div>
-      <h2 class="section-title">How this fits Eslitec — and our own direction</h2>
-      <p class="section-desc">Eslitec focuses on AI CRM for SMBs. MantaGO supports conversational commerce, chatbots and connected messaging. The 2am Shoppers is a proposed customer-retention app in the same domain, designed for working youths.</p>
-      
-      <div class="table-wrap">
+      <div class="section-label">02 · Three Modes</div>
+      <h2 class="section-title">One app, three tailored experiences</h2>
+      <p class="section-desc">At sign-up you choose Student, Working Adult or Business. You can switch modes later. Switching views never merges personal finances with merchant records.</p>
+
+      <div class="modes-grid">
+
+        <!-- Student -->
+        <div class="mode-card mode-student">
+          <div class="mode-header">
+            <span class="mode-emoji">🎓</span>
+            <div>
+              <h3>Student</h3>
+              <div class="mode-question">What can I spend this week while saving for my goal?</div>
+            </div>
+          </div>
+          <div class="mode-nav">Home · Discover · Save · Wishlist · Assistant</div>
+          <ul class="mode-features">
+            <li><strong>Home</strong> — Weekly allowance, recorded expenses, essential reserves, remaining discretionary budget and one next-step card</li>
+            <li><strong>Discover</strong> — Products within your chosen cap, short demos, clearly marked sponsored items</li>
+            <li><strong>Save</strong> — Goal pockets, target amounts, progress bars, contribution plan and optional badges</li>
+            <li><strong>Wishlist</strong> — Saved products, price timestamp, goal link, Wait / Save / Open actions</li>
+            <li><strong>Assistant</strong> — Quick reply buttons and short explanations</li>
+          </ul>
+          <div class="mode-example">
+            <div class="mode-example-label">Weekly plan example</div>
+            <div class="budget-calc">
+              <div class="budget-row"><span>Allowance</span><span>$80</span></div>
+              <div class="budget-row budget-minus"><span>Essential reserves</span><span>−$45</span></div>
+              <div class="budget-row budget-minus"><span>Savings allocation</span><span>−$15</span></div>
+              <div class="budget-row budget-result"><span>Discretionary budget</span><span>$20</span></div>
+            </div>
+          </div>
+          <div class="mode-tag">🎮 Optional gamification — badges, missions, progress. Can be turned off.</div>
+        </div>
+
+        <!-- Working Adult -->
+        <div class="mode-card mode-working">
+          <div class="mode-header">
+            <span class="mode-emoji">💼</span>
+            <div>
+              <h3>Working Adult</h3>
+              <div class="mode-question">How does this purchase fit my monthly plan?</div>
+            </div>
+          </div>
+          <div class="mode-nav">Overview · Spending · Savings · Shopping · Assistant</div>
+          <ul class="mode-features">
+            <li><strong>Overview</strong> — Pay cycle, recorded income, reserves, savings allocations, discretionary budget and upcoming purchases</li>
+            <li><strong>Spending</strong> — Categories, subscriptions, recurring expenses and source-labelled transactions</li>
+            <li><strong>Savings</strong> — Multiple goals, planned contributions, projected completion and editable rules</li>
+            <li><strong>Shopping</strong> — Wishlist, comparisons, replenishment checks and price alerts</li>
+            <li><strong>Assistant</strong> — Brief tradeoffs, timing options and a clear next action</li>
+          </ul>
+          <div class="mode-example">
+            <div class="mode-example-label">Monthly plan example</div>
+            <div class="budget-calc">
+              <div class="budget-row"><span>Recorded income</span><span>$2,400</span></div>
+              <div class="budget-row budget-minus"><span>Essential reserves</span><span>−$1,500</span></div>
+              <div class="budget-row budget-minus"><span>Savings allocations</span><span>−$400</span></div>
+              <div class="budget-row budget-minus"><span>Buffer</span><span>−$200</span></div>
+              <div class="budget-row budget-result"><span>Discretionary budget</span><span>$300</span></div>
+            </div>
+          </div>
+          <div class="mode-tag">📊 Calmer layout with summaries and expandable details. No constant emoji.</div>
+        </div>
+
+        <!-- Business -->
+        <div class="mode-card mode-business">
+          <div class="mode-header">
+            <span class="mode-emoji">🏪</span>
+            <div>
+              <h3>Business</h3>
+              <div class="mode-question">Which customers should we engage, and what is the useful next action?</div>
+            </div>
+          </div>
+          <div class="mode-nav">Overview · Products · Customers · Journeys · Marketing · Inbox · Analytics · Connections</div>
+          <ul class="mode-features">
+            <li><strong>Overview</strong> — Active journeys, repeat customers, confirmed orders, support queue and suggested actions</li>
+            <li><strong>Products</strong> — Own catalogue, variants, prices, stock and merchant-approved bundles</li>
+            <li><strong>Customers</strong> — Authorised records, purchase history, preferences and segments</li>
+            <li><strong>Journeys</strong> — Trigger, audience, conversation branches, follow-up timing and exits</li>
+            <li><strong>Marketing</strong> — Product selection, message drafts, verified offers, campaign budget and approval</li>
+            <li><strong>Analytics</strong> — Repeat-purchase rate, retention by cohort and attributed orders</li>
+          </ul>
+          <div class="mode-tag">🔒 Businesses see only authorised customer context. Private budgets and goal balances are never shared.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAVINGS -->
+  <section class="section section-alt" id="savings">
+    <div class="container">
+      <div class="section-label">03 · Savings Workspace</div>
+      <h2 class="section-title">A planning ledger built into the app</h2>
+      <p class="section-desc">The savings feature is a planning and tracking ledger. Money stays in the user's existing accounts. Recording "$10 saved" does not transfer funds, create a deposit or earn interest.</p>
+
+      <div class="savings-formula">
+        <div class="formula-label">Budget formula</div>
+        <div class="formula-text">
+          Remaining discretionary = confirmed income − essential reserves − savings allocations − buffer − recorded discretionary spending
+        </div>
+        <div class="formula-note">Labelled as a recorded plan with last-update time and any missing inputs shown.</div>
+      </div>
+
+      <div class="savings-steps">
+        <div class="save-step"><span class="save-num">1</span><p>Save a product and confirm an estimated total including known delivery charges.</p></div>
+        <div class="save-step"><span class="save-num">2</span><p>Choose "Save toward this" and create or link a goal pocket.</p></div>
+        <div class="save-step"><span class="save-num">3</span><p>Set a contribution plan and reminder preferences.</p></div>
+        <div class="save-step"><span class="save-num">4</span><p>Record contributions. Planned and completed entries remain separate.</p></div>
+        <div class="save-step"><span class="save-num">5</span><p>Purchase prompts are paused while the item is outside the chosen budget.</p></div>
+        <div class="save-step"><span class="save-num">6</span><p>When the goal is funded in the ledger, recheck price and stock, then offer the link.</p></div>
+        <div class="save-step"><span class="save-num">7</span><p>User reviews the listing and completes checkout externally.</p></div>
+        <div class="save-step"><span class="save-num">8</span><p>Record the purchase and reconcile the linked goal without double-counting.</p></div>
+      </div>
+
+      <div class="savings-variants">
+        <div class="savings-variant variant-student">
+          <div class="variant-label">🎓 Student AI prompt</div>
+          <blockquote>"That hoodie is $25 and your recorded shopping budget has $12 left. Want to save toward it or view options under $12?"</blockquote>
+          <div class="variant-btns">Save for it · Show cheaper options · Edit my budget · Dismiss</div>
+        </div>
+        <div class="savings-variant variant-working">
+          <div class="variant-label">💼 Working adult AI prompt</div>
+          <blockquote>"The item is $90. Your recorded discretionary budget is $120 after your planned savings allocation. Compare options, save for later or open the listing?"</blockquote>
+          <div class="variant-btns">Compare · Save for later · Open listing · Dismiss</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONNECTIONS HUB -->
+  <section class="section" id="connections">
+    <div class="container">
+      <div class="section-label">04 · Connections Hub</div>
+      <h2 class="section-title">Five platforms, four integration routes</h2>
+      <p class="section-desc">One Connections Hub for Shopee, SHEIN, TikTok Shop, Taobao and Pinduoduo. Each platform card shows the actual access level — not just "connected."</p>
+
+      <div class="routes-grid">
+        <div class="route-card">
+          <div class="route-num">1</div>
+          <h4>Share or paste a link</h4>
+          <p>Store the source, link and user-confirmed product details. Works for all five platforms immediately.</p>
+          <span class="route-badge">Link-only</span>
+        </div>
+        <div class="route-card">
+          <div class="route-num">2</div>
+          <h4>Import a purchase record</h4>
+          <p>Upload a receipt, screenshot or available order export. User confirms extracted details before they update spending.</p>
+          <span class="route-badge">Imported records</span>
+        </div>
+        <div class="route-card">
+          <div class="route-num">3</div>
+          <h4>Authorised merchant connection</h4>
+          <p>Apply for the relevant platform integration. Request only the scopes the service permits. Verify region and eligibility first.</p>
+          <span class="route-badge">Live connection</span>
+        </div>
+        <div class="route-card">
+          <div class="route-num">4</div>
+          <h4>External purchase handoff</h4>
+          <p>Open the original listing or checkout link. Track a confirmed order only through an authorised callback or clearly labelled user confirmation.</p>
+          <span class="route-badge">Handoff</span>
+        </div>
+      </div>
+
+      <div class="platforms-table-wrap">
         <table class="data-table">
           <thead>
-            <tr><th>Eslitec capability</th><th>Our implementation</th><th>Our emphasis</th></tr>
+            <tr><th>Platform</th><th>Shopper route (MVP)</th><th>Business route</th><th>Must validate</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td>AI CRM &amp; customer management</td>
-              <td>Import merchant customer records and orders</td>
-              <td>Keep confirmed budgets, interests and timing alongside purchase history</td>
+              <td><strong>Shopee</strong></td>
+              <td>Paste/share links; import receipts; open listings</td>
+              <td>Shopee Open Platform for approved merchant connection</td>
+              <td>Accessible regions, account eligibility, permissions</td>
             </tr>
             <tr>
-              <td>Conversational commerce</td>
-              <td>Start relevant conversations, guide next action</td>
-              <td>Casual, useful language for working youths</td>
+              <td><strong>SHEIN</strong></td>
+              <td>Save fashion links; import available order records</td>
+              <td>SHEIN Developer Platform — seller-focused application</td>
+              <td>Seller/market eligibility and supported order scopes</td>
             </tr>
             <tr>
-              <td>Automated marketing</td>
-              <td>Run journeys from customer-data triggers</td>
-              <td>Adapt timing and offers when customer responds</td>
+              <td><strong>TikTok Shop</strong></td>
+              <td>Save product/video links; import available order records</td>
+              <td>TikTok Shop Partner Center</td>
+              <td>App approval, shop scope and region</td>
             </tr>
             <tr>
-              <td>Connected messaging</td>
-              <td>Keep journey state in one dashboard</td>
-              <td>Begin with app chat + push; add external channels later</td>
+              <td><strong>Taobao</strong></td>
+              <td>Save original listing links; import available records</td>
+              <td>Taobao Open Platform — needs investigation</td>
+              <td>Current approval route, regional support, exact permissions</td>
             </tr>
             <tr>
-              <td>Membership &amp; loyalty</td>
-              <td>Recognize returning customers and benefits</td>
-              <td>Offer reordering and optional colleague bundles</td>
-            </tr>
-            <tr>
-              <td>Business outcomes</td>
-              <td>Track retention and repeat purchases</td>
-              <td>Show reason for engagement and verified result</td>
+              <td><strong>Pinduoduo</strong></td>
+              <td>Save links; import receipts; merchant-approved group-bundle demo</td>
+              <td>Pinduoduo Open Platform — needs investigation</td>
+              <td>Developer eligibility, regional support, permissions</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div class="team-connection">
-        <h3>What makes this personal to our team</h3>
-        <p>The idea carries forward the strongest parts of our original scheduling agent:</p>
-        <ul class="team-list">
-          <li><strong>Prioritisation:</strong> Decide which customer journey needs attention and why.</li>
-          <li><strong>Preference-based planning:</strong> Fit reminders around dates and quiet hours the customer chooses.</li>
-          <li><strong>Change recovery:</strong> Replan when price, stock, needs or purchase status changes.</li>
-          <li><strong>Action with control:</strong> Execute allowed reminders while requiring approval for spending.</li>
-          <li><strong>Visible outcomes:</strong> Show what the agent did and whether it led to another purchase.</li>
-        </ul>
-        <p class="team-note"><strong>"2am" is the brand personality, not a default notification time.</strong> Notifications respect each customer's quiet hours.</p>
+      <div class="connection-status-row">
+        <div class="conn-status conn-live">🟢 Live connection</div>
+        <div class="conn-status conn-imported">🔵 Imported records</div>
+        <div class="conn-status conn-link">⚪ Link-only</div>
+        <div class="conn-status conn-needs">🟡 Needs attention</div>
+        <div class="conn-status conn-demo">🟣 Demo data</div>
       </div>
-
-      <div class="inspiration-grid">
-        <h3>E-Commerce inspirations</h3>
-        <div class="inspo-chips">
-          <div class="inspo-chip"><span class="chip-icon">🛍️</span> <strong>Shopee</strong> — Wishlists, offers, reordering</div>
-          <div class="inspo-chip"><span class="chip-icon">👗</span> <strong>SHEIN</strong> — Preference-based discovery</div>
-          <div class="inspo-chip"><span class="chip-icon">📱</span> <strong>TikTok Shop</strong> — Product videos, content shopping</div>
-          <div class="inspo-chip"><span class="chip-icon">🏪</span> <strong>Taobao</strong> — Product discovery, comparisons</div>
-          <div class="inspo-chip"><span class="chip-icon">🤝</span> <strong>Pinduoduo</strong> — Social shopping, group deals</div>
-        </div>
-        <p class="inspo-note">These are design inspirations. This brief does not assume all platforms provide integration access.</p>
-      </div>
+      <p class="connections-note">Never show "Connected" if only a product link was saved. Integration plan reviewed October 2026 — keep permissions and regional availability checks current when implementation starts.</p>
     </div>
   </section>
 
-  <!-- FEATURES -->
-  <section class="section" id="features">
-    <div class="container">
-      <div class="section-label">04 · Key Features</div>
-      <h2 class="section-title">Two views: Customer and Business</h2>
-      
-      <div class="views-grid">
-        <div class="view-card view-customer">
-          <div class="view-header">
-            <span class="view-icon">👤</span>
-            <h3>Customer View</h3>
-          </div>
-          <ul class="view-list">
-            <li>Preferences and budget settings</li>
-            <li>Saved products and reminders</li>
-            <li>Personalized discovery feed (TikTok-inspired)</li>
-            <li>AI shopping conversation</li>
-            <li>Purchase history and reorder links</li>
-            <li>Notification and data controls</li>
-          </ul>
-        </div>
-        <div class="view-card view-business">
-          <div class="view-header">
-            <span class="view-icon">💼</span>
-            <h3>Business View</h3>
-          </div>
-          <ul class="view-list">
-            <li>Customer records and purchase history</li>
-            <li>Customer segments and active journeys</li>
-            <li>Reasons for proposed engagement</li>
-            <li>Conversation outcomes and support handovers</li>
-            <li>Campaign drafts and approval controls</li>
-            <li>Repeat-purchase and retention reporting</li>
-          </ul>
-        </div>
-      </div>
-
-      <h3 class="subsection-title">Customer engagement approaches</h3>
-      <div class="approach-grid">
-        <div class="approach-card">
-          <h4>💬 Interest-based conversations</h4>
-          <p>Ask what matters about a saved product → Understand intent and address hesitation</p>
-        </div>
-        <div class="approach-card">
-          <h4>🎥 Personalized product content</h4>
-          <p>Show demonstrations or comparisons → Help evaluate suitable options</p>
-        </div>
-        <div class="approach-card">
-          <h4>📅 Customer-chosen payday reminders</h4>
-          <p>Revisit an item on a selected date → Respect timing, encourage return visit</p>
-        </div>
-        <div class="approach-card">
-          <h4>🤝 Colleague group buying</h4>
-          <p>Offer approved coffee or snack bundles → Make social repeat shopping convenient</p>
-        </div>
-        <div class="approach-card">
-          <h4>🔄 Smart replenishment</h4>
-          <p>Ask whether a regular product is running low → Make repeat purchases easier</p>
-        </div>
-        <div class="approach-card">
-          <h4>✅ After-purchase care</h4>
-          <p>Ask about satisfaction, route problems to support → Address reasons customers leave</p>
-        </div>
-      </div>
-
-      <h3 class="subsection-title">Example notifications</h3>
-      <div class="notif-examples">
-        <div class="notif-bubble">Still thinking about that bag? 👀 It's now within your $30 budget.</div>
-        <div class="notif-bubble">Coffee check ☕ Running low, or still stocked?</div>
-        <div class="notif-bubble">You asked for a payday reminder—want to revisit your wishlist?</div>
-        <div class="notif-bubble">Buying snacks with your colleagues? There's an eligible group bundle to check out.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DEMO JOURNEY -->
+  <!-- JOURNEY -->
   <section class="section section-alt" id="journey">
     <div class="container">
-      <div class="section-label">05 · Demo Journey</div>
-      <h2 class="section-title">Example: Coffee replenishment for a returning customer</h2>
-      <p class="section-desc"><strong>Customer:</strong> Alicia, a young working adult. <strong>Merchant:</strong> A fictional coffee and workday-snack shop.</p>
+      <div class="section-label">05 · Example Journeys</div>
+      <h2 class="section-title">Three journeys, one platform</h2>
 
+      <!-- Working adult journey -->
+      <h3 class="journey-sub-title">💼 Alicia (Working Adult) — Coffee replenishment</h3>
       <div class="journey-timeline">
-        <div class="journey-step">
-          <div class="journey-num">1</div>
-          <div class="journey-content">
-            <p>Alicia previously bought coffee from the shop and agreed to relevant updates.</p>
-          </div>
-        </div>
-        <div class="journey-step">
-          <div class="journey-num">2</div>
-          <div class="journey-content">
-            <p>She searches for <strong>office coffee</strong> inside The 2am Shoppers.</p>
-          </div>
-        </div>
-        <div class="journey-step">
-          <div class="journey-num">3</div>
-          <div class="journey-content">
-            <p>The app shows a suitable product demonstration in its discovery feed.</p>
-          </div>
-        </div>
-        <div class="journey-step journey-response">
-          <div class="journey-num">4</div>
-          <div class="journey-content">
-            <p>Alicia responds: <strong>"Interested, but too expensive."</strong></p>
-          </div>
-        </div>
-        <div class="journey-step">
-          <div class="journey-num">5</div>
-          <div class="journey-content">
-            <p>The agent checks the merchant's catalogue and offers a smaller pack or an eligible colleague bundle.</p>
-          </div>
-        </div>
-        <div class="journey-step journey-response">
-          <div class="journey-num">6</div>
-          <div class="journey-content">
-            <p>Alicia chooses: <strong>"Remind me on the 25th."</strong></p>
-          </div>
-        </div>
-        <div class="journey-step">
-          <div class="journey-num">7</div>
-          <div class="journey-content">
-            <p>The agent schedules the reminder and pauses immediate follow-ups.</p>
-          </div>
-        </div>
-        <div class="journey-step">
-          <div class="journey-num">8</div>
-          <div class="journey-content">
-            <p>Before the reminder, it checks whether the product and offer are still available.</p>
-          </div>
-        </div>
-        <div class="journey-step">
-          <div class="journey-num">9</div>
-          <div class="journey-content">
-            <p>If something changed, it explains the change and offers suitable alternatives.</p>
-          </div>
-        </div>
-        <div class="journey-step journey-purchase">
-          <div class="journey-num">10</div>
-          <div class="journey-content">
-            <p>Alicia opens the listing, reviews the purchase and completes checkout.</p>
-          </div>
-        </div>
-        <div class="journey-step">
-          <div class="journey-num">11</div>
-          <div class="journey-content">
-            <p>The app records a verified purchase, ends the current prompt and later checks satisfaction.</p>
-          </div>
-        </div>
+        <div class="j-step"><div class="j-num">1</div><p>Alicia previously bought coffee and agreed to relevant updates.</p></div>
+        <div class="j-step"><div class="j-num">2</div><p>She searches for office coffee inside The 2am Shoppers.</p></div>
+        <div class="j-step j-response"><div class="j-num">3</div><p>AI shows a product demo. Alicia replies: <strong>"Interested, but too expensive."</strong></p></div>
+        <div class="j-step"><div class="j-num">4</div><p>Agent checks catalogue and offers a smaller pack or colleague bundle.</p></div>
+        <div class="j-step j-response"><div class="j-num">5</div><p>Alicia: <strong>"Remind me on the 25th."</strong> Agent schedules reminder, pauses follow-ups.</p></div>
+        <div class="j-step"><div class="j-num">6</div><p>Before the reminder, agent verifies price and stock. If changed, explains and offers alternatives.</p></div>
+        <div class="j-step j-purchase"><div class="j-num">7</div><p>Alicia opens the listing, completes checkout. App records purchase and later checks satisfaction.</p></div>
       </div>
 
-      <div class="journey-note">
-        <strong>Key point:</strong> This journey has a clear trigger, decisions, adaptations and exits. A product-link click alone is not treated as a completed purchase.
+      <!-- Student journey -->
+      <h3 class="journey-sub-title" style="margin-top:40px">🎓 Student — Save before buying</h3>
+      <div class="journey-timeline">
+        <div class="j-step"><div class="j-num">1</div><p>Student saves a $60 pair of shoes from a shared listing.</p></div>
+        <div class="j-step"><div class="j-num">2</div><p>Goal pocket has $20 recorded. App shows contribution plan and pauses purchase prompts.</p></div>
+        <div class="j-step j-response"><div class="j-num">3</div><p>Student records an unexpected expense. App recalculates discretionary budget.</p></div>
+        <div class="j-step"><div class="j-num">4</div><p>When goal is funded, app checks stock, offers purchase link. If mind changed, goal is repurposed and journey exits.</p></div>
+      </div>
+
+      <!-- Replan journey -->
+      <h3 class="journey-sub-title" style="margin-top:40px">💼 Working Adult — Replan after unexpected expense</h3>
+      <div class="journey-timeline">
+        <div class="j-step"><div class="j-num">1</div><p>Customer planned a coffee bundle for their pay-cycle date.</p></div>
+        <div class="j-step j-response"><div class="j-num">2</div><p>They record an unexpected expense, reduce shopping cap. App pauses the bundle prompt.</p></div>
+        <div class="j-step"><div class="j-num">3</div><p>App offers to move the reminder to a later date.</p></div>
+        <div class="j-step j-purchase"><div class="j-num">4</div><p>At the new date, checks interest and stock before resuming. If no longer needed, journey exits.</p></div>
+      </div>
+
+      <div class="journey-rule">
+        <strong>Key principle:</strong> A product-link click alone is not treated as a completed purchase. The app tracks confirmed orders only through authorised callbacks or clearly labelled user confirmations.
       </div>
     </div>
   </section>
 
-  <!-- MVP SCOPE -->
+  <!-- MVP -->
   <section class="section" id="mvp">
     <div class="container">
-      <div class="section-label">06 · MVP Scope</div>
-      <h2 class="section-title">Hackathon demonstration scope</h2>
-      <p class="section-desc">Build one complete journey for one fictional merchant and product category before expanding across marketplaces.</p>
-
-      <div class="demo-focus">
-        <h3>Primary demo</h3>
-        <p>Turn a merchant's existing coffee customers into personalised conversations that lead to a tracked repeat order.</p>
-        <p>Show one customer selecting a later date, one choosing a lower-cost option and one requiring human support.</p>
-      </div>
+      <div class="section-label">06 · Hackathon MVP</div>
+      <h2 class="section-title">One merchant. Three user journeys. One demo.</h2>
+      <p class="section-desc">Build one complete journey for one fictional coffee merchant. Show the student view, working adult view and business view. Include a functioning savings pocket and a budget change that alters the reminder.</p>
 
       <div class="scope-grid">
         <div class="scope-col scope-core">
-          <h3>✅ Core Features (MVP)</h3>
+          <h3>✅ Core Features</h3>
           <ul>
-            <li>Customer onboarding: interests, budget, notifications</li>
-            <li>Existing customer records + purchase-history import</li>
-            <li>Merchant onboarding: goals, offers, contact limits</li>
-            <li>Product catalogue, shared links, in-app search</li>
-            <li>Simple customer segmentation</li>
+            <li>Student / working adult / business onboarding</li>
+            <li>Three tailored dashboards and navigation</li>
+            <li>Shared savings workspace: goal pockets, contribution ledger, budget reserves</li>
+            <li>Wishlist with goal linking and Wait / Save / Open actions</li>
+            <li>Existing customer records and purchase-history import</li>
+            <li>Merchant onboarding with goals, offers and contact limits</li>
+            <li>Product catalogue, shared links and in-app search</li>
+            <li>Customer segmentation</li>
             <li>AI conversation with response-based adaptation</li>
             <li>Casual notifications and user-chosen reminders</li>
-            <li>One after-purchase or replenishment journey</li>
-            <li>Business dashboard with journey explanations</li>
-            <li>Human support handover and clear exits</li>
+            <li>After-purchase / replenishment journey</li>
+            <li>Business dashboard with journey explanations and outcomes</li>
+            <li>Support handover and clear journey exits</li>
+            <li>Connections Hub — all five sources via labelled imports and links</li>
           </ul>
-        </div>
-        <div class="scope-col scope-demo">
-          <h3>🎬 Demonstration Scope</h3>
-          <p>Use sample data to demonstrate 2–3 customers receiving different journeys.</p>
-          <p><strong>Clearly label:</strong> Simulated purchases, feeds, notifications or external integrations.</p>
-          <p>Keep real push notifications or merchant integrations only where the build supports them.</p>
         </div>
         <div class="scope-col scope-later">
           <h3>🚀 Later Enhancements</h3>
           <ul>
-            <li>Additional marketplace integrations</li>
-            <li>Real short-video content and ad publishing</li>
+            <li>Additional live marketplace integrations</li>
+            <li>Real short-video content and supported ad publishing</li>
             <li>Group-buy checkout</li>
             <li>Multilingual conversations</li>
             <li>Light/dark mode</li>
             <li>Broader analytics and product comparisons</li>
+            <li>Validated partner-backed money tracking (separate future scope)</li>
           </ul>
+
+          <h3 style="margin-top:24px">📐 Suggested Build Order</h3>
+          <ol class="build-ol">
+            <li>Roles, access boundaries, records and savings ledger</li>
+            <li>Three interface shells</li>
+            <li>Imports, product links and connections hub</li>
+            <li>Savings goals and budget calculations</li>
+            <li>Merchant catalogue, segments and retention journey</li>
+            <li>AI wording, notifications and support handover</li>
+            <li>Budget-change and stock/price-change recovery</li>
+            <li>Outcome dashboard and order tracking</li>
+            <li>One live marketplace connector (if feasible)</li>
+            <li>Polish and optional student gamification</li>
+          </ol>
         </div>
       </div>
 
-      <h3 class="subsection-title">Business process (behind the scenes)</h3>
-      <div class="process-steps">
-        <div class="proc-step">1. Merchant onboarding → goals, records, catalogue, limits</div>
-        <div class="proc-step">2. Check data quality → missing dates, duplicates, consent</div>
-        <div class="proc-step">3. Segment customers → assign relevant journeys</div>
-        <div class="proc-step">4. Select a trigger → first order, reminder date, replenishment, inactivity</div>
-        <div class="proc-step">5. Choose conversation → history + catalogue + intent + preferences</div>
-        <div class="proc-step">6. Start approved journey → send via implemented channel</div>
-        <div class="proc-step">7. Adapt and act → respond, remind later, recheck price/stock</div>
-        <div class="proc-step">8. Hand over when needed → escalate to staff, pause sales</div>
-        <div class="proc-step">9. Exit or follow up → after purchase, opt-out or limit</div>
-        <div class="proc-step">10. Measure outcomes → link orders to journeys, report vs holdout</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- METRICS -->
-  <section class="section section-alt" id="metrics">
-    <div class="container">
-      <div class="section-label">07 · Success Metrics</div>
-      <h2 class="section-title">How we measure retention and repeat purchase</h2>
-      
+      <!-- Metrics -->
+      <h3 class="subsection-title">Success metrics</h3>
       <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-icon">🔄</div>
-          <h4>Repeat-purchase rate</h4>
-          <p>Share of existing customers who buy again within a defined period</p>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon">📈</div>
-          <h4>Retention</h4>
-          <p>Share of a customer cohort who remain active purchasers</p>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon">⏱️</div>
-          <h4>Time to next purchase</h4>
-          <p>Whether customers return sooner after useful engagement</p>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon">💰</div>
-          <h4>Customer lifetime value</h4>
-          <p>Longer-term contribution; estimates must state assumptions</p>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon">💬</div>
-          <h4>Conversation-to-purchase</h4>
-          <p>Share of engaged customers with confirmed purchase in attribution window</p>
-        </div>
-        <div class="metric-card">
-          <div class="metric-icon">⚠️</div>
-          <h4>Opt-outs &amp; complaints</h4>
-          <p>Whether engagement is becoming unwanted</p>
-        </div>
-      </div>
-
-      <div class="pilot-note">
-        <h3>For a real pilot</h3>
-        <p>Compare eligible customers receiving the journey with a randomly assigned holdout group. Track repeat purchases from the participating business, because purchases elsewhere do not establish retention for that merchant.</p>
-        <p><strong>Hackathon note:</strong> Sample data can demonstrate the reporting process. It does not prove a real increase in retention or customer lifetime value.</p>
+        <div class="metric-card"><div class="metric-icon">🔄</div><h4>Repeat-purchase rate</h4><p>Eligible customers who buy again within a defined period</p></div>
+        <div class="metric-card"><div class="metric-icon">💬</div><h4>Conv-to-purchase rate</h4><p>Engaged customers with a confirmed purchase in the attribution window</p></div>
+        <div class="metric-card"><div class="metric-icon">🎯</div><h4>Savings goal progress</h4><p>Recorded contributions vs chosen targets — distinguish plans from confirmed entries</p></div>
+        <div class="metric-card"><div class="metric-icon">⚖️</div><h4>Budget adherence</h4><p>Recorded spending vs user-defined caps</p></div>
+        <div class="metric-card"><div class="metric-icon">🚫</div><h4>Budget-respecting engagement</h4><p>Purchase prompts deferred by preference/budget rules</p></div>
+        <div class="metric-card"><div class="metric-icon">⚠️</div><h4>Opt-outs &amp; complaints</h4><p>Whether engagement is becoming unwanted</p></div>
       </div>
     </div>
   </section>
@@ -504,24 +427,15 @@
   <section class="section get-started-section" id="get-started">
     <div class="container">
       <div class="section-label">Try it now</div>
-      <h2 class="section-title get-started-title">
-        Ready to shop smarter?
-      </h2>
-      <p class="section-desc get-started-desc">
-        Create an account to start saving products, setting budgets and getting personalised reminders — or sign in if you already have one.
-      </p>
+      <h2 class="section-title get-started-title">Ready to shop smarter?</h2>
+      <p class="section-desc get-started-desc">Create a free account — choose Student, Working Adult or Business to get started.</p>
 
-      <!-- Tab switcher -->
       <div class="auth-panel">
         <div class="auth-tabs" role="tablist">
           <button class="auth-tab auth-tab-active" id="tab-signin" role="tab"
-            aria-selected="true" aria-controls="panel-signin" onclick="switchTab('signin')">
-            Sign in
-          </button>
+            aria-selected="true" aria-controls="panel-signin" onclick="switchTab('signin')">Sign in</button>
           <button class="auth-tab" id="tab-signup" role="tab"
-            aria-selected="false" aria-controls="panel-signup" onclick="switchTab('signup')">
-            Create account
-          </button>
+            aria-selected="false" aria-controls="panel-signup" onclick="switchTab('signup')">Create account</button>
         </div>
 
         <!-- Sign-in panel -->
@@ -531,89 +445,61 @@
             <span>Demo admin — username: <strong>user</strong> · password: <strong>password</strong></span>
           </div>
           <form class="auth-form" id="form-signin" onsubmit="handleSignin(event)">
-            <label class="auth-label">
-              Username
-              <input class="auth-input" type="text" id="signin-username"
-                placeholder="e.g. user" autocomplete="username" required />
+            <label class="auth-label">Username
+              <input class="auth-input" type="text" id="signin-username" placeholder="e.g. user" autocomplete="username" required />
             </label>
-            <label class="auth-label">
-              Password
+            <label class="auth-label">Password
               <div class="auth-password-wrap">
-                <input class="auth-input" type="password" id="signin-password"
-                  placeholder="••••••••" autocomplete="current-password" required />
-                <button type="button" class="auth-toggle-pass"
-                  onclick="togglePass('signin-password', this)" aria-label="Show password">👁️</button>
+                <input class="auth-input" type="password" id="signin-password" placeholder="••••••••" autocomplete="current-password" required />
+                <button type="button" class="auth-toggle-pass" onclick="togglePass('signin-password',this)" aria-label="Show password">👁️</button>
               </div>
             </label>
             <div class="auth-error" id="signin-error" aria-live="polite"></div>
-            <button type="submit" class="btn btn-primary auth-submit" id="signin-btn">
-              Sign in →
-            </button>
+            <button type="submit" class="btn btn-primary auth-submit" id="signin-btn">Sign in →</button>
           </form>
-          <p class="auth-switch">
-            No account yet?
-            <button class="auth-switch-link" onclick="switchTab('signup')">Create one free</button>
-          </p>
+          <p class="auth-switch">No account yet? <button class="auth-switch-link" onclick="switchTab('signup')">Create one free</button></p>
         </div>
 
         <!-- Sign-up panel -->
         <div class="auth-form-panel auth-hidden" id="panel-signup" role="tabpanel">
           <div class="role-toggle">
-            <button class="role-btn role-active" id="role-customer"
-              onclick="setRole('student')" type="button">🎓 Student</button>
-            <button class="role-btn" id="role-merchant"
-              onclick="setRole('working')" type="button">💼 Working Adult</button>
+            <button class="role-btn role-active" id="role-student"  onclick="setRole('student')"  type="button">🎓 Student</button>
+            <button class="role-btn"             id="role-working"  onclick="setRole('working')"  type="button">💼 Working Adult</button>
+            <button class="role-btn"             id="role-business" onclick="setRole('business')" type="button">🏪 Business</button>
           </div>
           <form class="auth-form" id="form-signup" onsubmit="handleSignup(event)">
-            <label class="auth-label">
-              Username
-              <input class="auth-input" type="text" id="signup-username"
-                placeholder="Choose a username" autocomplete="username" required />
+            <label class="auth-label">Username
+              <input class="auth-input" type="text" id="signup-username" placeholder="Choose a username" autocomplete="username" required />
             </label>
-            <label class="auth-label">
-              Email <span class="auth-optional">(optional)</span>
-              <input class="auth-input" type="email" id="signup-email"
-                placeholder="you@example.com" autocomplete="email" />
+            <label class="auth-label">Email <span class="auth-optional">(optional)</span>
+              <input class="auth-input" type="email" id="signup-email" placeholder="you@example.com" autocomplete="email" />
             </label>
-            <label class="auth-label">
-              Password
+            <label class="auth-label">Password
               <div class="auth-password-wrap">
-                <input class="auth-input" type="password" id="signup-password"
-                  placeholder="At least 6 characters" autocomplete="new-password" required />
-                <button type="button" class="auth-toggle-pass"
-                  onclick="togglePass('signup-password', this)" aria-label="Show password">👁️</button>
+                <input class="auth-input" type="password" id="signup-password" placeholder="At least 6 characters" autocomplete="new-password" required />
+                <button type="button" class="auth-toggle-pass" onclick="togglePass('signup-password',this)" aria-label="Show password">👁️</button>
               </div>
             </label>
-            <label class="auth-label">
-              Confirm password
-              <input class="auth-input" type="password" id="signup-confirm"
-                placeholder="Repeat password" autocomplete="new-password" required />
+            <label class="auth-label">Confirm password
+              <input class="auth-input" type="password" id="signup-confirm" placeholder="Repeat password" autocomplete="new-password" required />
             </label>
             <div class="auth-error" id="signup-error" aria-live="polite"></div>
-            <button type="submit" class="btn btn-primary auth-submit" id="signup-btn">
-              Create account →
-            </button>
+            <button type="submit" class="btn btn-primary auth-submit" id="signup-btn">Create account →</button>
           </form>
-          <p class="auth-switch">
-            Already have an account?
-            <button class="auth-switch-link" onclick="switchTab('signin')">Sign in</button>
-          </p>
+          <p class="auth-switch">Already have an account? <button class="auth-switch-link" onclick="switchTab('signin')">Sign in</button></p>
         </div>
 
-        <!-- Success state (shown after auth) -->
+        <!-- Success state -->
         <div class="auth-success auth-hidden" id="auth-success">
           <div class="auth-success-icon">✅</div>
           <h3 class="auth-success-title" id="auth-success-title">Welcome!</h3>
           <p class="auth-success-sub" id="auth-success-sub">Redirecting you to the app…</p>
-          <a class="btn btn-primary auth-open-btn" id="auth-open-btn"
-            href="http://localhost:3003" target="_blank" rel="noopener">
-            Open the app →
-          </a>
+          <a class="btn btn-primary auth-open-btn" id="auth-open-btn" href="http://localhost:3003" target="_blank" rel="noopener">Open the app →</a>
         </div>
       </div>
 
       <p class="auth-note">
-        The app runs at <code>localhost:3003</code>. Accounts created here are stored in the app's local storage — start the app first with <code>npm run dev</code>.
+        The app runs at <code>localhost:3003</code>. Accounts created here share storage with the app. Start it first with <code>npm run dev</code> inside <code>app/frontend</code>.
       </p>
     </div>
   </section>
@@ -621,11 +507,11 @@
   <!-- PITCH -->
   <section class="section pitch-section" id="pitch">
     <div class="container">
-      <div class="section-label">08 · Pitch</div>
+      <div class="section-label">07 · Pitch</div>
       <div class="pitch-inner">
         <div class="pitch-deco">🛒</div>
         <blockquote class="pitch-quote">
-          The 2am Shoppers helps e-commerce businesses turn the customer data they already hold into adaptive shopping conversations for working youths. Its AI remembers confirmed interests, budgets and preferred timing, sends casual and relevant follow-ups, and changes the journey when customer needs change. Businesses can hand conversations to staff when needed and measure whether existing customers return and buy again.
+          The 2am Shoppers brings shopping, savings goals and personalised customer conversations into one app. Students get a simple, optionally gamified budgeting experience; working adults get practical spending and savings planning; businesses get tools to market their own products and support returning customers. The agent adapts reminders and recommendations to confirmed preferences and changing circumstances, while businesses measure repeat purchases and retention.
         </blockquote>
         <div class="pitch-team">The 2am Shoppers · Eslitec Hackathon · Problem Statement 1</div>
       </div>
@@ -635,12 +521,9 @@
   <!-- FOOTER -->
   <footer class="footer">
     <div class="container footer-inner">
-      <div class="footer-logo">
-        <span class="logo-icon">🛒</span>
-        <span>The 2am Shoppers</span>
-      </div>
-      <p class="footer-tagline">An AI shopping companion for working youths and the businesses that serve them.</p>
-      <p class="footer-note">Eslitec Hackathon · Problem Statement 1 · Proposed MVP concept</p>
+      <div class="footer-logo"><span class="logo-icon">🛒</span><span>The 2am Shoppers</span></div>
+      <p class="footer-tagline">One app for thoughtful shopping, savings goals and personalised customer conversations.</p>
+      <p class="footer-note">Eslitec Hackathon · Problem Statement 1 · Proposed MVP concept · Marketplace integrations require validation</p>
     </div>
   </footer>
 

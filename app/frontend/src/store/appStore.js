@@ -2,38 +2,143 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 /**
- * Global store for The 2am Shoppers.
- * Persisted to localStorage so state survives refresh.
+ * Global store — The 2am Shoppers (v3)
  *
- * Two views share this store:
- *   - Customer view: preferences, wishlist, conversations, reminders
- *   - Business view: merchant profile, segments, journeys, dashboard
+ * Three modes:
+ *   'student'  — weekly budget, goal pockets, gamification
+ *   'working'  — monthly plan, multiple savings goals, practical shopping
+ *   'business' — merchant CRM, journeys, catalogue, analytics
+ *
+ * Shopper financial data is NEVER shared with merchant records.
  */
 const useAppStore = create(
   persist(
     (set, get) => ({
 
       // ── App mode ─────────────────────────────────────────────
-      // 'student' | 'working' | null (not yet chosen)
+      // 'student' | 'working' | 'business' | null
       appMode: null,
       setAppMode: (mode) => set({ appMode: mode }),
 
-      // ── Customer / Student ───────────────────────────────────
-      customerProfile: null,   // { name, userType:'student'|'working', interests[], budget, quietStart, quietEnd, paydayDate }
-      setCustomerProfile: (p) => set({ customerProfile: p }),
+      // ── Shopper profile (student + working adult) ─────────────
+      shopperProfile: null,
+      // {
+      //   name, userType: 'student'|'working',
+      //   interests[], budget, quietStart, quietEnd,
+      //   paydayDate, notifFreq,
+      //   // working adult extras:
+      //   income, planningPeriod: 'monthly'|'custom',
+      //   essentialReserve, savingsAllocation, buffer,
+      //   // student extras:
+      //   allowance, allowancePeriod: 'weekly'|'monthly',
+      //   essentialReserveStudent,
+      //   gamificationEnabled: true
+      // }
+      setShopperProfile: (p) => set({ shopperProfile: p }),
 
-      wishlist: [],            // [{ id, title, url, price, budget, savedAt, reminderDate }]
+      // backward compat alias
+      get customerProfile() { return get().shopperProfile; },
+      setCustomerProfile: (p) => set({ shopperProfile: p }),
+
+      // ── Wishlist ─────────────────────────────────────────────
+      wishlist: [],
       addToWishlist: (item) =>
         set((s) => ({ wishlist: [...s.wishlist, { id: crypto.randomUUID(), savedAt: new Date().toISOString(), ...item }] })),
-      updateWishlistItem: (id, updates) =>
-        set((s) => ({ wishlist: s.wishlist.map((i) => i.id === id ? { ...i, ...updates } : i) })),
+      updateWishlistItem: (id, u) =>
+        set((s) => ({ wishlist: s.wishlist.map((i) => i.id === id ? { ...i, ...u } : i) })),
       removeFromWishlist: (id) =>
         set((s) => ({ wishlist: s.wishlist.filter((i) => i.id !== id) })),
 
-      // AI conversation thread per product/journey
-      conversations: [],       // [{ id, productId, messages[], status, createdAt }]
+      // ── Savings goals (pockets) ──────────────────────────────
+      savingsGoals: [],
+      // [{ id, name, icon, targetAmount, currentAmount,
+      //    contributionAmount, contributionFrequency,
+      //    linkedWishlistId, status:'active'|'paused'|'complete',
+      //    createdAt }]
+      addSavingsGoal: (goal) =>
+        set((s) => ({
+          savingsGoals: [...s.savingsGoals, {
+            id: crypto.randomUUID(),
+            createdAt: new Date().toISOString(),
+            currentAmount: 0,
+            status: 'active',
+            ...goal,
+          }],
+        })),
+      updateSavingsGoal: (id, u) =>
+        set((s) => ({ savingsGoals: s.savingsGoals.map((g) => g.id === id ? { ...g, ...u } : g) })),
+      deleteSavingsGoal: (id) =>
+        set((s) => ({ savingsGoals: s.savingsGoals.filter((g) => g.id !== id) })),
+
+      // ── Savings ledger entries ───────────────────────────────
+      savingsLedger: [],
+      // [{ id, goalId, type:'contribution'|'withdrawal'|'planned',
+      //    amount, note, date, createdAt }]
+      addLedgerEntry: (entry) =>
+        set((s) => ({
+          savingsLedger: [...s.savingsLedger, {
+            id: crypto.randomUUID(),
+            createdAt: new Date().toISOString(),
+            date: new Date().toISOString().slice(0, 10),
+            ...entry,
+          }],
+        })),
+      removeLedgerEntry: (id) =>
+        set((s) => ({ savingsLedger: s.savingsLedger.filter((e) => e.id !== id) })),
+
+      // ── Expense records ──────────────────────────────────────
+      expenses: [],
+      // [{ id, category, amount, description, date, source, createdAt }]
+      addExpense: (exp) =>
+        set((s) => ({
+          expenses: [...s.expenses, {
+            id: crypto.randomUUID(),
+            createdAt: new Date().toISOString(),
+            date: new Date().toISOString().slice(0, 10),
+            ...exp,
+          }],
+        })),
+      removeExpense: (id) =>
+        set((s) => ({ expenses: s.expenses.filter((e) => e.id !== id) })),
+
+      // ── Connections hub ──────────────────────────────────────
+      connections: {
+        shopee:    { status: 'demo',      label: 'Shopee',         route: 'link-only'  },
+        shein:     { status: 'demo',      label: 'SHEIN',          route: 'link-only'  },
+        tiktok:    { status: 'demo',      label: 'TikTok Shop',    route: 'link-only'  },
+        taobao:    { status: 'demo',      label: 'Taobao',         route: 'link-only'  },
+        pinduoduo: { status: 'demo',      label: 'Pinduoduo',      route: 'link-only'  },
+      },
+      // status: 'live' | 'imported' | 'link-only' | 'needs-attention' | 'demo'
+      updateConnection: (key, updates) =>
+        set((s) => ({ connections: { ...s.connections, [key]: { ...s.connections[key], ...updates } } })),
+
+      savedLinks: [],
+      // [{ id, platform, url, title, price, currency, savedAt, verified }]
+      addSavedLink: (link) =>
+        set((s) => ({
+          savedLinks: [...s.savedLinks, {
+            id: crypto.randomUUID(),
+            savedAt: new Date().toISOString(),
+            verified: false,
+            ...link,
+          }],
+        })),
+      removeSavedLink: (id) =>
+        set((s) => ({ savedLinks: s.savedLinks.filter((l) => l.id !== id) })),
+
+      // ── Conversations ────────────────────────────────────────
+      conversations: [],
       addConversation: (conv) =>
-        set((s) => ({ conversations: [...s.conversations, { id: crypto.randomUUID(), createdAt: new Date().toISOString(), status: 'active', messages: [], ...conv }] })),
+        set((s) => ({
+          conversations: [...s.conversations, {
+            id: crypto.randomUUID(),
+            createdAt: new Date().toISOString(),
+            status: 'active',
+            messages: [],
+            ...conv,
+          }],
+        })),
       addMessage: (convId, message) =>
         set((s) => ({
           conversations: s.conversations.map((c) =>
@@ -49,37 +154,34 @@ const useAppStore = create(
           ),
         })),
 
-      // Reminders set by the customer
+      // ── Reminders ────────────────────────────────────────────
       reminders: [],
       addReminder: (r) =>
         set((s) => ({ reminders: [...s.reminders, { id: crypto.randomUUID(), createdAt: new Date().toISOString(), fired: false, ...r }] })),
       dismissReminder: (id) =>
         set((s) => ({ reminders: s.reminders.map((r) => r.id === id ? { ...r, fired: true } : r) })),
 
-      // Purchase history (confirmed orders recorded in-app)
+      // ── Purchase history ─────────────────────────────────────
       purchaseHistory: [],
       recordPurchase: (p) =>
         set((s) => ({ purchaseHistory: [...s.purchaseHistory, { id: crypto.randomUUID(), confirmedAt: new Date().toISOString(), ...p }] })),
 
-      // ── Business / Working Adult ──────────────────────────────
-      merchantProfile: null,   // { name, goal, contactLimitPerDay, supportEmail }
+      // ── Business / Merchant ──────────────────────────────────
+      merchantProfile: null,
       setMerchantProfile: (p) => set({ merchantProfile: p }),
 
-      // Product catalogue
       catalogue: [],
       addProduct: (p) =>
         set((s) => ({ catalogue: [...s.catalogue, { id: crypto.randomUUID(), createdAt: new Date().toISOString(), inStock: true, ...p }] })),
       updateProduct: (id, u) =>
         set((s) => ({ catalogue: s.catalogue.map((p) => p.id === id ? { ...p, ...u } : p) })),
 
-      // Simulated customers (for demo)
       customers: [],
       addCustomer: (c) =>
         set((s) => ({ customers: [...s.customers, { id: crypto.randomUUID(), createdAt: new Date().toISOString(), segment: 'first_time', ...c }] })),
       updateCustomer: (id, u) =>
         set((s) => ({ customers: s.customers.map((c) => c.id === id ? { ...c, ...u } : c) })),
 
-      // Customer journeys
       journeys: [],
       addJourney: (j) =>
         set((s) => ({ journeys: [...s.journeys, { id: crypto.randomUUID(), createdAt: new Date().toISOString(), status: 'active', events: [], ...j }] })),
@@ -98,18 +200,73 @@ const useAppStore = create(
           ),
         })),
 
-      // Support handovers
       supportHandovers: [],
       addHandover: (h) =>
         set((s) => ({ supportHandovers: [...s.supportHandovers, { id: crypto.randomUUID(), createdAt: new Date().toISOString(), resolved: false, ...h }] })),
       resolveHandover: (id) =>
         set((s) => ({ supportHandovers: s.supportHandovers.map((h) => h.id === id ? { ...h, resolved: true, resolvedAt: new Date().toISOString() } : h) })),
 
+      // ── Computed helpers ─────────────────────────────────────
+      /**
+       * Budget formula (student weekly):
+       * discretionary = allowance − essentialReserve − savingsAllocation
+       *               − recordedSpendingThisPeriod
+       */
+      getStudentBudget: () => {
+        const p = get().shopperProfile;
+        if (!p || p.userType !== 'student') return null;
+        const allowance  = Number(p.allowance)              || 0;
+        const essentials = Number(p.essentialReserveStudent) || 0;
+        const savings    = Number(p.savingsAllocation)       || 0;
+        const today      = new Date();
+        const weekAgo    = new Date(today.getTime() - 7 * 86400000);
+        const spent      = get().expenses
+          .filter((e) => e.category !== 'essential' && new Date(e.date) >= weekAgo)
+          .reduce((sum, e) => sum + Number(e.amount), 0);
+        return {
+          allowance, essentials, savings, spent,
+          discretionary: Math.max(0, allowance - essentials - savings - spent),
+        };
+      },
+
+      /**
+       * Budget formula (working adult monthly):
+       * discretionary = income − essentialReserve − savingsAllocation − buffer
+       *               − recordedSpendingThisMonth
+       */
+      getWorkingBudget: () => {
+        const p = get().shopperProfile;
+        if (!p || p.userType !== 'working') return null;
+        const income     = Number(p.income)          || 0;
+        const essentials = Number(p.essentialReserve) || 0;
+        const savings    = Number(p.savingsAllocation) || 0;
+        const buffer     = Number(p.buffer)            || 0;
+        const now        = new Date();
+        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10);
+        const spent      = get().expenses
+          .filter((e) => e.category !== 'essential' && e.date >= monthStart)
+          .reduce((sum, e) => sum + Number(e.amount), 0);
+        return {
+          income, essentials, savings, buffer, spent,
+          discretionary: Math.max(0, income - essentials - savings - buffer - spent),
+        };
+      },
+
       // ── Reset ────────────────────────────────────────────────
       reset: () => set({
         appMode: null,
-        customerProfile: null, wishlist: [], conversations: [], reminders: [], purchaseHistory: [],
-        merchantProfile: null, catalogue: [], customers: [], journeys: [], supportHandovers: [],
+        shopperProfile: null,
+        wishlist: [], savingsGoals: [], savingsLedger: [], expenses: [],
+        savedLinks: [], conversations: [], reminders: [], purchaseHistory: [],
+        connections: {
+          shopee:    { status: 'demo', label: 'Shopee',      route: 'link-only' },
+          shein:     { status: 'demo', label: 'SHEIN',       route: 'link-only' },
+          tiktok:    { status: 'demo', label: 'TikTok Shop', route: 'link-only' },
+          taobao:    { status: 'demo', label: 'Taobao',      route: 'link-only' },
+          pinduoduo: { status: 'demo', label: 'Pinduoduo',   route: 'link-only' },
+        },
+        merchantProfile: null, catalogue: [], customers: [],
+        journeys: [], supportHandovers: [],
       }),
     }),
     { name: '2am-shoppers-store' }

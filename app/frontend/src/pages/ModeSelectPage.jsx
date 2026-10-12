@@ -5,23 +5,21 @@ import useAuthStore from '../store/authStore.js';
 import styles from './ModeSelectPage.module.css';
 
 export default function ModeSelectPage() {
-  const { setAppMode, customerProfile, merchantProfile, reset } = useAppStore();
+  const { setAppMode, shopperProfile, merchantProfile, reset } = useAppStore();
   const { currentUser, isAdmin, logout } = useAuthStore();
   const navigate = useNavigate();
 
   function choose(mode) {
     setAppMode(mode);
-    if (mode === 'student') {
-      navigate(customerProfile ? '/customer' : '/customer/onboarding');
-    } else {
+    if (mode === 'business') {
       navigate(merchantProfile ? '/business' : '/business/onboarding');
+    } else {
+      // student or working — both go to /customer routes
+      navigate(shopperProfile ? '/customer' : '/customer/onboarding');
     }
   }
 
-  function handleLogout() {
-    logout();
-    navigate('/login');
-  }
+  function handleLogout() { logout(); navigate('/login'); }
 
   return (
     <div className={styles.page}>
@@ -40,52 +38,57 @@ export default function ModeSelectPage() {
       <div className={styles.inner}>
         <div className={styles.logo}>🛒</div>
         <h1 className={styles.title}>
-          The <span className="gradient-text">2am Shoppers</span>
+          The <span className={styles.gradientText}>2am Shoppers</span>
         </h1>
         <p className={styles.sub}>
-          An AI shopping companion — tell us who you are so we can personalise your experience.
+          Choose your mode. You can switch any time — personal finances never mix with merchant records.
         </p>
 
-        {/* Admin shortcut banner */}
         {isAdmin() && (
           <div className={styles.adminBanner}>
             <span>⚡</span>
             <span>
-              Admin account — you can access both views and skip onboarding.
-              {(customerProfile || merchantProfile) && (
-                <button className={styles.resetLink} onClick={() => { reset(); }}>
-                  Reset all data
-                </button>
+              Admin — access all three modes and skip onboarding.
+              {(shopperProfile || merchantProfile) && (
+                <button className={styles.resetLink} onClick={() => reset()}>Reset all data</button>
               )}
             </span>
           </div>
         )}
 
         <div className={styles.cards}>
-          {/* Student card */}
-          <button
-            className={`${styles.card} ${styles.cardStudent}`}
-            onClick={() => choose('student')}
-          >
+          {/* Student */}
+          <button className={`${styles.card} ${styles.cardStudent}`} onClick={() => choose('student')}>
             <span className={styles.cardEmoji}>🎓</span>
-            <h2>I'm a student</h2>
-            <p>Save products around your school budget, set payday reminders and get picks that fit student life.</p>
-            {customerProfile?.userType === 'student' && (
-              <span className={styles.returning}>← Continue as {customerProfile.name}</span>
+            <h2>Student</h2>
+            <p>Weekly allowance tracking, goal pockets and budget-filtered shopping picks.</p>
+            <div className={styles.cardDetail}>Home · Discover · Save · Wishlist · Assistant</div>
+            {shopperProfile?.userType === 'student' && (
+              <span className={styles.returning}>← Continue as {shopperProfile.name}</span>
             )}
             <span className={styles.cardArrow}>→</span>
           </button>
 
-          {/* Working adult card */}
-          <button
-            className={`${styles.card} ${styles.cardWorking}`}
-            onClick={() => choose('working')}
-          >
+          {/* Working Adult */}
+          <button className={`${styles.card} ${styles.cardWorking}`} onClick={() => choose('working')}>
             <span className={styles.cardEmoji}>💼</span>
-            <h2>I'm a working adult</h2>
-            <p>Shop smarter around your work schedule — track office essentials, get payday deals and reorder what you love.</p>
-            {customerProfile?.userType === 'working' && (
-              <span className={styles.returning}>← Continue as {customerProfile.name}</span>
+            <h2>Working Adult</h2>
+            <p>Monthly income plan, multiple savings goals, smart shopping reminders and replenishment.</p>
+            <div className={styles.cardDetail}>Overview · Spending · Savings · Shopping · Assistant</div>
+            {shopperProfile?.userType === 'working' && (
+              <span className={styles.returning}>← Continue as {shopperProfile.name}</span>
+            )}
+            <span className={styles.cardArrow}>→</span>
+          </button>
+
+          {/* Business */}
+          <button className={`${styles.card} ${styles.cardBusiness}`} onClick={() => choose('business')}>
+            <span className={styles.cardEmoji}>🏪</span>
+            <h2>Business</h2>
+            <p>Merchant CRM — journeys, catalogue, marketing, analytics and customer retention.</p>
+            <div className={styles.cardDetail}>Overview · Products · Customers · Journeys · Analytics</div>
+            {merchantProfile && (
+              <span className={styles.returning}>← Continue as {merchantProfile.name}</span>
             )}
             <span className={styles.cardArrow}>→</span>
           </button>

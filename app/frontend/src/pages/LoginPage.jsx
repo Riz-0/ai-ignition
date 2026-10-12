@@ -11,37 +11,28 @@ export default function LoginPage() {
   const [loading,  setLoading]  = useState(false);
   const [showPass, setShowPass] = useState(false);
 
-  const { login }                                        = useAuthStore();
-  const { customerProfile, merchantProfile, setAppMode } = useAppStore();
+  const { login }                                          = useAuthStore();
+  const { shopperProfile, merchantProfile, setAppMode }    = useAppStore();
   const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     setTimeout(() => {
       const result = login(username, password);
       setLoading(false);
+      if (!result.success) { setError(result.error); return; }
 
-      if (!result.success) {
-        setError(result.error);
-        return;
-      }
+      if (result.role === 'admin') { navigate('/'); return; }
 
-      // Admin goes straight to mode select
-      if (result.role === 'admin') {
-        navigate('/');
-        return;
-      }
-
-      // Returning users go to their last-used view
-      if ((result.role === 'working' || result.role === 'merchant') && merchantProfile) {
-        setAppMode('working');
-        navigate('/business');
-      } else if ((result.role === 'student' || result.role === 'customer') && customerProfile) {
-        setAppMode('student');
-        navigate('/customer');
+      // Route returning users to their last view
+      if (result.role === 'business' && merchantProfile) {
+        setAppMode('business'); navigate('/business');
+      } else if ((result.role === 'working') && shopperProfile?.userType === 'working') {
+        setAppMode('working'); navigate('/customer');
+      } else if ((result.role === 'student') && shopperProfile?.userType === 'student') {
+        setAppMode('student'); navigate('/customer');
       } else {
         navigate('/');
       }
@@ -54,10 +45,9 @@ export default function LoginPage() {
         <div className={styles.header}>
           <Link to="/" className={styles.logo}>🛒 2am Shoppers</Link>
           <h1 className={styles.title}>Welcome back</h1>
-          <p className={styles.sub}>Sign in to continue</p>
+          <p className={styles.sub}>Sign in to your account</p>
         </div>
 
-        {/* Admin hint */}
         <div className={styles.adminHint}>
           <span className={styles.adminIcon}>⚡</span>
           <span>Admin: username <strong>user</strong> · password <strong>password</strong></span>
@@ -66,47 +56,25 @@ export default function LoginPage() {
         <form className={styles.form} onSubmit={handleSubmit}>
           <label className={styles.label}>
             Username
-            <input
-              className={styles.input}
-              type="text"
-              autoComplete="username"
-              placeholder="e.g. user"
-              value={username}
-              onChange={e => { setUsername(e.target.value); setError(''); }}
-              required
-            />
+            <input className={styles.input} type="text" autoComplete="username"
+              placeholder="e.g. user" value={username}
+              onChange={e => { setUsername(e.target.value); setError(''); }} required />
           </label>
-
           <label className={styles.label}>
             Password
             <div className={styles.passwordWrap}>
-              <input
-                className={styles.input}
-                type={showPass ? 'text' : 'password'}
-                autoComplete="current-password"
-                placeholder="••••••••"
-                value={password}
-                onChange={e => { setPassword(e.target.value); setError(''); }}
-                required
-              />
-              <button
-                type="button"
-                className={styles.togglePass}
+              <input className={styles.input} type={showPass ? 'text' : 'password'}
+                autoComplete="current-password" placeholder="••••••••" value={password}
+                onChange={e => { setPassword(e.target.value); setError(''); }} required />
+              <button type="button" className={styles.togglePass}
                 onClick={() => setShowPass(v => !v)}
-                aria-label={showPass ? 'Hide password' : 'Show password'}
-              >
+                aria-label={showPass ? 'Hide password' : 'Show password'}>
                 {showPass ? '🙈' : '👁️'}
               </button>
             </div>
           </label>
-
           {error && <div className={styles.error}>{error}</div>}
-
-          <button
-            type="submit"
-            className={`btn btn-primary ${styles.submitBtn}`}
-            disabled={loading}
-          >
+          <button type="submit" className={`btn btn-primary ${styles.submitBtn}`} disabled={loading}>
             {loading ? 'Signing in…' : 'Sign in →'}
           </button>
         </form>
