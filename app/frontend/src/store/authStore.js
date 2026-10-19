@@ -39,8 +39,25 @@ const useAuthStore = create(
 
       // ── Login ────────────────────────────────────────────────
       login: (username, password) => {
-        const accounts = get().accounts;
-        const account  = accounts.find(
+        // First check in-memory accounts (includes the seed + any accounts
+        // created while the app was running).
+        let accounts = get().accounts;
+
+        // Also merge any accounts written to localStorage by the website
+        // or another tab — Zustand doesn't rehydrate on external writes.
+        try {
+          const raw = localStorage.getItem('2am-shoppers-auth');
+          if (raw) {
+            const persisted = JSON.parse(raw)?.state?.accounts;
+            if (Array.isArray(persisted) && persisted.length > accounts.length) {
+              // Persist has more accounts than in-memory — adopt them
+              set({ accounts: persisted });
+              accounts = persisted;
+            }
+          }
+        } catch { /* ignore parse errors */ }
+
+        const account = accounts.find(
           a => a.username.toLowerCase() === username.toLowerCase().trim()
             && a.password === password
         );

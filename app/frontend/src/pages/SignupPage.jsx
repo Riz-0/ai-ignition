@@ -111,7 +111,7 @@ export default function SignupPage() {
 
         <div className={styles.footer}>
           <span>{t('signup.haveAccount')}</span>
-          <Link to="/login" className={styles.switchLink}>{t('signIn')}</Link>
+          <Link to="/login" className={styles.switchLink}>{t('common.signIn')}</Link>
         </div>
 
         <div className={styles.downloadLink}>

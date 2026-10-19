@@ -28,12 +28,22 @@
         <a href="#get-app">Get the app</a>
       </nav>
       <div class="nav-auth-btns">
-        <div class="nav-lang" id="nav-lang">
-          <button class="nav-lang-btn" data-lang="en" title="English">🇬🇧</button>
-          <button class="nav-lang-btn" data-lang="ja" title="日本語">🇯🇵</button>
-          <button class="nav-lang-btn" data-lang="zh" title="中文">🇨🇳</button>
-          <button class="nav-lang-btn" data-lang="th" title="ไทย">🇹🇭</button>
+        <!-- Language dropdown -->
+        <div class="nav-lang-wrap" id="nav-lang-wrap">
+          <button class="nav-lang-trigger" id="nav-lang-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Select language">
+            <span id="nav-lang-flag">🇬🇧</span>
+            <span id="nav-lang-label">EN</span>
+            <span class="nav-lang-caret">▾</span>
+          </button>
+          <div class="nav-lang-dropdown" id="nav-lang-dropdown" role="menu">
+            <button class="nav-lang-option" role="menuitem" data-lang="en">🇬🇧 <span>English</span></button>
+            <button class="nav-lang-option" role="menuitem" data-lang="ja">🇯🇵 <span>日本語</span></button>
+            <button class="nav-lang-option" role="menuitem" data-lang="zh">🇨🇳 <span>中文</span></button>
+            <button class="nav-lang-option" role="menuitem" data-lang="th">🇹🇭 <span>ไทย</span></button>
+          </div>
         </div>
+        <!-- Theme toggle -->
+        <button class="nav-theme-btn" id="nav-theme-btn" aria-label="Toggle dark/light mode" title="Toggle theme">🌙</button>
         <a href="#get-started" class="nav-signin-btn" data-i18n="signIn">Sign in</a>
         <a href="#get-started" class="nav-signup-btn" data-i18n="getStarted">Get started</a>
       </div>
@@ -52,19 +62,19 @@
     <div class="container hero-inner">
       <div class="hero-badge">
         <span class="badge-dot"></span>
-        Eslitec Hackathon · Problem Statement 1 · One Less Thing
+        <span data-i18n="heroBadge">Eslitec Hackathon · Problem Statement 1 · One Less Thing</span>
       </div>
-      <h1 class="hero-title">The <span class="gradient-text">2am Shoppers</span></h1>
-      <p class="hero-sub">One app for thoughtful shopping, savings goals and personalised customer conversations.</p>
-      <p class="hero-desc">Students get a weekly budget and goal pockets. Working adults get monthly planning and smart reminders. Businesses get retention tools that respect their customers' preferences.</p>
+      <h1 class="hero-title">The <span class="gradient-text" data-i18n="heroTitle">2am Shoppers</span></h1>
+      <p class="hero-sub" data-i18n="heroSub">One app for thoughtful shopping, savings goals and personalised customer conversations.</p>
+      <p class="hero-desc" data-i18n="heroDesc">Students get a weekly budget and goal pockets. Working adults get monthly planning and smart reminders. Businesses get retention tools that respect their customers' preferences.</p>
       <div class="hero-cta">
-        <a href="#three-modes" class="btn btn-primary">Explore the three modes</a>
-        <a href="#get-started" class="btn btn-ghost">Get started free</a>
+        <a href="#three-modes" class="btn btn-primary" data-i18n="heroCta1">Explore the three modes</a>
+        <a href="#get-started" class="btn btn-ghost" data-i18n="heroCta2">Get started free</a>
       </div>
       <div class="hero-modes">
-        <div class="hero-mode hero-mode-student">🎓 Student</div>
-        <div class="hero-mode hero-mode-working">💼 Working Adult</div>
-        <div class="hero-mode hero-mode-business">🏪 Business</div>
+        <div class="hero-mode hero-mode-student" data-i18n="modeStudent">🎓 Student</div>
+        <div class="hero-mode hero-mode-working" data-i18n="modeWorking">💼 Working Adult</div>
+        <div class="hero-mode hero-mode-business" data-i18n="modeBusiness">🏪 Business</div>
       </div>
     </div>
   </section>
@@ -73,8 +83,8 @@
   <section class="section section-alt" id="problem">
     <div class="container">
       <div class="section-label">01 · Problem</div>
-      <h2 class="section-title">Scattered shopping. Generic promotions. No savings plan.</h2>
-      <p class="section-desc">Students and working adults shop across multiple platforms, forget saved products and have no single view of budget versus spending. Businesses hold customer data but can't turn it into relevant conversations.</p>
+      <h2 class="section-title" data-i18n="problemTitle">Scattered shopping. Generic promotions. No savings plan.</h2>
+      <p class="section-desc" data-i18n="problemDesc">Students and working adults shop across multiple platforms, forget saved products and have no single view of budget versus spending. Businesses hold customer data but can't turn it into relevant conversations.</p>
       <div class="pain-grid">
         <div class="pain-card">
           <div class="pain-icon">🛍️</div>
@@ -488,8 +498,8 @@
   <section class="section get-started-section" id="get-started">
     <div class="container">
       <div class="section-label">Try it now</div>
-      <h2 class="section-title get-started-title">Ready to shop smarter?</h2>
-      <p class="section-desc get-started-desc">Create a free account — choose Student, Working Adult or Business to get started.</p>
+      <h2 class="section-title get-started-title" data-i18n="getStartedTitle">Ready to shop smarter?</h2>
+      <p class="section-desc get-started-desc" data-i18n="getStartedDesc">Create a free account — choose Student, Working Adult or Business to get started.</p>
 
       <div class="auth-panel">
         <div class="auth-tabs" role="tablist">
@@ -616,7 +626,7 @@
       <div class="section-label">07 · Pitch</div>
       <div class="pitch-inner">
         <div class="pitch-deco">🛒</div>
-        <blockquote class="pitch-quote">
+        <blockquote class="pitch-quote" data-i18n="pitchQuote">
           The 2am Shoppers brings shopping, savings goals and personalised customer conversations into one app. Students get a simple, optionally gamified budgeting experience; working adults get practical spending and savings planning; businesses get tools to market their own products and support returning customers. The agent adapts reminders and recommendations to confirmed preferences and changing circumstances, while businesses measure repeat purchases and retention.
         </blockquote>
         <div class="pitch-team">The 2am Shoppers · Eslitec Hackathon · Problem Statement 1</div>
@@ -628,7 +638,7 @@
   <footer class="footer">
     <div class="container footer-inner">
       <div class="footer-logo"><span class="logo-icon">🛒</span><span>The 2am Shoppers</span></div>
-      <p class="footer-tagline">One app for thoughtful shopping, savings goals and personalised customer conversations.</p>
+      <p class="footer-tagline" data-i18n="heroSub">One app for thoughtful shopping, savings goals and personalised customer conversations.</p>
       <p class="footer-note">Eslitec Hackathon · Problem Statement 1 · Proposed MVP concept · Marketplace integrations require validation</p>
     </div>
   </footer>

@@ -1,5 +1,5 @@
 /* ============================================================
-   THE 2AM SHOPPERS — Website JS (v3)
+   THE 2AM SHOPPERS — Website JS (v4)
    ============================================================ */
 
 /* ── Nav scroll + mobile toggle ── */
@@ -71,19 +71,7 @@ const fadeObs = new IntersectionObserver(entries => {
 document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
 
 /* ── Typewriter on hero subtitle ── */
-const heroSub = document.querySelector('.hero-sub');
-if (heroSub) {
-  const text = heroSub.textContent;
-  heroSub.textContent = '';
-  heroSub.style.borderRight = '2px solid #a78bfa';
-  let i = 0;
-  setTimeout(() => {
-    const t = setInterval(() => {
-      heroSub.textContent = text.slice(0, ++i);
-      if (i >= text.length) { clearInterval(t); setTimeout(() => heroSub.style.borderRight = 'none', 500); }
-    }, 28);
-  }, 500);
-}
+// The typewriter runs after translations are applied (see i18n section below).
 
 /* ── Smooth scroll with nav offset ── */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
@@ -98,11 +86,216 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 });
 
 /* ============================================================
+   DARK / LIGHT THEME
+   ============================================================ */
+const THEME_KEY = '2am-shoppers-website-theme';
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('nav-theme-btn');
+  if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
+  btn?.setAttribute('title', theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+  localStorage.setItem(THEME_KEY, theme);
+}
+
+// On load, apply saved or default theme
+applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
+
+document.getElementById('nav-theme-btn')?.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+/* ============================================================
+   TRANSLATIONS (EN / JA / ZH / TH)
+   ============================================================ */
+const LANG_META = {
+  en: { flag: '🇬🇧', label: 'EN', name: 'English' },
+  ja: { flag: '🇯🇵', label: 'JA', name: '日本語'   },
+  zh: { flag: '🇨🇳', label: 'ZH', name: '中文'     },
+  th: { flag: '🇹🇭', label: 'TH', name: 'ไทย'      },
+};
+
+const WEBSITE_TRANS = {
+  en: {
+    heroBadge:       'Eslitec Hackathon · Problem Statement 1 · One Less Thing',
+    heroTitle:       '2am Shoppers',
+    heroSub:         'One app for thoughtful shopping, savings goals and personalised customer conversations.',
+    heroDesc:        'Students get a weekly budget and goal pockets. Working adults get monthly planning and smart reminders. Businesses get retention tools that respect their customers\' preferences.',
+    heroCta1:        'Explore the three modes',
+    heroCta2:        'Get started free',
+    modeStudent:     '🎓 Student',
+    modeWorking:     '💼 Working Adult',
+    modeBusiness:    '🏪 Business',
+    problemTitle:    'Scattered shopping. Generic promotions. No savings plan.',
+    problemDesc:     'Students and working adults shop across multiple platforms, forget saved products and have no single view of budget versus spending. Businesses hold customer data but can\'t turn it into relevant conversations.',
+    getStartedTitle: 'Ready to shop smarter?',
+    getStartedDesc:  'Create a free account — choose Student, Working Adult or Business to get started.',
+    pitchQuote:      'The 2am Shoppers brings shopping, savings goals and personalised customer conversations into one app. Students get a simple, optionally gamified budgeting experience; working adults get practical spending and savings planning; businesses get tools to market their own products and support returning customers.',
+    signIn:          'Sign in',
+    getStarted:      'Get started',
+    getTheApp:       'Get the app',
+  },
+  ja: {
+    heroBadge:       'Eslitec ハッカソン · 課題1 · One Less Thing',
+    heroTitle:       '2am Shoppers',
+    heroSub:         'お買い物・貯金目標・パーソナライズされた会話を一つに。',
+    heroDesc:        '学生は週の予算と貯金ポケット。社会人は月の計画とリマインダー。事業者は顧客のプライバシーを守るリテンションツール。',
+    heroCta1:        '3つのモードを見る',
+    heroCta2:        '無料ではじめる',
+    modeStudent:     '🎓 学生',
+    modeWorking:     '💼 社会人',
+    modeBusiness:    '🏪 事業者',
+    problemTitle:    'バラバラなショッピング、画一的なプロモーション、貯金計画なし。',
+    problemDesc:     '学生や社会人は複数のプラットフォームをまたいで買い物し、保存した商品を忘れ、予算と支出を一元管理できていません。事業者は顧客データを持ちながら、関連性のある会話につなげられていません。',
+    getStartedTitle: 'かしこく買い物しよう',
+    getStartedDesc:  '無料アカウントを作成 — 学生・社会人・事業者から選んでください。',
+    pitchQuote:      '2am Shoppersはショッピング・貯金目標・パーソナライズされた顧客会話を一つのアプリに集約します。学生にはシンプルで楽しい予算管理体験を。社会人には実践的な支出・貯金プランを。事業者には既存顧客をサポートし繰り返し購入を促すツールを。',
+    signIn:          'サインイン',
+    getStarted:      'はじめる',
+    getTheApp:       'アプリを入手',
+  },
+  zh: {
+    heroBadge:       'Eslitec 黑客马拉松 · 问题陈述1 · One Less Thing',
+    heroTitle:       '2am Shoppers',
+    heroSub:         '一个应用，整合购物、储蓄目标与个性化客户对话。',
+    heroDesc:        '学生获得每周预算和储蓄目标。上班族获得月度计划和智能提醒。企业获得尊重客户偏好的客户留存工具。',
+    heroCta1:        '探索三种模式',
+    heroCta2:        '免费开始',
+    modeStudent:     '🎓 学生',
+    modeWorking:     '💼 上班族',
+    modeBusiness:    '🏪 商家',
+    problemTitle:    '购物分散。推送千篇一律。没有储蓄计划。',
+    problemDesc:     '学生和上班族在多个平台购物，忘记已保存的商品，没有统一的预算视图。企业掌握客户数据，却无法转化为有关联的对话。',
+    getStartedTitle: '准备好更聪明地购物了吗？',
+    getStartedDesc:  '创建免费账户 — 选择学生、上班族或商家即可开始。',
+    pitchQuote:      '2am Shoppers 将购物、储蓄目标与个性化客户对话整合到一个应用中。学生获得简单、可选游戏化的预算体验；上班族获得实用的支出和储蓄规划；企业获得工具来营销自己的产品并支持回头客。',
+    signIn:          '登录',
+    getStarted:      '开始使用',
+    getTheApp:       '获取应用',
+  },
+  th: {
+    heroBadge:       'Eslitec Hackathon · แนวคิดที่ 1 · One Less Thing',
+    heroTitle:       '2am Shoppers',
+    heroSub:         'แอปเดียวสำหรับช้อปอย่างฉลาด ออมเพื่อเป้าหมาย และการสนทนาที่เป็นส่วนตัว',
+    heroDesc:        'นักเรียนได้งบประมาณรายสัปดาห์และกระเป๋าออม คนทำงานได้แผนรายเดือนและแจ้งเตือนอัจฉริยะ ธุรกิจได้เครื่องมือรักษาลูกค้าที่เคารพความเป็นส่วนตัว',
+    heroCta1:        'สำรวจสามโหมด',
+    heroCta2:        'เริ่มต้นฟรี',
+    modeStudent:     '🎓 นักเรียน',
+    modeWorking:     '💼 คนทำงาน',
+    modeBusiness:    '🏪 ธุรกิจ',
+    problemTitle:    'ช้อปกระจัดกระจาย โปรโมชั่นซ้ำซาก ไม่มีแผนออม',
+    problemDesc:     'นักเรียนและคนทำงานช้อปบนหลายแพลตฟอร์ม ลืมสินค้าที่บันทึกไว้ และไม่มีมุมมองรวมของงบประมาณ ธุรกิจมีข้อมูลลูกค้าแต่ไม่สามารถสร้างการสนทนาที่ตรงใจได้',
+    getStartedTitle: 'พร้อมช้อปอย่างฉลาดแล้วหรือยัง?',
+    getStartedDesc:  'สร้างบัญชีฟรี — เลือก นักเรียน คนทำงาน หรือธุรกิจ เพื่อเริ่มต้น',
+    pitchQuote:      '2am Shoppers รวมการช้อปปิ้ง เป้าหมายออม และการสนทนาลูกค้าเฉพาะบุคคลไว้ในแอปเดียว นักเรียนได้ประสบการณ์งบประมาณที่สนุก คนทำงานได้แผนการใช้จ่ายและออม ธุรกิจได้เครื่องมือทำการตลาดและสนับสนุนลูกค้าที่กลับมา',
+    signIn:          'เข้าสู่ระบบ',
+    getStarted:      'เริ่มต้น',
+    getTheApp:       'รับแอป',
+  },
+};
+
+const LANG_KEY = '2am-shoppers-website-lang';
+let currentLang = localStorage.getItem(LANG_KEY) || 'en';
+
+function applyTranslations(lang) {
+  const t = WEBSITE_TRANS[lang] ?? WEBSITE_TRANS.en;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+  // Update html lang attribute for accessibility
+  document.documentElement.lang = lang;
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem(LANG_KEY, lang);
+  applyTranslations(lang);
+  // Update trigger button
+  const meta = LANG_META[lang];
+  if (meta) {
+    const flagEl  = document.getElementById('nav-lang-flag');
+    const labelEl = document.getElementById('nav-lang-label');
+    if (flagEl)  flagEl.textContent  = meta.flag;
+    if (labelEl) labelEl.textContent = meta.label;
+  }
+  // Highlight active option
+  document.querySelectorAll('.nav-lang-option').forEach(opt => {
+    opt.classList.toggle('active', opt.dataset.lang === lang);
+  });
+  // Run typewriter again with new text if hero is visible
+  const heroSub = document.querySelector('.hero-sub');
+  if (heroSub) startTypewriter(heroSub);
+}
+
+// Language dropdown toggle
+const langTrigger  = document.getElementById('nav-lang-trigger');
+const langDropdown = document.getElementById('nav-lang-dropdown');
+
+langTrigger?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const open = langDropdown.classList.toggle('open');
+  langTrigger.setAttribute('aria-expanded', String(open));
+});
+
+// Close on outside click
+document.addEventListener('click', () => {
+  langDropdown?.classList.remove('open');
+  langTrigger?.setAttribute('aria-expanded', 'false');
+});
+
+// Option click
+document.querySelectorAll('.nav-lang-option').forEach(opt => {
+  opt.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setLang(opt.dataset.lang);
+    langDropdown.classList.remove('open');
+    langTrigger?.setAttribute('aria-expanded', 'false');
+  });
+});
+
+// Apply on load
+setLang(currentLang);
+
+/* ── Typewriter on hero subtitle ── */
+let typewriterTimer = null;
+function startTypewriter(el) {
+  if (!el) return;
+  clearInterval(typewriterTimer);
+  const text = el.textContent || el.getAttribute('data-i18n-text') || '';
+  el.setAttribute('data-i18n-text', text); // preserve original
+  el.textContent = '';
+  el.style.borderRight = '2px solid #a78bfa';
+  let i = 0;
+  typewriterTimer = setInterval(() => {
+    el.textContent = text.slice(0, ++i);
+    if (i >= text.length) {
+      clearInterval(typewriterTimer);
+      setTimeout(() => { el.style.borderRight = 'none'; }, 500);
+    }
+  }, 28);
+}
+
+// Run typewriter once on first load, after translations
+setTimeout(() => {
+  const heroSub = document.querySelector('.hero-sub');
+  if (heroSub) startTypewriter(heroSub);
+}, 300);
+
+/* ============================================================
    AUTH SECTION
    ============================================================ */
 
 let currentRole = 'student'; // 'student' | 'working' | 'business'
-const AUTH_KEY  = '2am-shoppers-auth';
+
+/*
+ * AUTH_KEY must match the Zustand persist name in authStore.js.
+ * The app stores: { state: { accounts, currentUser, isLoggedIn, ... }, version: 0 }
+ * We write to the same key so the app picks up accounts and the session
+ * immediately on load — no reload required.
+ */
+const AUTH_KEY = '2am-shoppers-auth';
 
 /* ── Tab switching ── */
 window.switchTab = function(tab) {
@@ -131,16 +324,23 @@ window.togglePass = function(inputId, btn) {
   const input = document.getElementById(inputId);
   if (!input) return;
   const isText = input.type === 'text';
-  input.type    = isText ? 'password' : 'text';
+  input.type      = isText ? 'password' : 'text';
   btn.textContent = isText ? '👁️' : '🙈';
 };
 
-/* ── Account helpers ── */
-function loadAccounts() {
+/* ── Storage helpers ──
+   Always read the full persisted state, modify just what we need,
+   and write it back atomically so the app's Zustand rehydrate gets
+   a consistent snapshot.
+*/
+function readAuthState() {
   try {
     const raw = localStorage.getItem(AUTH_KEY);
-    return JSON.parse(raw)?.state?.accounts ?? seedAccounts();
-  } catch { return seedAccounts(); }
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    // Zustand persist: { state: { accounts, currentUser, isLoggedIn, ... }, version: 0 }
+    return parsed;
+  } catch { return null; }
 }
 
 function seedAccounts() {
@@ -151,25 +351,20 @@ function seedAccounts() {
   }];
 }
 
-function saveAccount(account) {
-  try {
-    const raw      = localStorage.getItem(AUTH_KEY);
-    const existing = raw ? JSON.parse(raw) : { state: { accounts: [] }, version: 0 };
-    if (!existing.state)          existing.state = {};
-    if (!existing.state.accounts) existing.state.accounts = seedAccounts();
-    existing.state.accounts.push(account);
-    localStorage.setItem(AUTH_KEY, JSON.stringify(existing));
-  } catch (e) { console.warn('Auth write failed:', e); }
+function loadAccounts() {
+  const stored = readAuthState();
+  return stored?.state?.accounts ?? seedAccounts();
 }
 
-function setSession(account) {
+/* Write a full auth state update in one atomic localStorage write. */
+function writeAuthState(updates) {
   try {
-    const raw      = localStorage.getItem(AUTH_KEY);
-    const existing = raw ? JSON.parse(raw) : { state: {}, version: 0 };
-    existing.state.currentUser = account;
-    existing.state.isLoggedIn  = true;
+    const existing = readAuthState() ?? { state: {}, version: 0 };
+    if (!existing.state)          existing.state = {};
+    if (!existing.state.accounts) existing.state.accounts = seedAccounts();
+    Object.assign(existing.state, updates);
     localStorage.setItem(AUTH_KEY, JSON.stringify(existing));
-  } catch (e) { console.warn('Session write failed:', e); }
+  } catch (e) { console.warn('Auth write failed:', e); }
 }
 
 function showSuccess(name, isNew) {
@@ -180,6 +375,7 @@ function showSuccess(name, isNew) {
   const subEl   = document.getElementById('auth-success-sub');
   if (titleEl) titleEl.textContent = isNew ? `Welcome, ${name}! 🎉` : `Welcome back, ${name}!`;
   if (subEl)   subEl.textContent   = 'Your account is ready. Click below to open the app.';
+  // Auto-open the app after a short delay
   setTimeout(() => window.open('http://localhost:3003', '_blank', 'noopener'), 1500);
 }
 
@@ -216,7 +412,8 @@ window.handleSignin = function(e) {
       setTimeout(() => input?.classList.remove('input-shake'), 500);
       return;
     }
-    setSession(account);
+    // Write session: keep accounts intact, update session fields only
+    writeAuthState({ currentUser: account, isLoggedIn: true });
     showSuccess(account.name ?? account.username, false);
   }, 500);
 };
@@ -230,9 +427,9 @@ window.handleSignup = function(e) {
   const password = document.getElementById('signup-password')?.value;
   const confirm  = document.getElementById('signup-confirm')?.value;
 
-  if (!username)         { showError('signup-error', 'Username is required.'); return; }
-  if (!password)         { showError('signup-error', 'Password is required.'); return; }
-  if (password.length<6) { showError('signup-error', 'Password must be at least 6 characters.'); return; }
+  if (!username)            { showError('signup-error', 'Username is required.'); return; }
+  if (!password)            { showError('signup-error', 'Password is required.'); return; }
+  if (password.length < 6)  { showError('signup-error', 'Password must be at least 6 characters.'); return; }
   if (password !== confirm) { showError('signup-error', 'Passwords do not match.'); return; }
 
   setLoading('signup-btn', true);
@@ -249,8 +446,12 @@ window.handleSignup = function(e) {
       name:      username, role: currentRole,
       createdAt: new Date().toISOString(),
     };
-    saveAccount(newAccount);
-    setSession(newAccount);
+    // Atomic write: add the new account AND set the session in one write
+    writeAuthState({
+      accounts:    [...accounts, newAccount],
+      currentUser: newAccount,
+      isLoggedIn:  true,
+    });
     setLoading('signup-btn', false);
     showSuccess(newAccount.name, true);
   }, 500);
@@ -294,61 +495,23 @@ document.querySelector('.nav-logo')?.addEventListener('click', e => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-/* ── Website language pills ── */
-document.querySelectorAll('.nav-lang-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    window.__setWebsiteLang?.(btn.dataset.lang);
-    document.querySelectorAll('.nav-lang-btn').forEach(b => b.classList.toggle('on', b === btn));
-  });
-});
-const savedLang = localStorage.getItem('2am-shoppers-website-lang') || 'en';
-document.querySelectorAll('.nav-lang-btn').forEach(b => b.classList.toggle('on', b.dataset.lang === savedLang));
-
 /* ============================================================
    GET-THE-APP — dynamic QR code
-   The QR encodes the app's install page URL so a phone on the
-   same network can reach it. localhost only works on the same
-   machine; when the website is served from a LAN IP (e.g. for
-   a live demo) we swap the hostname so the phone can connect.
    ============================================================ */
 (function () {
-  const qrImg = document.getElementById('qr-img');
+  const qrImg      = document.getElementById('qr-img');
   const qrFallback = document.getElementById('qr-fallback');
   if (!qrImg) return;
 
   function appUrl() {
     const host = location.hostname;
-    // file:// → empty host. localhost → same machine. Use default.
     if (!host || host === 'localhost' || host === '127.0.0.1') {
       return 'http://localhost:3003/download';
     }
-    // Otherwise (LAN IP or public host) reuse the protocol + host, port 3003
     return `${location.protocol}//${host}:3003/download`;
   }
 
   const url = appUrl();
   qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=192x192&margin=8&data=${encodeURIComponent(url)}`;
   if (qrFallback) qrFallback.textContent = url.replace(/^https?:\/\//, '');
-})();
-
-/* ── Optional: language + theme toggles for the website ──
-   Mirrors the app's language switcher so the presentation site
-   reads in the same four languages as the app (en/ja/zh/th).
-   Persists to localStorage and re-renders translatable labels. */
-(function () {
-  const KEY = '2am-shoppers-website-lang';
-  const TRANS = {
-    en: { getTheApp: 'Get the app', signIn: 'Sign in', getStarted: 'Get started' },
-    ja: { getTheApp: 'アプリを入手', signIn: 'サインイン', getStarted: 'はじめる' },
-    zh: { getTheApp: '获取应用', signIn: '登录', getStarted: '开始使用' },
-    th: { getTheApp: 'รับแอป', signIn: 'เข้าสู่ระบบ', getStarted: 'เริ่มต้น' },
-  };
-  const apply = (lang) => {
-    const t = TRANS[lang] ?? TRANS.en;
-    document.querySelectorAll('[data-i18n="getTheApp"]').forEach(el => { el.textContent = t.getTheApp; });
-    document.querySelectorAll('[data-i18n="signIn"]').forEach(el => { el.textContent = t.signIn; });
-    document.querySelectorAll('[data-i18n="getStarted"]').forEach(el => { el.textContent = t.getStarted; });
-  };
-  apply(localStorage.getItem(KEY) || 'en');
-  window.__setWebsiteLang = (lang) => { localStorage.setItem(KEY, lang); apply(lang); };
 })();
