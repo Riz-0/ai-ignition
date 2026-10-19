@@ -195,3 +195,24 @@
   text-decoration: none;
 }
 .switchLink:hover { color: var(--text); }
+
+/* ── UI prefs bar (language + theme) — sits top-right of auth screens ── */
+.prefsBar {
+  position: fixed;
+  top: 16px;
+  right: 18px;
+  z-index: 10;
+}
+
+/* ── Download link at the bottom of the auth card ── */
+.downloadLink {
+  padding: 0 28px 22px;
+  text-align: center;
+}
+.downloadLink a {
+  font-size: .82rem;
+  color: var(--violet-light);
+  font-weight: 600;
+  text-decoration: none;
+}
+.downloadLink a:hover { text-decoration: underline; }

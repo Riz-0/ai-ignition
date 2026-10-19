@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAppStore from '../../store/appStore.js';
+import { useT, useI18n } from '../../i18n/I18nProvider.jsx';
 import styles from './CustomerSettings.module.css';
 
 const STUDENT_INTERESTS = ['Fashion', 'Coffee', 'Beauty', 'Stationery & Study', 'Electronics', 'Food & Snacks', 'Sports', 'Books'];
 const WORKING_INTERESTS = ['Fashion', 'Coffee', 'Beauty', 'Workday Essentials', 'Electronics', 'Food & Snacks', 'Home & Living', 'Gadgets'];
 
 export default function CustomerSettings() {
-  const { customerProfile, setCustomerProfile, reset } = useAppStore();
+  const { customerProfile, setCustomerProfile, reset, theme, setTheme } = useAppStore();
+  const t = useT();
+  const { lang, setLang, languages } = useI18n();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -44,7 +47,7 @@ export default function CustomerSettings() {
   }
 
   function handleReset() {
-    if (window.confirm('This will clear all your data and return you to the start. Continue?')) {
+    if (window.confirm(t('settings.resetConfirm'))) {
       reset();
       navigate('/');
     }
@@ -52,43 +55,67 @@ export default function CustomerSettings() {
 
   return (
     <div>
-      <h1 className="page-title">Settings</h1>
-      <p className="page-sub">Update your preferences at any time.</p>
+      <h1 className="page-title">{t('settings.title')}</h1>
+      <p className="page-sub">{t('settings.sub')}</p>
+
+      {/* Appearance — language + theme */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionHead}>{t('settings.appearance')}</h2>
+        <label className={styles.label}>
+          {t('settings.language')}
+          <select className={styles.input} value={lang}
+            onChange={e => setLang(e.target.value)}>
+            {languages.map(l => <option key={l.code} value={l.code}>{l.native} — {l.label}</option>)}
+          </select>
+        </label>
+        <p className={styles.subtle}>{t('settings.languageHint')}</p>
+        <label className={styles.label} style={{ marginTop: 14 }}>
+          {t('settings.theme')}
+          <div className={styles.row}>
+            <button type="button"
+              className={`${styles.typeBtn} ${theme === 'dark' ? styles.typeBtnOn : ''}`}
+              onClick={() => setTheme('dark')}>🌙 {t('settings.themeDark')}</button>
+            <button type="button"
+              className={`${styles.typeBtn} ${theme === 'light' ? styles.typeBtnOn : ''}`}
+              onClick={() => setTheme('light')}>☀️ {t('settings.themeLight')}</button>
+          </div>
+        </label>
+      </section>
 
       <form className={styles.form} onSubmit={save}>
 
         <section className={styles.section}>
-          <h2 className={styles.sectionHead}>Account type</h2>
+          <h2 className={styles.sectionHead}>{t('settings.accountType')}</h2>
           <div className={styles.row}>
             <button
               type="button"
               className={`${styles.typeBtn} ${form.userType === 'student' ? styles.typeBtnOn : ''}`}
               onClick={() => switchType('student')}
             >
-              🎓 Student
+              🎓 {t('mode.student')}
             </button>
             <button
               type="button"
               className={`${styles.typeBtn} ${form.userType === 'working' ? styles.typeBtnOn : ''}`}
               onClick={() => switchType('working')}
             >
-              💼 Working Adult
+              💼 {t('mode.working')}
             </button>
           </div>
-          <p className={styles.subtle}>Switching type resets your interests selection.</p>
+          <p className={styles.subtle}>{t('settings.budgetHint')}</p>
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.sectionHead}>Profile</h2>
+          <h2 className={styles.sectionHead}>{t('settings.profile')}</h2>
           <label className={styles.label}>
-            Name
+            {t('settings.name')}
             <input className={styles.input} value={form.name}
               onChange={e => setForm({ ...form, name: e.target.value })} />
           </label>
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.sectionHead}>Interests</h2>
+          <h2 className={styles.sectionHead}>{t('settings.interests')}</h2>
           <div className={styles.interestGrid}>
             {INTERESTS.map(i => (
               <button key={i} type="button"
@@ -101,42 +128,42 @@ export default function CustomerSettings() {
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.sectionHead}>Budget</h2>
+          <h2 className={styles.sectionHead}>{t('settings.budget')}</h2>
           <label className={styles.label}>
-            General budget (SGD)
+            {t('settings.budgetLabel')}
             <input className={styles.input} type="number" min="0"
               placeholder="Leave blank to not set"
               value={form.budget}
               onChange={e => setForm({ ...form, budget: e.target.value })} />
           </label>
-          <p className={styles.subtle}>The app will not infer your income from your age or habits.</p>
+          <p className={styles.subtle}>{t('settings.budgetHint')}</p>
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.sectionHead}>Notifications</h2>
+          <h2 className={styles.sectionHead}>{t('settings.notifications')}</h2>
           <label className={styles.label}>
-            Frequency
+            {t('settings.frequency')}
             <select className={styles.input} value={form.notifFreq}
               onChange={e => setForm({ ...form, notifFreq: e.target.value })}>
-              <option value="frequent">Frequent</option>
-              <option value="occasional">Occasional</option>
-              <option value="minimal">Minimal</option>
+              <option value="frequent">{t('settings.frequent')}</option>
+              <option value="occasional">{t('settings.occasional')}</option>
+              <option value="minimal">{t('settings.minimal')}</option>
             </select>
           </label>
           <div className={styles.row}>
             <label className={styles.label}>
-              Quiet hours start
+              {t('settings.quietStart')}
               <input className={styles.input} type="time" value={form.quietStart}
                 onChange={e => setForm({ ...form, quietStart: e.target.value })} />
             </label>
             <label className={styles.label}>
-              Quiet hours end
+              {t('settings.quietEnd')}
               <input className={styles.input} type="time" value={form.quietEnd}
                 onChange={e => setForm({ ...form, quietEnd: e.target.value })} />
             </label>
           </div>
           <label className={styles.label}>
-            {isStudent ? 'Allowance day reminder (day of month)' : 'Payday reminder (day of month)'}
+            {isStudent ? t('settings.allowanceReminder') : t('settings.paydayReminder')}
             <input className={styles.input} type="number" min="1" max="31"
               placeholder="e.g. 25"
               value={form.paydayDate}
@@ -146,10 +173,10 @@ export default function CustomerSettings() {
 
         <div className={styles.actions}>
           <button type="submit" className="btn btn-primary">
-            {saved ? '✓ Saved' : 'Save changes'}
+            {saved ? t('common.saved') : t('common.saveChanges')}
           </button>
           <button type="button" className="btn btn-danger btn-sm" onClick={handleReset}>
-            Reset all data
+            {t('common.reset')}
           </button>
         </div>
       </form>

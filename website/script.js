@@ -55,6 +55,7 @@ const ANIMATE = [
   '.savings-variant', '.save-step', '.j-step', '.scope-col',
   '.section-title', '.section-desc', '.guiding-rule', '.savings-formula',
   '.journey-rule', '.conn-status',
+  '.eslitec-card', '.loop-card', '.get-app-platform',
 ];
 ANIMATE.forEach(sel => {
   document.querySelectorAll(sel).forEach((el, i) => {
@@ -292,3 +293,62 @@ document.querySelector('.nav-logo')?.addEventListener('click', e => {
   e.preventDefault();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+
+/* ── Website language pills ── */
+document.querySelectorAll('.nav-lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    window.__setWebsiteLang?.(btn.dataset.lang);
+    document.querySelectorAll('.nav-lang-btn').forEach(b => b.classList.toggle('on', b === btn));
+  });
+});
+const savedLang = localStorage.getItem('2am-shoppers-website-lang') || 'en';
+document.querySelectorAll('.nav-lang-btn').forEach(b => b.classList.toggle('on', b.dataset.lang === savedLang));
+
+/* ============================================================
+   GET-THE-APP — dynamic QR code
+   The QR encodes the app's install page URL so a phone on the
+   same network can reach it. localhost only works on the same
+   machine; when the website is served from a LAN IP (e.g. for
+   a live demo) we swap the hostname so the phone can connect.
+   ============================================================ */
+(function () {
+  const qrImg = document.getElementById('qr-img');
+  const qrFallback = document.getElementById('qr-fallback');
+  if (!qrImg) return;
+
+  function appUrl() {
+    const host = location.hostname;
+    // file:// → empty host. localhost → same machine. Use default.
+    if (!host || host === 'localhost' || host === '127.0.0.1') {
+      return 'http://localhost:3003/download';
+    }
+    // Otherwise (LAN IP or public host) reuse the protocol + host, port 3003
+    return `${location.protocol}//${host}:3003/download`;
+  }
+
+  const url = appUrl();
+  qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=192x192&margin=8&data=${encodeURIComponent(url)}`;
+  if (qrFallback) qrFallback.textContent = url.replace(/^https?:\/\//, '');
+})();
+
+/* ── Optional: language + theme toggles for the website ──
+   Mirrors the app's language switcher so the presentation site
+   reads in the same four languages as the app (en/ja/zh/th).
+   Persists to localStorage and re-renders translatable labels. */
+(function () {
+  const KEY = '2am-shoppers-website-lang';
+  const TRANS = {
+    en: { getTheApp: 'Get the app', signIn: 'Sign in', getStarted: 'Get started' },
+    ja: { getTheApp: 'アプリを入手', signIn: 'サインイン', getStarted: 'はじめる' },
+    zh: { getTheApp: '获取应用', signIn: '登录', getStarted: '开始使用' },
+    th: { getTheApp: 'รับแอป', signIn: 'เข้าสู่ระบบ', getStarted: 'เริ่มต้น' },
+  };
+  const apply = (lang) => {
+    const t = TRANS[lang] ?? TRANS.en;
+    document.querySelectorAll('[data-i18n="getTheApp"]').forEach(el => { el.textContent = t.getTheApp; });
+    document.querySelectorAll('[data-i18n="signIn"]').forEach(el => { el.textContent = t.signIn; });
+    document.querySelectorAll('[data-i18n="getStarted"]').forEach(el => { el.textContent = t.getStarted; });
+  };
+  apply(localStorage.getItem(KEY) || 'en');
+  window.__setWebsiteLang = (lang) => { localStorage.setItem(KEY, lang); apply(lang); };
+})();

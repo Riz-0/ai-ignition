@@ -39,6 +39,33 @@
   --font:         'Inter', system-ui, sans-serif;
 }
 
+/* ── Light theme ─────────────────────────────────────────────
+   Activated by data-theme="light" on the <html> element.
+   Brands (coral/amber/violet) stay the same so the identity reads
+   the same in both themes; surfaces and text flip.
+*/
+:root[data-theme="light"] {
+  --bg:           #f7f7fb;
+  --bg-alt:       #ffffff;
+  --bg-card:      #ffffff;
+  --bg-card2:     #f1f2f8;
+  --border:       #e2e3ee;
+  --border-light: #d3d5e3;
+
+  --coral-light:  #c03050;
+  --amber-light:  #b45309;
+  --violet-light: #6d28d9;
+  --teal-light:   #0e7490;
+  --green-light:  #047857;
+  --red-light:    #b91c1c;
+
+  --text:         #1a1d2b;
+  --text-muted:   #5a6172;
+  --text-dim:     #9aa1b2;
+
+  --gradient:     linear-gradient(135deg, #f04e6e 0%, #f59e0b 100%);
+}
+
 html { font-size: 16px; }
 body {
   font-family: var(--font);
@@ -46,6 +73,7 @@ body {
   color: var(--text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  transition: background-color .2s ease, color .2s ease;
 }
 
 a { color: var(--coral-light); text-decoration: none; }
@@ -106,6 +134,11 @@ strong { color: var(--text); }
 .btn-danger { background: rgba(220,38,38,.12); color: var(--red-light); border: 1px solid rgba(220,38,38,.28); }
 .btn-danger:hover { background: rgba(220,38,38,.25); }
 .btn-sm { padding: 6px 13px; font-size: .8rem; }
+
+/* Light-theme overrides for buttons that relied on translucent fills */
+:root[data-theme="light"] .btn-ghost { background: var(--bg-card); }
+:root[data-theme="light"] .btn-ghost:hover { background: var(--bg-card2); }
+
 
 .card {
   background: var(--bg-card);

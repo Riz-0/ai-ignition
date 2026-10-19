@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import useAppStore from '../../store/appStore.js';
+import { useT } from '../../i18n/I18nProvider.jsx';
+import InAppShop from '../../components/InAppShop.jsx';
 import styles from './ConnectionsPage.module.css';
 
 const PLATFORMS = [
@@ -60,6 +62,7 @@ const STATUS_META = {
 
 export default function ConnectionsPage() {
   const { connections, updateConnection, addSavedLink, savedLinks } = useAppStore();
+  const t = useT();
   const [expanded, setExpanded] = useState(null);
   const [linkForm, setLinkForm] = useState({ platform: '', url: '', title: '', price: '' });
   const [showLinkForm, setShowLinkForm] = useState(false);
@@ -90,10 +93,8 @@ export default function ConnectionsPage() {
 
   return (
     <div>
-      <h1 className="page-title">Connections Hub</h1>
-      <p className="page-sub">
-        One place for Shopee, SHEIN, TikTok Shop, Taobao and Pinduoduo. Each card shows the actual access level — never "Connected" if only a link was saved.
-      </p>
+      <h1 className="page-title">{t('connections.title')}</h1>
+      <p className="page-sub">{t('connections.sub')}</p>
 
       {/* Status legend */}
       <div className={styles.legend}>
@@ -243,6 +244,9 @@ export default function ConnectionsPage() {
           );
         })}
       </div>
+
+      {/* In-app Shop — browse products from connected platforms */}
+      <InAppShop />
 
       <p className={styles.footer}>
         Integration plan reviewed October 2026. Keep permissions and regional availability checks current when implementation starts. Never show "Connected" if only a product link was saved.

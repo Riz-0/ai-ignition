@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore.js';
 import useAppStore  from '../store/appStore.js';
+import { useT } from '../i18n/I18nProvider.jsx';
+import { UIPrefsCluster } from '../components/UIPrefs.jsx';
 import styles from './AuthPage.module.css';
 
 export default function LoginPage() {
@@ -13,6 +15,7 @@ export default function LoginPage() {
 
   const { login }                                          = useAuthStore();
   const { shopperProfile, merchantProfile, setAppMode }    = useAppStore();
+  const t = useT();
   const navigate = useNavigate();
 
   function handleSubmit(e) {
@@ -22,7 +25,7 @@ export default function LoginPage() {
     setTimeout(() => {
       const result = login(username, password);
       setLoading(false);
-      if (!result.success) { setError(result.error); return; }
+      if (!result.success) { setError(t('login.error')); return; }
 
       if (result.role === 'admin') { navigate('/'); return; }
 
@@ -41,27 +44,28 @@ export default function LoginPage() {
 
   return (
     <div className={styles.page}>
+      <div className={styles.prefsBar}><UIPrefsCluster /></div>
       <div className={styles.card}>
         <div className={styles.header}>
-          <Link to="/" className={styles.logo}>🛒 2am Shoppers</Link>
-          <h1 className={styles.title}>Welcome back</h1>
-          <p className={styles.sub}>Sign in to your account</p>
+          <Link to="/" className={styles.logo}>🛒 {t('common.appName')}</Link>
+          <h1 className={styles.title}>{t('login.welcome')}</h1>
+          <p className={styles.sub}>{t('login.sub')}</p>
         </div>
 
         <div className={styles.adminHint}>
           <span className={styles.adminIcon}>⚡</span>
-          <span>Admin: username <strong>user</strong> · password <strong>password</strong></span>
+          <span>{t('login.hint')}</span>
         </div>
 
         <form className={styles.form} onSubmit={handleSubmit}>
           <label className={styles.label}>
-            Username
+            {t('login.username')}
             <input className={styles.input} type="text" autoComplete="username"
               placeholder="e.g. user" value={username}
               onChange={e => { setUsername(e.target.value); setError(''); }} required />
           </label>
           <label className={styles.label}>
-            Password
+            {t('login.password')}
             <div className={styles.passwordWrap}>
               <input className={styles.input} type={showPass ? 'text' : 'password'}
                 autoComplete="current-password" placeholder="••••••••" value={password}
@@ -75,13 +79,17 @@ export default function LoginPage() {
           </label>
           {error && <div className={styles.error}>{error}</div>}
           <button type="submit" className={`btn btn-primary ${styles.submitBtn}`} disabled={loading}>
-            {loading ? 'Signing in…' : 'Sign in →'}
+            {loading ? t('login.signingIn') : t('login.submit')}
           </button>
         </form>
 
         <div className={styles.footer}>
-          <span>Don't have an account?</span>
-          <Link to="/signup" className={styles.switchLink}>Create one</Link>
+          <span>{t('login.noAccount')}</span>
+          <Link to="/signup" className={styles.switchLink}>{t('login.createOne')}</Link>
+        </div>
+
+        <div className={styles.downloadLink}>
+          <Link to="/download">📱 {t('download.title')}</Link>
         </div>
       </div>
     </div>

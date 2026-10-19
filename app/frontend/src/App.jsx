@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage            from './pages/LoginPage.jsx';
 import SignupPage           from './pages/SignupPage.jsx';
 import ModeSelectPage       from './pages/ModeSelectPage.jsx';
+import DownloadPage         from './pages/DownloadPage.jsx';
 
 // Customer (student + working adult)
 import CustomerOnboarding   from './pages/customer/CustomerOnboarding.jsx';
@@ -40,8 +41,9 @@ export default function App() {
     <Routes>
 
       {/* ── Public ─────────────────────────────────────────── */}
-      <Route path="/login"  element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/login"    element={<LoginPage />} />
+      <Route path="/signup"   element={<SignupPage />} />
+      <Route path="/download" element={<DownloadPage />} />
 
       {/* ── Mode select ────────────────────────────────────── */}
       <Route path="/" element={<RequireAuth><ModeSelectPage /></RequireAuth>} />

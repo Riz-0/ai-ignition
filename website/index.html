@@ -24,11 +24,18 @@
         <a href="#savings">Savings</a>
         <a href="#connections">Connections</a>
         <a href="#journey">Journey</a>
-        <a href="#mvp">MVP</a>
+        <a href="#eslitec">Eslitec</a>
+        <a href="#get-app">Get the app</a>
       </nav>
       <div class="nav-auth-btns">
-        <a href="#get-started" class="nav-signin-btn">Sign in</a>
-        <a href="#get-started" class="nav-signup-btn">Get started</a>
+        <div class="nav-lang" id="nav-lang">
+          <button class="nav-lang-btn" data-lang="en" title="English">🇬🇧</button>
+          <button class="nav-lang-btn" data-lang="ja" title="日本語">🇯🇵</button>
+          <button class="nav-lang-btn" data-lang="zh" title="中文">🇨🇳</button>
+          <button class="nav-lang-btn" data-lang="th" title="ไทย">🇹🇭</button>
+        </div>
+        <a href="#get-started" class="nav-signin-btn" data-i18n="signIn">Sign in</a>
+        <a href="#get-started" class="nav-signup-btn" data-i18n="getStarted">Get started</a>
       </div>
       <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -423,6 +430,60 @@
     </div>
   </section>
 
+  <!-- ESLITEC PITCH -->
+  <section class="section section-alt" id="eslitec">
+    <div class="container">
+      <div class="section-label">07 · Built to extend Eslitec</div>
+      <h2 class="section-title">The shopper-side companion to MantaGO</h2>
+      <p class="section-desc">Eslitec's MantaGO is Asia's conversational commerce platform for SMEs — connecting LINE, Messenger, Instagram, WhatsApp and Live Chat, with marketing, membership and analytics. The 2am Shoppers is designed to sit on the other side of that conversation: the app the shopper actually opens.</p>
+
+      <div class="eslitec-loop">
+        <div class="loop-card loop-merchant">
+          <div class="loop-emoji">🏪</div>
+          <h3>MantaGO (merchant-side)</h3>
+          <p>Eslitec builds the merchant workspace — channels, journeys, marketing, membership, analytics. Serving 800+ SMEs in Taiwan and expanding into <strong>Thailand, Japan and Singapore</strong>.</p>
+        </div>
+        <div class="loop-bridge">↔</div>
+        <div class="loop-card loop-shopper">
+          <div class="loop-emoji">🛒</div>
+          <h3>2am Shoppers (shopper-side)</h3>
+          <p>We build the shopper app — savings goals, budget-aware discovery, and authorised preferences. Shoppers carry their intent and consent; merchants receive only what the shopper authorises.</p>
+        </div>
+      </div>
+
+      <div class="eslitec-grid">
+        <div class="eslitec-card">
+          <h3>1 · Closes the loop</h3>
+          <p>MantaGO reaches the merchant's existing customers across channels. The 2am Shoppers reaches the shopper between purchases — turning one-off conversations into a savings, wishlist and re-order journey the shopper controls.</p>
+        </div>
+        <div class="eslitec-card">
+          <h3>2 · Consent by design</h3>
+          <p>Shopper budgets, allowances and goal balances never flow to the merchant CRM. The app applies spending limits on the shopper side; MantaGO receives only the authorised preferences and signals it needs to start a relevant conversation.</p>
+        </div>
+        <div class="eslitec-card">
+          <h3>3 · Multilingual for the region</h3>
+          <p>Eslitec is expanding into Thailand, Japan and Singapore. The 2am Shoppers ships in <strong>English, Japanese, Chinese and Thai</strong> so the same demo plays in each market — matching MantaGO's regional reach with a shopper app locals can read.</p>
+        </div>
+        <div class="eslitec-card">
+          <h3>4 · Distribution through MantaGO channels</h3>
+          <p>Onboarding flows, payday reminders and satisfaction check-ins can be delivered through the channels MantaGO already operates (LINE, WhatsApp, IG). The 2am Shoppers holds the journey state; MantaGO delivers the message.</p>
+        </div>
+        <div class="eslitec-card">
+          <h3>5 · Membership without exposure</h3>
+          <p>MantaGO's membership and loyalty features recognise returning customers. The 2am Shoppers adds a private savings planner that the merchant never sees — letting merchants reward repeat purchases without handling the shopper's private finances.</p>
+        </div>
+        <div class="eslitec-card">
+          <h3>6 · Shared measurement</h3>
+          <p>MantaGO measures marketing outcomes. The 2am Shoppers adds the shopper-side measures that explain them — repeat-purchase rate, retention, savings progress and budget-respecting engagement — so the two sides read from the same outcomes.</p>
+        </div>
+      </div>
+
+      <div class="eslitec-note">
+        <strong>Positioning:</strong> The 2am Shoppers is a proposed companion concept. It is not an existing Eslitec product, a replacement for MantaGO, or a claim of verified integration. Any live connection to MantaGO or its channels would be a separate, approved partnership.
+      </div>
+    </div>
+  </section>
+
   <!-- GET STARTED / AUTH -->
   <section class="section get-started-section" id="get-started">
     <div class="container">
@@ -501,6 +562,51 @@
       <p class="auth-note">
         The app runs at <code>localhost:3003</code>. Accounts created here share storage with the app. Start it first with <code>npm run dev</code> inside <code>app/frontend</code>.
       </p>
+    </div>
+  </section>
+
+  <!-- GET THE APP -->
+  <section class="section" id="get-app">
+    <div class="container" style="max-width: 780px;">
+      <div class="section-label">09 · Install the App</div>
+      <h2 class="section-title">Take 2am Shoppers everywhere</h2>
+      <p class="section-desc">The app is a Progressive Web App — install it on any phone, tablet or desktop from the browser. No app store needed for the demo.</p>
+
+      <div class="get-app-grid">
+        <div class="get-app-card">
+          <div class="get-app-qr">
+            <img id="qr-img"
+              src="https://api.qrserver.com/v1/create-qr-code/?size=192x192&margin=8&data=http%3A%2F%2Flocalhost%3A3003%2Fdownload"
+              width="192" height="192"
+              alt="QR code — scan to open the install page"
+              style="border-radius:10px; background:#fff; display:block; padding:4px;"
+              onerror="this.style.display='none'; document.getElementById('qr-fallback').style.display='flex';"
+            />
+            <div id="qr-fallback" style="display:none; width:192px; height:192px; background:#fff; border-radius:10px; align-items:center; justify-content:center; font-size:.75rem; color:#1a1d2b; font-family:monospace; text-align:center; padding:12px; box-sizing:border-box; line-height:1.4;">
+              localhost:3003/download
+            </div>
+          </div>
+          <p class="get-app-qr-label">Scan with your phone camera to open the install page</p>
+        </div>
+        <div class="get-app-steps">
+          <div class="get-app-platform">
+            <h3>🍎 iPhone / iPad (Safari)</h3>
+            <ol><li>Open <code>localhost:3003</code> in Safari.</li><li>Tap the Share button.</li><li>Tap <strong>Add to Home Screen</strong>.</li><li>Tap Add — app appears on your home screen.</li></ol>
+          </div>
+          <div class="get-app-platform">
+            <h3>🤖 Android (Chrome)</h3>
+            <ol><li>Open <code>localhost:3003</code> in Chrome.</li><li>Tap the menu (⋮).</li><li>Tap <strong>Install app</strong> or Add to Home screen.</li><li>Confirm — app installs to your launcher.</li></ol>
+          </div>
+          <div class="get-app-platform">
+            <h3>💻 Desktop (Chrome / Edge)</h3>
+            <ol><li>Click the install icon (⊕) in the address bar.</li><li>Click <strong>Install</strong> — app opens in its own window.</li></ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="get-app-note">
+        <strong>Why PWA for the demo?</strong> A PWA is the fastest path to a phone-like experience without App Store or Play Store approval. It works offline once installed (after the first visit), supports home-screen shortcuts, push notifications via the Web Push API, and background sync — the same foundation we'd use for the production app while full native builds are validated.
+      </div>
     </div>
   </section>
 

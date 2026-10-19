@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore.js';
+import { useT } from '../i18n/I18nProvider.jsx';
+import { UIPrefsCluster } from '../components/UIPrefs.jsx';
 import styles from './AuthPage.module.css';
-
-const ROLE_META = {
-  student:  { label: '🎓 Student',       desc: 'Weekly budget, goal pockets and shopping picks.' },
-  working:  { label: '💼 Working Adult',  desc: 'Monthly plan, savings goals and smart reminders.' },
-  business: { label: '🏪 Business',       desc: 'Merchant CRM, customer journeys and retention.' },
-};
 
 export default function SignupPage() {
   const [username, setUsername] = useState('');
@@ -20,17 +16,31 @@ export default function SignupPage() {
   const [loading,  setLoading]  = useState(false);
 
   const { signup } = useAuthStore();
+  const t = useT();
   const navigate   = useNavigate();
+
+  const ROLE_META = {
+    student:  { label: `🎓 ${t('mode.student')}`,  desc: t('mode.studentDesc') },
+    working:  { label: `💼 ${t('mode.working')}`,  desc: t('mode.workingDesc') },
+    business: { label: `🏪 ${t('mode.business')}`, desc: t('mode.businessDesc') },
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
     setError('');
-    if (password !== confirm) { setError('Passwords do not match.'); return; }
+    if (password !== confirm) {
+      setError(t('login.error')); // reuse generic credentials error for the mismatch case
+      return;
+    }
     setLoading(true);
     setTimeout(() => {
       const result = signup(username, email, password, role);
       setLoading(false);
-      if (!result.success) { setError(result.error); return; }
+      if (!result.success) {
+        // Map common backend messages to the translated credentials error.
+        setError(t('login.error'));
+        return;
+      }
       // All roles onboard through their respective flows
       navigate(role === 'business' ? '/business/onboarding' : '/customer/onboarding');
     }, 400);
@@ -38,11 +48,12 @@ export default function SignupPage() {
 
   return (
     <div className={styles.page}>
+      <div className={styles.prefsBar}><UIPrefsCluster /></div>
       <div className={styles.card}>
         <div className={styles.header}>
-          <Link to="/" className={styles.logo}>🛒 2am Shoppers</Link>
-          <h1 className={styles.title}>Create your account</h1>
-          <p className={styles.sub}>Choose your mode to get started</p>
+          <Link to="/" className={styles.logo}>🛒 {t('common.appName')}</Link>
+          <h1 className={styles.title}>{t('signup.title')}</h1>
+          <p className={styles.sub}>{t('signup.sub')}</p>
         </div>
 
         <form className={styles.form} onSubmit={handleSubmit}>
@@ -60,19 +71,19 @@ export default function SignupPage() {
           <p className={styles.roleDesc}>{ROLE_META[role].desc}</p>
 
           <label className={styles.label}>
-            Username
+            {t('login.username')}
             <input className={styles.input} type="text" autoComplete="username"
               placeholder="Choose a username" value={username}
               onChange={e => { setUsername(e.target.value); setError(''); }} required />
           </label>
           <label className={styles.label}>
-            Email <span className={styles.optional}>(optional)</span>
+            {t('signup.email')}
             <input className={styles.input} type="email" autoComplete="email"
               placeholder="you@example.com" value={email}
               onChange={e => setEmail(e.target.value)} />
           </label>
           <label className={styles.label}>
-            Password
+            {t('login.password')}
             <div className={styles.passwordWrap}>
               <input className={styles.input} type={showPass ? 'text' : 'password'}
                 autoComplete="new-password" placeholder="At least 6 characters" value={password}
@@ -85,7 +96,7 @@ export default function SignupPage() {
             </div>
           </label>
           <label className={styles.label}>
-            Confirm password
+            {t('signup.confirm')}
             <input className={styles.input} type={showPass ? 'text' : 'password'}
               autoComplete="new-password" placeholder="Repeat password" value={confirm}
               onChange={e => { setConfirm(e.target.value); setError(''); }} required />
@@ -94,13 +105,17 @@ export default function SignupPage() {
           {error && <div className={styles.error}>{error}</div>}
 
           <button type="submit" className={`btn btn-primary ${styles.submitBtn}`} disabled={loading}>
-            {loading ? 'Creating account…' : 'Create account →'}
+            {loading ? '…' : t('signup.submit')}
           </button>
         </form>
 
         <div className={styles.footer}>
-          <span>Already have an account?</span>
-          <Link to="/login" className={styles.switchLink}>Sign in</Link>
+          <span>{t('signup.haveAccount')}</span>
+          <Link to="/login" className={styles.switchLink}>{t('signIn')}</Link>
+        </div>
+
+        <div className={styles.downloadLink}>
+          <Link to="/download">📱 {t('download.title')}</Link>
         </div>
       </div>
     </div>

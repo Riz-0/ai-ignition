@@ -109,6 +109,15 @@ strong { color: var(--text); font-weight: 600; }
 
 .nav-auth-btns { display: flex; align-items: center; gap: 8px; margin-left: 16px; }
 
+.nav-lang { display: flex; align-items: center; gap: 2px; margin-right: 4px; }
+.nav-lang-btn {
+  background: transparent; border: 1px solid transparent;
+  border-radius: 6px; padding: 4px 6px; font-size: 1rem;
+  cursor: pointer; line-height: 1; transition: all .15s; opacity: .6;
+}
+.nav-lang-btn:hover { opacity: 1; }
+.nav-lang-btn.on { opacity: 1; border-color: var(--student-l); background: rgba(124,58,237,.12); }
+
 .nav-signin-btn {
   font-size: .82rem; font-weight: 500; color: var(--text-muted);
   text-decoration: none; padding: 6px 14px;
@@ -596,6 +605,71 @@ strong { color: var(--text); font-weight: 600; }
 .footer-tagline { font-size: .88rem; }
 .footer-note    { font-size: .76rem; color: var(--text-dim); }
 
+/* ── Eslitec pitch ── */
+.eslitec-loop {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px;
+  align-items: stretch; margin: 32px 0 36px;
+}
+.loop-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 22px;
+}
+.loop-merchant { border-top: 3px solid var(--business); }
+.loop-shopper  { border-top: 3px solid var(--working); }
+.loop-emoji { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+.loop-card h3 { font-size: .98rem; margin-bottom: 8px; color: var(--text); }
+.loop-card p  { font-size: .86rem; line-height: 1.6; }
+.loop-bridge {
+  align-self: center; font-size: 1.8rem; color: var(--text-dim);
+  display: flex; align-items: center;
+}
+.eslitec-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  margin-bottom: 28px;
+}
+.eslitec-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px;
+}
+.eslitec-card h3 { font-size: .88rem; color: var(--working-l); margin-bottom: 8px; }
+.eslitec-card p  { font-size: .82rem; line-height: 1.55; }
+.eslitec-note {
+  background: rgba(124,58,237,.06); border: 1px solid rgba(124,58,237,.22);
+  border-radius: 10px; padding: 14px 18px; font-size: .8rem; color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ── Get the app ── */
+.get-app-grid {
+  display: grid; grid-template-columns: 280px 1fr; gap: 32px;
+  align-items: start; margin-bottom: 28px;
+}
+.get-app-card { text-align: center; position: sticky; top: 90px; }
+.get-app-qr {
+  width: 200px; height: 200px; margin: 0 auto 12px;
+  background: #fff; border-radius: 12px; padding: 4px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 28px rgba(0,0,0,.35);
+}
+.get-app-qr-label { font-size: .78rem; color: var(--text-muted); line-height: 1.5; max-width: 240px; margin: 0 auto; }
+.get-app-steps { display: flex; flex-direction: column; gap: 16px; }
+.get-app-platform {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 20px;
+}
+.get-app-platform h3 { font-size: .92rem; margin-bottom: 10px; color: var(--text); }
+.get-app-platform ol { padding-left: 20px; }
+.get-app-platform li { font-size: .82rem; color: var(--text-muted); margin-bottom: 6px; line-height: 1.5; }
+.get-app-platform code {
+  font-family: monospace; background: var(--bg-card2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 1px 6px; font-size: .76rem; color: var(--text);
+}
+.get-app-note {
+  background: rgba(8,145,178,.06); border: 1px solid rgba(8,145,178,.22);
+  border-radius: 10px; padding: 14px 18px; font-size: .82rem; color: var(--text-muted);
+  line-height: 1.6;
+}
+
 /* ── Scroll animations ── */
 .fade-in { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
@@ -604,6 +678,11 @@ strong { color: var(--text); font-weight: 600; }
 @media (max-width: 860px) {
   .modes-grid { grid-template-columns: 1fr; }
   .scope-grid { grid-template-columns: 1fr; }
+  .eslitec-grid { grid-template-columns: 1fr; }
+  .eslitec-loop { grid-template-columns: 1fr; gap: 12px; }
+  .loop-bridge { transform: rotate(90deg); justify-self: center; }
+  .get-app-grid { grid-template-columns: 1fr; gap: 24px; }
+  .get-app-card { position: static; }
 }
 
 @media (max-width: 768px) {

@@ -20,6 +20,16 @@ const useAppStore = create(
       appMode: null,
       setAppMode: (mode) => set({ appMode: mode }),
 
+      // ── Language + theme (UI preferences) ────────────────────
+      // language: 'en' | 'ja' | 'zh' | 'th'  (matches Eslitec's markets)
+      language: null,
+      setLanguage: (language) => set({ language }),
+
+      // theme: 'dark' | 'light'
+      theme: 'dark',
+      setTheme: (theme) => set({ theme }),
+      toggleTheme: () => set((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
+
       // ── Shopper profile (student + working adult) ─────────────
       shopperProfile: null,
       // {
@@ -255,6 +265,8 @@ const useAppStore = create(
       // ── Reset ────────────────────────────────────────────────
       reset: () => set({
         appMode: null,
+        // NOTE: language and theme are intentionally preserved across reset —
+        // a user switching modes shouldn't lose their display preferences.
         shopperProfile: null,
         wishlist: [], savingsGoals: [], savingsLedger: [], expenses: [],
         savedLinks: [], conversations: [], reminders: [], purchaseHistory: [],
