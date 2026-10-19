@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 /**
  * Auth store — manages login sessions and user accounts.
@@ -39,20 +39,24 @@ const useAuthStore = create(
 
       // ── Login ────────────────────────────────────────────────
       login: (username, password) => {
-        // First check in-memory accounts (includes the seed + any accounts
+        // Start with in-memory accounts (includes the seed + any accounts
         // created while the app was running).
         let accounts = get().accounts;
 
-        // Also merge any accounts written to localStorage by the website
-        // or another tab — Zustand doesn't rehydrate on external writes.
+        // Merge any accounts written to localStorage by the website or another
+        // tab — Zustand doesn't rehydrate on external writes after init.
+        // We do a union by id so we never lose accounts from either side.
         try {
           const raw = localStorage.getItem('2am-shoppers-auth');
           if (raw) {
             const persisted = JSON.parse(raw)?.state?.accounts;
-            if (Array.isArray(persisted) && persisted.length > accounts.length) {
-              // Persist has more accounts than in-memory — adopt them
-              set({ accounts: persisted });
-              accounts = persisted;
+            if (Array.isArray(persisted) && persisted.length > 0) {
+              const existingIds = new Set(accounts.map(a => a.id));
+              const newAccounts = persisted.filter(a => !existingIds.has(a.id));
+              if (newAccounts.length > 0) {
+                accounts = [...accounts, ...newAccounts];
+                set({ accounts });
+              }
             }
           }
         } catch { /* ignore parse errors */ }
@@ -96,10 +100,81 @@ const useAuthStore = create(
       // ── Logout ───────────────────────────────────────────────
       logout: () => set({ currentUser: null, isLoggedIn: false }),
 
+      // ── Sync from storage ────────────────────────────────────
+      // Call once on app mount to pick up a session written by the website.
+      syncFromStorage: () => {
+        try {
+          const raw = localStorage.getItem('2am-shoppers-auth');
+          if (!raw) return;
+          const parsed = JSON.parse(raw)?.state;
+          if (!parsed) return;
+
+          // Merge accounts
+          const inMemory  = get().accounts;
+          const persisted = parsed.accounts;
+          if (Array.isArray(persisted) && persisted.length > 0) {
+            const existingIds = new Set(inMemory.map(a => a.id));
+            const newAccounts = persisted.filter(a => !existingIds.has(a.id));
+            if (newAccounts.length > 0) {
+              set({ accounts: [...inMemory, ...newAccounts] });
+            }
+          }
+
+          // Adopt session if the website logged someone in and we are not yet logged in
+          if (!get().isLoggedIn && parsed.isLoggedIn && parsed.currentUser) {
+            set({ currentUser: parsed.currentUser, isLoggedIn: true });
+          }
+        } catch { /* ignore */ }
+      },
+
       // ── Helpers ──────────────────────────────────────────────
       isAdmin: () => get().currentUser?.role === 'admin',
     }),
-    { name: '2am-shoppers-auth' }
+    {
+      name: '2am-shoppers-auth',
+
+      /**
+       * Custom storage: merges accounts on every write so that entries written
+       * by the website (same localStorage key) are never silently dropped when
+       * the app's Zustand store re-persists in-memory state.
+       */
+      storage: createJSONStorage(() => ({
+        getItem:    (key) => localStorage.getItem(key),
+        removeItem: (key) => localStorage.removeItem(key),
+        setItem:    (key, value) => {
+          try {
+            const existing = JSON.parse(localStorage.getItem(key) || '{}');
+            const incoming = JSON.parse(value);
+
+            // Union accounts by id — neither side loses entries.
+            const existingAccounts = existing?.state?.accounts ?? [];
+            const incomingAccounts = incoming?.state?.accounts ?? [];
+            const byId = new Map(existingAccounts.map(a => [a.id, a]));
+            incomingAccounts.forEach(a => byId.set(a.id, a));
+
+            incoming.state.accounts = [...byId.values()];
+            localStorage.setItem(key, JSON.stringify(incoming));
+          } catch {
+            localStorage.setItem(key, value);
+          }
+        },
+      })),
+
+      /**
+       * Custom merge: when Zustand rehydrates on startup, union the stored
+       * accounts with the initial SEED_ACCOUNTS so neither side drops entries.
+       */
+      merge: (persisted, current) => {
+        const persistedAccounts = persisted?.accounts ?? [];
+        const currentAccounts   = current.accounts ?? [];
+        const allIds = new Set(currentAccounts.map(a => a.id));
+        const merged = [
+          ...currentAccounts,
+          ...persistedAccounts.filter(a => !allIds.has(a.id)),
+        ];
+        return { ...current, ...persisted, accounts: merged };
+      },
+    }
   )
 );
 

@@ -81,7 +81,6 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     e.preventDefault();
     const offset = (nav?.offsetHeight ?? 64) + 16;
     window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
-    setTimeout(() => document.getElementById('signin-username')?.focus?.(), 600);
   });
 });
 
@@ -135,6 +134,13 @@ const WEBSITE_TRANS = {
     signIn:          'Sign in',
     getStarted:      'Get started',
     getTheApp:       'Get the app',
+    navProblem:      'Problem',
+    navModes:        'Three Modes',
+    navSavings:      'Savings',
+    navConnections:  'Connections',
+    navJourney:      'Journey',
+    navEslitec:      'Eslitec',
+    navGetApp:       'Get the app',
   },
   ja: {
     heroBadge:       'Eslitec ハッカソン · 課題1 · One Less Thing',
@@ -154,6 +160,13 @@ const WEBSITE_TRANS = {
     signIn:          'サインイン',
     getStarted:      'はじめる',
     getTheApp:       'アプリを入手',
+    navProblem:      '課題',
+    navModes:        '3つのモード',
+    navSavings:      '貯金',
+    navConnections:  '連携',
+    navJourney:      'ジャーニー',
+    navEslitec:      'Eslitec',
+    navGetApp:       'アプリを入手',
   },
   zh: {
     heroBadge:       'Eslitec 黑客马拉松 · 问题陈述1 · One Less Thing',
@@ -173,6 +186,13 @@ const WEBSITE_TRANS = {
     signIn:          '登录',
     getStarted:      '开始使用',
     getTheApp:       '获取应用',
+    navProblem:      '痛点',
+    navModes:        '三种模式',
+    navSavings:      '储蓄',
+    navConnections:  '连接',
+    navJourney:      '旅程',
+    navEslitec:      'Eslitec',
+    navGetApp:       '获取应用',
   },
   th: {
     heroBadge:       'Eslitec Hackathon · แนวคิดที่ 1 · One Less Thing',
@@ -192,6 +212,13 @@ const WEBSITE_TRANS = {
     signIn:          'เข้าสู่ระบบ',
     getStarted:      'เริ่มต้น',
     getTheApp:       'รับแอป',
+    navProblem:      'ปัญหา',
+    navModes:        'สามโหมด',
+    navSavings:      'ออม',
+    navConnections:  'การเชื่อมต่อ',
+    navJourney:      'เส้นทาง',
+    navEslitec:      'Eslitec',
+    navGetApp:       'รับแอป',
   },
 };
 
@@ -235,8 +262,8 @@ const langDropdown = document.getElementById('nav-lang-dropdown');
 
 langTrigger?.addEventListener('click', (e) => {
   e.stopPropagation();
-  const open = langDropdown.classList.toggle('open');
-  langTrigger.setAttribute('aria-expanded', String(open));
+  const open = langDropdown?.classList.toggle('open');
+  langTrigger.setAttribute('aria-expanded', String(!!open));
 });
 
 // Close on outside click
@@ -368,15 +395,40 @@ function writeAuthState(updates) {
 }
 
 function showSuccess(name, isNew) {
-  ['panel-signin', 'panel-signup'].forEach(id => document.getElementById(id)?.classList.add('auth-hidden'));
-  const successEl = document.getElementById('auth-success');
-  if (successEl) successEl.classList.remove('auth-hidden');
-  const titleEl = document.getElementById('auth-success-title');
-  const subEl   = document.getElementById('auth-success-sub');
-  if (titleEl) titleEl.textContent = isNew ? `Welcome, ${name}! 🎉` : `Welcome back, ${name}!`;
-  if (subEl)   subEl.textContent   = 'Your account is ready. Click below to open the app.';
-  // Auto-open the app after a short delay
-  setTimeout(() => window.open('http://localhost:3003', '_blank', 'noopener'), 1500);
+  const appBase = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? 'http://localhost:3003'
+    : `${location.protocol}//${location.hostname}:3003`;
+  const dest = isNew ? `${appBase}/download` : `${appBase}/login`;
+
+  const overlay   = document.getElementById('congrats-overlay');
+  const titleEl   = document.getElementById('congrats-title');
+  const subEl     = document.getElementById('congrats-sub');
+  const btn       = document.getElementById('congrats-btn');
+  const closeBtn  = document.getElementById('congrats-close');
+
+  if (titleEl) titleEl.textContent = isNew
+    ? `Congrats, ${name}! 🎉 Account created!`
+    : `Welcome back, ${name}!`;
+  if (subEl) subEl.textContent = isNew
+    ? "You're all set. Open the app to sign in and start shopping smarter."
+    : 'Your session is ready. Click below to open the app.';
+  if (btn) {
+    btn.href        = dest;
+    btn.textContent = isNew ? 'Open the app →' : 'Sign in to the app →';
+  }
+  if (overlay) {
+    overlay.style.display = 'flex';
+    // Animate box in fresh each time
+    const box = document.getElementById('congrats-box');
+    if (box) { box.style.animation = 'none'; requestAnimationFrame(() => { box.style.animation = ''; }); }
+  }
+  if (closeBtn) {
+    closeBtn.onclick = () => { if (overlay) overlay.style.display = 'none'; };
+  }
+  // Close on overlay backdrop click
+  if (overlay) {
+    overlay.onclick = (e) => { if (e.target === overlay) overlay.style.display = 'none'; };
+  }
 }
 
 function showError(id, msg) { const el = document.getElementById(id); if (el) el.textContent = msg; }
@@ -412,9 +464,12 @@ window.handleSignin = function(e) {
       setTimeout(() => input?.classList.remove('input-shake'), 500);
       return;
     }
-    // Write session: keep accounts intact, update session fields only
+    // Write session to localStorage so the app picks it up immediately
     writeAuthState({ currentUser: account, isLoggedIn: true });
-    showSuccess(account.name ?? account.username, false);
+    // Directly open the app login page — StorageSync will auto-log them in
+    const appBase = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3003' : `${location.protocol}//${location.hostname}:3003`;
+    window.open(appBase + '/login', '_blank', 'noopener');
   }, 500);
 };
 
@@ -432,6 +487,9 @@ window.handleSignup = function(e) {
   if (password.length < 6)  { showError('signup-error', 'Password must be at least 6 characters.'); return; }
   if (password !== confirm) { showError('signup-error', 'Passwords do not match.'); return; }
 
+  // Role is set by the inline button onclick into window._signupRole, with fallback
+  const role = window._signupRole || currentRole || 'student';
+
   setLoading('signup-btn', true);
   setTimeout(() => {
     const accounts = loadAccounts();
@@ -443,10 +501,9 @@ window.handleSignup = function(e) {
     const newAccount = {
       id:        (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
       username, password, email: email ?? '',
-      name:      username, role: currentRole,
+      name:      username, role,
       createdAt: new Date().toISOString(),
     };
-    // Atomic write: add the new account AND set the session in one write
     writeAuthState({
       accounts:    [...accounts, newAccount],
       currentUser: newAccount,
@@ -515,3 +572,8 @@ document.querySelector('.nav-logo')?.addEventListener('click', e => {
   qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=192x192&margin=8&data=${encodeURIComponent(url)}`;
   if (qrFallback) qrFallback.textContent = url.replace(/^https?:\/\//, '');
 })();
+
+/* ── "Get started" nav button → activate Create account tab ── */
+document.getElementById('nav-get-started')?.addEventListener('click', () => {
+  setTimeout(() => { document.getElementById('tab-signup')?.click(); }, 80);
+});

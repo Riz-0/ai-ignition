@@ -19,33 +19,37 @@
         <span>2am Shoppers</span>
       </a>
       <nav class="nav-links" id="nav-links">
-        <a href="#problem">Problem</a>
-        <a href="#three-modes">Three Modes</a>
-        <a href="#savings">Savings</a>
-        <a href="#connections">Connections</a>
-        <a href="#journey">Journey</a>
-        <a href="#eslitec">Eslitec</a>
-        <a href="#get-app">Get the app</a>
+        <a href="#problem"     data-i18n="navProblem">Problem</a>
+        <a href="#three-modes" data-i18n="navModes">Three Modes</a>
+        <a href="#savings"     data-i18n="navSavings">Savings</a>
+        <a href="#connections" data-i18n="navConnections">Connections</a>
+        <a href="#journey"     data-i18n="navJourney">Journey</a>
+        <a href="#eslitec"     data-i18n="navEslitec">Eslitec</a>
+        <a href="#get-app"     data-i18n="navGetApp">Get the app</a>
       </nav>
       <div class="nav-auth-btns">
-        <!-- Language dropdown -->
-        <div class="nav-lang-wrap" id="nav-lang-wrap">
-          <button class="nav-lang-trigger" id="nav-lang-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Select language">
-            <span id="nav-lang-flag">🇬🇧</span>
-            <span id="nav-lang-label">EN</span>
-            <span class="nav-lang-caret">▾</span>
-          </button>
-          <div class="nav-lang-dropdown" id="nav-lang-dropdown" role="menu">
-            <button class="nav-lang-option" role="menuitem" data-lang="en">🇬🇧 <span>English</span></button>
-            <button class="nav-lang-option" role="menuitem" data-lang="ja">🇯🇵 <span>日本語</span></button>
-            <button class="nav-lang-option" role="menuitem" data-lang="zh">🇨🇳 <span>中文</span></button>
-            <button class="nav-lang-option" role="menuitem" data-lang="th">🇹🇭 <span>ไทย</span></button>
+        <!-- Language dropdown + theme — always visible, even on mobile -->
+        <div class="nav-ui-prefs">
+          <div class="nav-lang-wrap" id="nav-lang-wrap">
+            <button class="nav-lang-trigger" id="nav-lang-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Select language">
+              <span id="nav-lang-flag">🇬🇧</span>
+              <span id="nav-lang-label">EN</span>
+              <span class="nav-lang-caret">▾</span>
+            </button>
+            <div class="nav-lang-dropdown" id="nav-lang-dropdown" role="menu">
+              <button class="nav-lang-option" role="menuitem" data-lang="en">🇬🇧 <span>English</span></button>
+              <button class="nav-lang-option" role="menuitem" data-lang="ja">🇯🇵 <span>日本語</span></button>
+              <button class="nav-lang-option" role="menuitem" data-lang="zh">🇨🇳 <span>中文</span></button>
+              <button class="nav-lang-option" role="menuitem" data-lang="th">🇹🇭 <span>ไทย</span></button>
+            </div>
           </div>
+          <!-- Theme toggle -->
+          <button class="nav-theme-btn" id="nav-theme-btn" aria-label="Toggle dark/light mode" title="Toggle theme">🌙</button>
         </div>
-        <!-- Theme toggle -->
-        <button class="nav-theme-btn" id="nav-theme-btn" aria-label="Toggle dark/light mode" title="Toggle theme">🌙</button>
-        <a href="#get-started" class="nav-signin-btn" data-i18n="signIn">Sign in</a>
-        <a href="#get-started" class="nav-signup-btn" data-i18n="getStarted">Get started</a>
+        <!-- Get started CTA — hidden on mobile -->
+        <div class="nav-cta-btns">
+          <a href="#get-started" class="nav-signup-btn" data-i18n="getStarted" id="nav-get-started">Get started</a>
+        </div>
       </div>
       <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -495,6 +499,26 @@
   </section>
 
   <!-- GET STARTED / AUTH -->
+  <!-- CONGRATS MODAL -->
+  <div id="congrats-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;align-items:center;justify-content:center;">
+    <div id="congrats-box" style="background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:44px 36px;max-width:420px;width:90%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.6);animation:congrats-in .35s ease;">
+      <div style="font-size:3rem;margin-bottom:16px;">🎉</div>
+      <h2 style="font-size:1.4rem;color:var(--text);margin-bottom:8px;" id="congrats-title">Account created!</h2>
+      <p style="font-size:.9rem;color:var(--text-muted);margin-bottom:28px;" id="congrats-sub">You're all set. Open the app to sign in and get started.</p>
+      <a id="congrats-btn" href="http://localhost:3003/login" target="_blank" rel="noopener"
+        style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--gradient);color:#fff;font-weight:700;font-size:.95rem;padding:13px 32px;border-radius:10px;text-decoration:none;width:100%;box-sizing:border-box;">
+        Open the app →
+      </a>
+      <button type="button" id="congrats-close"
+        style="margin-top:14px;background:none;border:none;color:var(--text-muted);font-size:.82rem;cursor:pointer;font-family:var(--font);">
+        Close
+      </button>
+    </div>
+  </div>
+  <style>
+    @keyframes congrats-in { from{opacity:0;transform:scale(.9) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  </style>
+
   <section class="section get-started-section" id="get-started">
     <div class="container">
       <div class="section-label">Try it now</div>
@@ -502,15 +526,16 @@
       <p class="section-desc get-started-desc" data-i18n="getStartedDesc">Create a free account — choose Student, Working Adult or Business to get started.</p>
 
       <div class="auth-panel">
+        <!-- ── Tabs ── -->
         <div class="auth-tabs" role="tablist">
-          <button class="auth-tab auth-tab-active" id="tab-signin" role="tab"
-            aria-selected="true" aria-controls="panel-signin" onclick="switchTab('signin')">Sign in</button>
-          <button class="auth-tab" id="tab-signup" role="tab"
-            aria-selected="false" aria-controls="panel-signup" onclick="switchTab('signup')">Create account</button>
+          <button class="auth-tab auth-tab-active" id="tab-signin" role="tab" aria-selected="true"
+            onclick="(function(){document.getElementById('panel-signin').style.display='';document.getElementById('panel-signup').style.display='none';document.getElementById('tab-signin').className='auth-tab auth-tab-active';document.getElementById('tab-signup').className='auth-tab';})()">Sign in</button>
+          <button class="auth-tab" id="tab-signup" role="tab" aria-selected="false"
+            onclick="(function(){document.getElementById('panel-signup').style.display='';document.getElementById('panel-signin').style.display='none';document.getElementById('tab-signup').className='auth-tab auth-tab-active';document.getElementById('tab-signin').className='auth-tab';})()">Create account</button>
         </div>
 
         <!-- Sign-in panel -->
-        <div class="auth-form-panel" id="panel-signin" role="tabpanel">
+        <div class="auth-form-panel" id="panel-signin">
           <div class="admin-hint">
             <span>⚡</span>
             <span>Demo admin — username: <strong>user</strong> · password: <strong>password</strong></span>
@@ -528,15 +553,21 @@
             <div class="auth-error" id="signin-error" aria-live="polite"></div>
             <button type="submit" class="btn btn-primary auth-submit" id="signin-btn">Sign in →</button>
           </form>
-          <p class="auth-switch">No account yet? <button class="auth-switch-link" onclick="switchTab('signup')">Create one free</button></p>
+          <p class="auth-switch">No account yet?
+            <button type="button" class="auth-switch-link"
+              onclick="document.getElementById('tab-signup').click()">Create one</button>
+          </p>
         </div>
 
         <!-- Sign-up panel -->
-        <div class="auth-form-panel auth-hidden" id="panel-signup" role="tabpanel">
+        <div class="auth-form-panel" id="panel-signup" style="display:none;">
           <div class="role-toggle">
-            <button class="role-btn role-active" id="role-student"  onclick="setRole('student')"  type="button">🎓 Student</button>
-            <button class="role-btn"             id="role-working"  onclick="setRole('working')"  type="button">💼 Working Adult</button>
-            <button class="role-btn"             id="role-business" onclick="setRole('business')" type="button">🏪 Business</button>
+            <button class="role-btn role-active" id="role-student" type="button"
+              onclick="(function(el){['role-student','role-working','role-business'].forEach(function(id){var b=document.getElementById(id);if(b){b.classList.remove('role-active');}});el.classList.add('role-active');window._signupRole='student';})(this)">🎓 Student</button>
+            <button class="role-btn" id="role-working" type="button"
+              onclick="(function(el){['role-student','role-working','role-business'].forEach(function(id){var b=document.getElementById(id);if(b){b.classList.remove('role-active');}});el.classList.add('role-active');window._signupRole='working';})(this)">💼 Working Adult</button>
+            <button class="role-btn" id="role-business" type="button"
+              onclick="(function(el){['role-student','role-working','role-business'].forEach(function(id){var b=document.getElementById(id);if(b){b.classList.remove('role-active');}});el.classList.add('role-active');window._signupRole='business';})(this)">🏪 Business</button>
           </div>
           <form class="auth-form" id="form-signup" onsubmit="handleSignup(event)">
             <label class="auth-label">Username
@@ -557,15 +588,10 @@
             <div class="auth-error" id="signup-error" aria-live="polite"></div>
             <button type="submit" class="btn btn-primary auth-submit" id="signup-btn">Create account →</button>
           </form>
-          <p class="auth-switch">Already have an account? <button class="auth-switch-link" onclick="switchTab('signin')">Sign in</button></p>
-        </div>
-
-        <!-- Success state -->
-        <div class="auth-success auth-hidden" id="auth-success">
-          <div class="auth-success-icon">✅</div>
-          <h3 class="auth-success-title" id="auth-success-title">Welcome!</h3>
-          <p class="auth-success-sub" id="auth-success-sub">Redirecting you to the app…</p>
-          <a class="btn btn-primary auth-open-btn" id="auth-open-btn" href="http://localhost:3003" target="_blank" rel="noopener">Open the app →</a>
+          <p class="auth-switch">Already have an account?
+            <button type="button" class="auth-switch-link"
+              onclick="document.getElementById('tab-signin').click()">Sign in</button>
+          </p>
         </div>
       </div>
 

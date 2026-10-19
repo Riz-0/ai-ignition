@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import { I18nProvider } from './i18n/I18nProvider.jsx';
-import useAppStore from './store/appStore.js';
+import useAppStore  from './store/appStore.js';
+import useAuthStore from './store/authStore.js';
 import './index.css';
 
 /* ── Apply persisted theme + language before render ────────
@@ -31,6 +32,15 @@ function ThemeSync() {
   return null;
 }
 
+/* ── Pick up a session written by the website ──────────────── */
+function StorageSync() {
+  const syncFromStorage = useAuthStore((s) => s.syncFromStorage);
+  React.useEffect(() => {
+    syncFromStorage();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  return null;
+}
+
 /* ── Register the PWA service worker ─────────────────────── */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -46,6 +56,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <I18nProvider>
         <ThemeSync />
+        <StorageSync />
         <App />
       </I18nProvider>
     </BrowserRouter>

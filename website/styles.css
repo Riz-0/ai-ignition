@@ -125,7 +125,9 @@ strong { color: var(--text); font-weight: 600; }
 }
 .nav-links a:hover { color: var(--text); }
 
-.nav-auth-btns { display: flex; align-items: center; gap: 8px; margin-left: 16px; }
+.nav-auth-btns  { display: flex; align-items: center; gap: 12px; margin-left: 20px; }
+.nav-ui-prefs   { display: flex; align-items: center; gap: 8px; }
+.nav-cta-btns   { display: flex; align-items: center; padding-left: 12px; border-left: 1px solid var(--border-light); }
 
 /* ── Language dropdown ── */
 .nav-lang-wrap { position: relative; }
@@ -180,13 +182,6 @@ strong { color: var(--text); font-weight: 600; }
   flex-shrink: 0;
 }
 .nav-theme-btn:hover { border-color: var(--business-l); }
-
-.nav-signin-btn {
-  font-size: .82rem; font-weight: 500; color: var(--text-muted);
-  text-decoration: none; padding: 6px 14px;
-  border-radius: 6px; border: 1px solid var(--border-light); transition: all .2s;
-}
-.nav-signin-btn:hover { color: var(--text); border-color: var(--working-l); }
 
 .nav-signup-btn {
   font-size: .82rem; font-weight: 600; color: #fff;
@@ -556,9 +551,18 @@ strong { color: var(--text); font-weight: 600; }
 .auth-panel {
   max-width: 460px; margin: 0 auto 24px;
   background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 16px; overflow: hidden;
+  border-radius: 16px; overflow: visible;
   box-shadow: 0 12px 48px rgba(0,0,0,.45);
   position: relative; z-index: 1;
+}
+/* Clip only the tab bar corners, not the panels */
+.auth-tabs {
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+}
+.auth-form-panel, .auth-success {
+  border-radius: 0 0 16px 16px;
+  overflow: hidden;
 }
 
 .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
@@ -757,7 +761,7 @@ strong { color: var(--text); font-weight: 600; }
   }
   .nav-links.open { display: flex; }
   .nav-toggle { display: flex; }
-  .nav-auth-btns { display: none; }
+  .nav-cta-btns { display: none; }
   .hero-inner { padding: 40px 24px; }
   .hero-cta   { flex-direction: column; }
   .btn        { justify-content: center; }

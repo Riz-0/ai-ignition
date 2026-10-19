@@ -149,7 +149,7 @@
 
 .topbar {
   height: 54px;
-  background: rgba(8,9,15,.88);
+  background: var(--bg-topbar, rgba(8,9,15,.88));
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
   display: flex;
