@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import useAppStore from '../../store/appStore.js';
+import { getPersonaFeed } from '../../store/personaFeeds.js';
 import styles from './FeedPage.module.css';
 
-// Demo feed cards — in the full build these come from the merchant catalogue + AI ranking
+// Generic fallback feed (used when the account has no persona feed)
 const DEMO_FEED = [
   {
     id: 'f1', type: 'demo', merchant: 'Brew & Bites', category: 'Coffee',
@@ -37,23 +38,33 @@ const DEMO_FEED = [
 
 const TYPE_LABEL = { demo: 'Product', comparison: 'Comparison', bundle: 'Group Deal' };
 const TAG_STYLE  = {
-  replenishment:    'badge-coral',
+  replenishment:      'badge-coral',
   returning_customer: 'badge-violet',
-  comparison:       'badge-teal',
-  group_deal:       'badge-amber',
-  interest_match:   'badge-green',
-  within_budget:    'badge-green',
+  comparison:         'badge-teal',
+  group_deal:         'badge-amber',
+  interest_match:     'badge-green',
+  within_budget:      'badge-green',
+  trending:           'badge-violet',
+  travel:             'badge-teal',
+  value_set:          'badge-amber',
+  goal_linked:        'badge-amber',
+  collectible:        'badge-violet',
 };
 
 export default function FeedPage() {
-  const { shopperProfile, addToWishlist, feedback, recordSkip, applyFeedback } = useAppStore();
+  const { shopperProfile, activeAccountId, addToWishlist, feedback, recordSkip, applyFeedback } = useAppStore();
   const [saved, setSaved] = useState({});
+
+  // Personalised discovery feed for this persona (Emily → beauty/travel,
+  // John → fitness/collectibles), falling back to the generic demo feed.
+  const personaFeed = getPersonaFeed(activeAccountId, shopperProfile?.userType);
+  const sourceFeed  = personaFeed ?? DEMO_FEED;
 
   // Feed reacts to stored feedback (Phase 2 explicit + implicit loops):
   //  - hide items the user skipped
   //  - hide items in a disliked category
   //  - hide items above the lowered price threshold
-  const visibleFeed = DEMO_FEED.filter(item => {
+  const visibleFeed = sourceFeed.filter(item => {
     if (feedback.skippedFeedIds.includes(item.id)) return false;
     if (feedback.dislikedCategories.includes(item.category)) return false;
     if (feedback.priceThreshold != null && item.price != null && item.price > feedback.priceThreshold) return false;
@@ -75,7 +86,8 @@ export default function FeedPage() {
     <div>
       <h1 className="page-title">Discover</h1>
       <p className="page-sub">
-        Personalized picks based on your interests: {shopperProfile?.interests?.join(', ') || 'everything'}.
+        {shopperProfile?.name ? `Hand-picked for ${shopperProfile.name} — ` : 'Personalised picks — '}
+        based on your interests: {shopperProfile?.interests?.join(', ') || 'everything'}.
       </p>
 
       {/* Feedback summary — shows the loop is working */}
@@ -90,7 +102,7 @@ export default function FeedPage() {
 
       <div className={styles.disclaimer}>
         <span>🔬</span>
-        <p>This feed uses sample merchant data for the hackathon demo. All products, prices and deals are illustrative. Simulated content is labelled.</p>
+        <p>Picks reference real brands matched to your interests; prices are indicative and may differ at checkout. Links open the official store. Bundles marked SIMULATED are illustrative.</p>
       </div>
 
       <div className={styles.feed}>
@@ -127,7 +139,13 @@ export default function FeedPage() {
                 >
                   {saved[item.id] ? '❤️ Saved' : '❤️ Save'}
                 </button>
-                <button className="btn btn-primary btn-sm">{item.cta}</button>
+                {item.url ? (
+                  <a className="btn btn-primary btn-sm" href={item.url} target="_blank" rel="noopener noreferrer">
+                    {item.cta}
+                  </a>
+                ) : (
+                  <button className="btn btn-primary btn-sm">{item.cta}</button>
+                )}
               </div>
             </div>
           </div>
