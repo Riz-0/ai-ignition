@@ -2,43 +2,41 @@ import React, { useState, useRef, useEffect } from 'react';
 import useAppStore from '../../store/appStore.js';
 import styles from './ChatPage.module.css';
 
-// Response-based adaptation map
-const RESPONSE_ADAPTATIONS = {
-  'too expensive': 'Got it — I\'ll look for lower-cost alternatives or a group bundle. What\'s your budget for this?',
-  'remind me later': 'No problem! When would you like me to remind you? (e.g. "the 25th" or "next Friday")',
-  'wrong style': 'Thanks for telling me. Can you describe what style you\'re looking for? I\'ll update your preferences.',
-  'not interested': 'Understood — I\'ve noted this. I won\'t suggest this type of product again.',
-  'already bought': 'Great! I\'ll end this recommendation. Would you like me to check in on whether you\'re happy with it in a few days?',
-  'still have enough': 'Got it — I\'ll pause the replenishment check. I\'ll ask again in a few weeks.',
-  'interested': 'Here are some options based on your preferences and budget. Which one looks most suitable?',
-  'stop notifications': 'Understood — I\'ve stopped notifications for this product. You can adjust this in Settings at any time.',
-};
+// Rule → { reply, intent } so each tap both replies AND updates preferences.
+const RESPONSE_RULES = [
+  { keys: ['too expensive', 'expensive', 'pricey', 'budget'], intent: 'too_expensive',
+    reply: "Got it — I've lowered your price threshold by 20% and I'll look for cheaper alternatives or a group bundle." },
+  { keys: ['remind me later', 'remind', 'later'], intent: 'remind_later',
+    reply: 'No problem! When would you like me to remind you? You can say something like "the 25th" or "next Friday".' },
+  { keys: ['wrong style', 'not my style', "don't like", 'different style'], intent: 'wrong_style',
+    reply: "Thanks for telling me — I've noted that and I'll steer away from this style. What are you looking for instead?" },
+  { keys: ['not interested', 'no thanks', 'stop recommending'], intent: 'not_interested',
+    reply: "Understood — I've stopped this recommendation and adjusted your future suggestions." },
+  { keys: ['already bought', 'already got', 'bought it'], intent: 'already_bought',
+    reply: "Great! I'll end this recommendation. Want me to check in on whether you're happy with it in a few days?" },
+  { keys: ['still have enough', 'still stocked', 'not running low'], intent: 'still_enough',
+    reply: "Got it — I'll pause the replenishment check and ask again in a few weeks." },
+  { keys: ['interested', 'tell me more', 'show me', 'looks good', 'yes'], intent: 'interested',
+    reply: "Great — here are options within your budget. Which one looks most suitable?" },
+  { keys: ['stop notifications', 'unsubscribe', 'no more messages'], intent: 'stop_notifications',
+    reply: "Understood — I've stopped push follow-ups. You can change this in Settings any time." },
+  { keys: ['payday', '25th', 'end of month'], intent: 'payday',
+    reply: "I've scheduled a reminder for your chosen date. I'll verify the product and price are still available before sending it." },
+];
 
-// AI response generator (mock — replace with real LLM call in full build)
-function getAIReply(userMsg) {
-  const lower = userMsg.toLowerCase();
-  for (const [key, reply] of Object.entries(RESPONSE_ADAPTATIONS)) {
-    if (lower.includes(key)) return reply;
-  }
-  if (lower.includes('payday') || lower.includes('25th') || lower.includes('remind')) {
-    return 'I\'ve scheduled a reminder for you. I\'ll check that the product and offer are still available before sending it.';
-  }
-  if (lower.includes('cheap') || lower.includes('budget') || lower.includes('price')) {
-    return 'Let me check what\'s available within your budget. Do you want me to also look for eligible group deals?';
-  }
-  if (lower.includes('coffee') || lower.includes('shoes') || lower.includes('bag')) {
-    return 'I found a few options matching your interests. Want me to show them in your feed, or would you prefer details here?';
-  }
-  return 'Got it — I\'m adapting your recommendations based on that. Is there anything specific you\'d like me to find for you?';
+function matchRule(msg) {
+  const lower = msg.toLowerCase();
+  return RESPONSE_RULES.find(r => r.keys.some(k => lower.includes(k))) ?? null;
 }
 
+// Quick-reply chips — now include Interested and Not interested (Phase 3).
 const QUICK_REPLIES = [
-  'Too expensive', 'Remind me later', 'Wrong style', 'Already bought',
-  'Show alternatives', 'What\'s in my budget?', 'Stop notifications',
+  'Interested', 'Too expensive', 'Remind me later', 'Wrong style',
+  'Already bought', 'Not interested', 'Show alternatives', 'Stop notifications',
 ];
 
 export default function ChatPage() {
-  const { customerProfile, addConversation, addMessage, conversations } = useAppStore();
+  const { shopperProfile, addConversation, addMessage, conversations, applyFeedback } = useAppStore();
   const [input, setInput]   = useState('');
   const [convId, setConvId] = useState(null);
   const [typing, setTyping] = useState(false);
@@ -72,11 +70,19 @@ export default function ChatPage() {
     setInput('');
     addMessage(conv.id, { role: 'user', text: msg });
 
+    const rule = matchRule(msg);
+    // Explicit feedback loop — persist the preference change.
+    if (rule) {
+      applyFeedback(rule.intent, { category: conv.productCategory ?? null });
+    }
+    const reply = rule?.reply
+      ?? "Got it — I'm adapting your recommendations based on that. Anything specific you'd like me to find?";
+
     setTyping(true);
     setTimeout(() => {
       setTyping(false);
-      addMessage(conv.id, { role: 'ai', text: getAIReply(msg) });
-    }, 900 + Math.random() * 600);
+      addMessage(conv.id, { role: 'ai', text: reply });
+    }, 700 + Math.random() * 500);
   }
 
   function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
@@ -94,7 +100,7 @@ export default function ChatPage() {
         {messages.length === 0 && (
           <div className={styles.welcome}>
             <span className={styles.welcomeIcon}>🛒</span>
-            <p>Hi {customerProfile?.name ?? 'there'}! I'm your 2am shopping companion.</p>
+            <p>Hi {shopperProfile?.name ?? 'there'}! I'm your 2am shopping companion.</p>
             <p style={{ fontSize: '.85rem', color: 'var(--text-dim)', marginTop: 6 }}>
               Ask me anything — about a saved product, your wishlist, or what to buy next.
             </p>

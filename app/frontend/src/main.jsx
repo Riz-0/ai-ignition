@@ -32,12 +32,25 @@ function ThemeSync() {
   return null;
 }
 
-/* ── Pick up a session written by the website ──────────────── */
+/* ── Pick up a session written by the website, and load that
+      account's per-account profile into the active slots ──────── */
 function StorageSync() {
   const syncFromStorage = useAuthStore((s) => s.syncFromStorage);
+  const currentUser     = useAuthStore((s) => s.currentUser);
+  const activeAccountId = useAppStore((s) => s.activeAccountId);
+  const setActiveAccount = useAppStore((s) => s.setActiveAccount);
+
   React.useEffect(() => {
     syncFromStorage();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Whenever the logged-in account changes, swap in its saved profile.
+  React.useEffect(() => {
+    if (currentUser?.id && activeAccountId !== currentUser.id) {
+      setActiveAccount(currentUser.id);
+    }
+  }, [currentUser, activeAccountId, setActiveAccount]);
+
   return null;
 }
 

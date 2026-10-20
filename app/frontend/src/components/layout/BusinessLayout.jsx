@@ -15,7 +15,7 @@ const NAV_BASE = [
 ];
 
 export default function BusinessLayout() {
-  const { merchantProfile, supportHandovers, reset } = useAppStore();
+  const { merchantProfile, supportHandovers, switchMode } = useAppStore();
   const { logout } = useAuthStore();
   const t = useT();
   const [open, setOpen] = useState(false);
@@ -58,7 +58,7 @@ export default function BusinessLayout() {
             </div>
           </div>
           <button className={styles.switchBtn} title="Switch view"
-            onClick={() => { reset(); navigate('/'); }}
+            onClick={() => { switchMode(); navigate('/'); }}
           >⇄</button>
           <button className={styles.logoutBtn} title={t('common.signOut')}
             onClick={() => { logout(); navigate('/login'); }}

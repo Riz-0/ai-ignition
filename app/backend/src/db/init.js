@@ -203,6 +203,7 @@ export function initDb() {
       orders      INTEGER DEFAULT 0,
       last_order  TEXT,
       mode        TEXT,             -- 'student'|'working'|null — used only for wording variant, not financial inference
+      holdout     INTEGER DEFAULT 0, -- 1 = control group, excluded from journeys; used for metrics comparison
       notes       TEXT,
       created_at  TEXT DEFAULT (datetime('now'))
     );

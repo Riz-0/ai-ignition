@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useAuthStore from '../store/authStore.js';
+import useAppStore  from '../store/appStore.js';
 import { useT } from '../i18n/I18nProvider.jsx';
 import { UIPrefsCluster } from '../components/UIPrefs.jsx';
 import styles from './AuthPage.module.css';
@@ -16,6 +17,7 @@ export default function SignupPage() {
   const [loading,  setLoading]  = useState(false);
 
   const { signup } = useAuthStore();
+  const { setActiveAccount } = useAppStore();
   const t = useT();
   const navigate   = useNavigate();
 
@@ -41,6 +43,8 @@ export default function SignupPage() {
         setError(t('login.error'));
         return;
       }
+      // Tie the new account to the profile it is about to create in onboarding
+      setActiveAccount(result.accountId);
       // All roles onboard through their respective flows
       navigate(role === 'business' ? '/business/onboarding' : '/customer/onboarding');
     }, 400);

@@ -7,7 +7,7 @@ import { UIPrefsCluster } from '../../components/UIPrefs.jsx';
 import styles from './Layout.module.css';
 
 export default function CustomerLayout() {
-  const { shopperProfile, reminders, reset } = useAppStore();
+  const { shopperProfile, reminders, switchMode } = useAppStore();
   const { logout } = useAuthStore();
   const t = useT();
   const [open, setOpen] = useState(false);
@@ -77,7 +77,7 @@ export default function CustomerLayout() {
             </div>
           </div>
           <button className={styles.switchBtn} title="Switch view"
-            onClick={() => { reset(); navigate('/'); }}>⇄</button>
+            onClick={() => { switchMode(); navigate('/'); }}>⇄</button>
           <button className={styles.logoutBtn} title={t('common.signOut')}
             onClick={() => { logout(); navigate('/login'); }}>⏻</button>
         </div>

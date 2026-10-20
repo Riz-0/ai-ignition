@@ -67,7 +67,7 @@ const useAuthStore = create(
         );
         if (!account) return { success: false, error: 'Incorrect username or password.' };
         set({ currentUser: account, isLoggedIn: true });
-        return { success: true, role: account.role };
+        return { success: true, role: account.role, accountId: account.id };
       },
 
       // ── Sign up ──────────────────────────────────────────────
@@ -94,7 +94,7 @@ const useAuthStore = create(
         };
 
         set(s => ({ accounts: [...s.accounts, newAccount], currentUser: newAccount, isLoggedIn: true }));
-        return { success: true, role: newAccount.role };
+        return { success: true, role: newAccount.role, accountId: newAccount.id };
       },
 
       // ── Logout ───────────────────────────────────────────────

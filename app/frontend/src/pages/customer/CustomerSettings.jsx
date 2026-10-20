@@ -8,20 +8,20 @@ const STUDENT_INTERESTS = ['Fashion', 'Coffee', 'Beauty', 'Stationery & Study', 
 const WORKING_INTERESTS = ['Fashion', 'Coffee', 'Beauty', 'Workday Essentials', 'Electronics', 'Food & Snacks', 'Home & Living', 'Gadgets'];
 
 export default function CustomerSettings() {
-  const { customerProfile, setCustomerProfile, reset, theme, setTheme } = useAppStore();
+  const { shopperProfile, setShopperProfile, reset, theme, setTheme } = useAppStore();
   const t = useT();
   const { lang, setLang, languages } = useI18n();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    name:        customerProfile?.name        ?? '',
-    userType:    customerProfile?.userType    ?? 'student',
-    interests:   customerProfile?.interests   ?? [],
-    budget:      customerProfile?.budget      ?? '',
-    quietStart:  customerProfile?.quietStart  ?? '22:00',
-    quietEnd:    customerProfile?.quietEnd    ?? '08:00',
-    paydayDate:  customerProfile?.paydayDate  ?? '',
-    notifFreq:   customerProfile?.notifFreq   ?? 'occasional',
+    name:        shopperProfile?.name        ?? '',
+    userType:    shopperProfile?.userType    ?? 'student',
+    interests:   shopperProfile?.interests   ?? [],
+    budget:      shopperProfile?.budget      ?? '',
+    quietStart:  shopperProfile?.quietStart  ?? '22:00',
+    quietEnd:    shopperProfile?.quietEnd    ?? '08:00',
+    paydayDate:  shopperProfile?.paydayDate  ?? '',
+    notifFreq:   shopperProfile?.notifFreq   ?? 'occasional',
   });
   const [saved, setSaved] = useState(false);
 
@@ -41,7 +41,7 @@ export default function CustomerSettings() {
 
   function save(e) {
     e.preventDefault();
-    setCustomerProfile({ ...form, budget: Number(form.budget) || null });
+    setShopperProfile({ ...form, budget: Number(form.budget) || null });
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   }

@@ -13,8 +13,8 @@ export default function LoginPage() {
   const [loading,  setLoading]  = useState(false);
   const [showPass, setShowPass] = useState(false);
 
-  const { login }                                          = useAuthStore();
-  const { shopperProfile, merchantProfile, setAppMode }    = useAppStore();
+  const { login }                 = useAuthStore();
+  const { setActiveAccount }      = useAppStore();
   const t = useT();
   const navigate = useNavigate();
 
@@ -27,18 +27,12 @@ export default function LoginPage() {
       setLoading(false);
       if (!result.success) { setError(t('login.error')); return; }
 
-      if (result.role === 'admin') { navigate('/'); return; }
-
-      // Route returning users to their last view
-      if (result.role === 'business' && merchantProfile) {
-        setAppMode('business'); navigate('/business');
-      } else if ((result.role === 'working') && shopperProfile?.userType === 'working') {
-        setAppMode('working'); navigate('/customer');
-      } else if ((result.role === 'student') && shopperProfile?.userType === 'student') {
-        setAppMode('student'); navigate('/customer');
-      } else {
-        navigate('/');
-      }
+      // Load THIS account's saved profiles into the active slots, then
+      // always land on mode-select. The mode-select screen routes the
+      // user into their saved view (or onboarding) based on the profile
+      // that belongs to this account — no role/userType mismatch bounce.
+      setActiveAccount(result.accountId);
+      navigate('/');
     }, 400);
   }
 
