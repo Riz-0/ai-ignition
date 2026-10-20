@@ -8,7 +8,7 @@ import styles from './Layout.module.css';
 
 export default function CustomerLayout() {
   const { shopperProfile, reminders, switchMode } = useAppStore();
-  const { logout } = useAuthStore();
+  const { logout, isAdmin } = useAuthStore();
   const t = useT();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -76,8 +76,10 @@ export default function CustomerLayout() {
               <div className={styles.userSub}>{isStudent ? t('mode.student') : t('mode.working')}</div>
             </div>
           </div>
-          <button className={styles.switchBtn} title="Switch view"
-            onClick={() => { switchMode(); navigate('/'); }}>⇄</button>
+          {isAdmin() && (
+            <button className={styles.switchBtn} title="Switch view"
+              onClick={() => { switchMode(); navigate('/'); }}>⇄</button>
+          )}
           <button className={styles.logoutBtn} title={t('common.signOut')}
             onClick={() => { logout(); navigate('/login'); }}>⏻</button>
         </div>

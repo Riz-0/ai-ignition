@@ -86,6 +86,9 @@ export const TRANSLATIONS = {
       createOne: 'Create one',
       error: 'Incorrect username or password.',
     },
+    welcome: {
+      hint: 'New here? Create an account. Returning? Sign in to pick up where you left off.',
+    },
     signup: {
       title: 'Create your account',
       sub: 'Choose Student, Working Adult or Business to get started.',
@@ -265,6 +268,9 @@ export const TRANSLATIONS = {
       noAccount: 'アカウントをお持ちでないですか？',
       createOne: '作成する',
       error: 'ユーザー名またはパスワードが正しくありません。',
+    },
+    welcome: {
+      hint: 'はじめての方はアカウントを作成。再開する方はサインインしてください。',
     },
     signup: {
       title: 'アカウントを作成',
@@ -446,6 +452,9 @@ export const TRANSLATIONS = {
       createOne: '创建一个',
       error: '用户名或密码不正确。',
     },
+    welcome: {
+      hint: '初次使用？创建一个账户。老用户？登录继续。',
+    },
     signup: {
       title: '创建您的账户',
       sub: '选择学生、上班族或商家即可开始。',
@@ -626,6 +635,9 @@ export const TRANSLATIONS = {
       createOne: 'สร้างบัญชี',
       error: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
     },
+    welcome: {
+      hint: 'มาใหม่? สร้างบัญชี กลับมาอีกครั้ง? เข้าสู่ระบบเพื่อใช้งานต่อ',
+    },
     signup: {
       title: 'สร้างบัญชีของคุณ',
       sub: 'เลือก นักเรียน คนทำงาน หรือธุรกิจ เพื่อเริ่มต้น',
@@ -805,6 +817,9 @@ export const TRANSLATIONS = {
       noAccount: '계정이 없으신가요?',
       createOne: '계정 만들기',
       error: '사용자 이름 또는 비밀번호가 올바르지 않습니다.',
+    },
+    welcome: {
+      hint: '처음이신가요? 계정을 만드세요. 다시 오셨나요? 로그인해서 이어가세요.',
     },
     signup: {
       title: '계정 만들기',

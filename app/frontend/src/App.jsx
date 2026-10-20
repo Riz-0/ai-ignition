@@ -34,6 +34,25 @@ function RequireAuth({ children }) {
   return isLoggedIn ? children : <Navigate to="/login" replace />;
 }
 
+/**
+ * Landing router for `/`. The 3-mode selector is ADMIN-ONLY. Everyone
+ * else is sent straight to the view that matches their account, so a
+ * normal user never sees the mode picker.
+ */
+function LandingRouter() {
+  const role            = useAuthStore(s => s.currentUser?.role);
+  const shopperProfile  = useAppStore(s => s.shopperProfile);
+  const merchantProfile = useAppStore(s => s.merchantProfile);
+
+  if (role === 'admin') return <ModeSelectPage />;
+
+  if (role === 'business') {
+    return <Navigate to={merchantProfile ? '/business' : '/business/onboarding'} replace />;
+  }
+  // student / working (or anything else) → customer app
+  return <Navigate to={shopperProfile ? '/customer' : '/customer/onboarding'} replace />;
+}
+
 export default function App() {
   const { shopperProfile, merchantProfile } = useAppStore();
 
@@ -45,8 +64,8 @@ export default function App() {
       <Route path="/signup"   element={<SignupPage />} />
       <Route path="/download" element={<DownloadPage />} />
 
-      {/* ── Mode select ────────────────────────────────────── */}
-      <Route path="/" element={<RequireAuth><ModeSelectPage /></RequireAuth>} />
+      {/* ── Landing: admin → mode select, others → their view ── */}
+      <Route path="/" element={<RequireAuth><LandingRouter /></RequireAuth>} />
 
       {/* ── Customer (student + working adult) ─────────────── */}
       <Route path="/customer/onboarding"

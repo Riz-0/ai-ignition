@@ -17,7 +17,7 @@ export default function SignupPage() {
   const [loading,  setLoading]  = useState(false);
 
   const { signup } = useAuthStore();
-  const { setActiveAccount } = useAppStore();
+  const { setActiveAccount, setAppMode } = useAppStore();
   const t = useT();
   const navigate   = useNavigate();
 
@@ -45,6 +45,8 @@ export default function SignupPage() {
       }
       // Tie the new account to the profile it is about to create in onboarding
       setActiveAccount(result.accountId);
+      // Set the mode so onboarding pre-selects the right type
+      setAppMode(role);
       // All roles onboard through their respective flows
       navigate(role === 'business' ? '/business/onboarding' : '/customer/onboarding');
     }, 400);
@@ -55,7 +57,10 @@ export default function SignupPage() {
       <div className={styles.prefsBar}><UIPrefsCluster /></div>
       <div className={styles.card}>
         <div className={styles.header}>
-          <Link to="/" className={styles.logo}>🛒 {t('common.appName')}</Link>
+          <div className={styles.brandRow}>
+            <span className={styles.brandIcon}>🛒</span>
+            <span className={styles.brandName}>{t('common.appName')}</span>
+          </div>
           <h1 className={styles.title}>{t('signup.title')}</h1>
           <p className={styles.sub}>{t('signup.sub')}</p>
         </div>

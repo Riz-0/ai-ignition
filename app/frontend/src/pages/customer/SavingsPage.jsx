@@ -6,13 +6,16 @@ const ICONS = ['🎯','👟','💻','✈️','📚','☕','🎮','💄','🎒','
 
 export default function SavingsPage() {
   const {
-    shopperProfile, savingsGoals, savingsLedger,
+    shopperProfile, savingsLedger, getActiveGoals,
     addSavingsGoal, updateSavingsGoal, deleteSavingsGoal, addLedgerEntry,
     getStudentBudget, getWorkingBudget,
   } = useAppStore();
 
   const isStudent = shopperProfile?.userType === 'student';
   const budget    = isStudent ? getStudentBudget() : getWorkingBudget();
+
+  // Goals scoped to the logged-in account (keeps persona goals separate).
+  const savingsGoals = getActiveGoals();
 
   const [showForm, setShowForm]     = useState(false);
   const [form, setForm]             = useState({ name: '', icon: '🎯', targetAmount: '', contributionAmount: '', contributionFrequency: isStudent ? 'weekly' : 'monthly' });

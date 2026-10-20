@@ -68,6 +68,51 @@ const useAppStore = create(
           };
         }),
 
+      /**
+       * Seed pre-filled profiles + savings goals for the demo/persona
+       * accounts so they skip onboarding. Idempotent: only fills a slot if
+       * that account has no profile yet, so it never overwrites real edits.
+       *
+       * @param {Array} bundles  from demoAccounts.DEMO_ACCOUNTS
+       */
+      seedDemoProfiles: (bundles) =>
+        set((s) => {
+          const profiles = { ...s.profilesByAccount };
+          let goals = s.savingsGoals ? [...s.savingsGoals] : [];
+          let touched = false;
+
+          for (const b of bundles) {
+            const id = b?.account?.id;
+            if (!id || !b.profile) continue;
+            if (profiles[id]) continue; // already has a profile — leave it
+
+            const entry = {};
+            if (b.profile.kind === 'merchant') entry.merchant = b.profile.data;
+            else                                entry.shopper  = b.profile.data;
+            profiles[id] = entry;
+            touched = true;
+
+            // Attach this account's demo savings goals (tagged by account).
+            if (Array.isArray(b.goals) && b.goals.length) {
+              const hasGoals = goals.some(g => g.accountId === id);
+              if (!hasGoals) {
+                b.goals.forEach(g => {
+                  goals.push({
+                    id: crypto.randomUUID(),
+                    accountId: id,
+                    createdAt: new Date().toISOString(),
+                    status: 'active',
+                    currentAmount: 0,
+                    ...g,
+                  });
+                });
+              }
+            }
+          }
+
+          return touched ? { profilesByAccount: profiles, savingsGoals: goals } : {};
+        }),
+
       // backward-compat setter only. NOTE: no `customerProfile` getter here —
       // Zustand's Object.assign snapshot freezes getters to their first value
       // (null), the stale-profile bug. Pages read `shopperProfile` directly.
@@ -138,6 +183,7 @@ const useAppStore = create(
         set((s) => ({
           savingsGoals: [...s.savingsGoals, {
             id: crypto.randomUUID(),
+            accountId: s.activeAccountId ?? null, // tag to the logged-in account
             createdAt: new Date().toISOString(),
             currentAmount: 0,
             status: 'active',
@@ -148,6 +194,17 @@ const useAppStore = create(
         set((s) => ({ savingsGoals: s.savingsGoals.map((g) => g.id === id ? { ...g, ...u } : g) })),
       deleteSavingsGoal: (id) =>
         set((s) => ({ savingsGoals: s.savingsGoals.filter((g) => g.id !== id) })),
+
+      /**
+       * Goals visible to the active account. A goal with no accountId
+       * (legacy / created before scoping) shows for everyone; a tagged
+       * goal shows only for its owner. Keeps persona goals separate.
+       */
+      getActiveGoals: () => {
+        const s = get();
+        const id = s.activeAccountId;
+        return s.savingsGoals.filter(g => !g.accountId || g.accountId === id);
+      },
 
       // ── Savings ledger entries ───────────────────────────────
       savingsLedger: [],

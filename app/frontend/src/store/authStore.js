@@ -1,31 +1,27 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { DEMO_ACCOUNT_LIST } from './demoAccounts.js';
 
 /**
  * Auth store — manages login sessions and user accounts.
  *
- * Pre-seeded admin account:
- *   username : user
- *   password : password
- *   role     : admin   (can access both customer and business views,
- *                        and skip onboarding entirely)
+ * Pre-seeded demo accounts (see demoAccounts.js):
+ *   user / password          → admin (all modes, skips onboarding)
+ *   emily / emilypassword    → Emily, student persona
+ *   john / johnpassword      → John, working-adult persona
+ *   student / student        → demo student account
+ *   working / working        → demo working-adult account
+ *   business / business      → demo business account
  *
  * Additional accounts can be created via the signup flow.
  * Passwords are stored as-is here (frontend demo only).
  * In production use bcrypt on the backend and never store plain passwords.
  */
 
-const SEED_ACCOUNTS = [
-  {
-    id:        'admin-001',
-    username:  'user',
-    password:  'password',
-    email:     'admin@2amshoppers.com',
-    name:      'Admin',
-    role:      'admin',   // 'admin' | 'customer' | 'merchant'
-    createdAt: '2026-01-01T00:00:00.000Z',
-  },
-];
+const SEED_ACCOUNTS = DEMO_ACCOUNT_LIST.map(a => ({
+  createdAt: '2026-01-01T00:00:00.000Z',
+  ...a,
+}));
 
 const useAuthStore = create(
   persist(

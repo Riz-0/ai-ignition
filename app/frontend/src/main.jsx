@@ -5,6 +5,7 @@ import App from './App.jsx';
 import { I18nProvider } from './i18n/I18nProvider.jsx';
 import useAppStore  from './store/appStore.js';
 import useAuthStore from './store/authStore.js';
+import { DEMO_ACCOUNTS } from './store/demoAccounts.js';
 import './index.css';
 
 /* ── Apply persisted theme + language before render ────────
@@ -58,8 +59,12 @@ function StorageSync() {
   const currentUser      = useAuthStore((s) => s.currentUser);
   const activeAccountId  = useAppStore((s) => s.activeAccountId);
   const setActiveAccount = useAppStore((s) => s.setActiveAccount);
+  const seedDemoProfiles = useAppStore((s) => s.seedDemoProfiles);
 
   React.useEffect(() => {
+    // 0. Make sure every demo/persona account has its ready-to-go profile.
+    seedDemoProfiles(DEMO_ACCOUNTS);
+
     // 1. Website handoff via URL hash takes priority.
     const handoff = readSessionFromHash();
     if (handoff) {
