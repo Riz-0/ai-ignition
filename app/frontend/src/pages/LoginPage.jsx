@@ -13,10 +13,16 @@ export default function LoginPage() {
   const [loading,  setLoading]  = useState(false);
   const [showPass, setShowPass] = useState(false);
 
-  const { login }                 = useAuthStore();
+  const { login, isLoggedIn }     = useAuthStore();
   const { setActiveAccount }      = useAppStore();
   const t = useT();
   const navigate = useNavigate();
+
+  // If a session was already adopted (e.g. handed off from the website),
+  // don't sit on the login screen — go straight to mode select.
+  React.useEffect(() => {
+    if (isLoggedIn) navigate('/', { replace: true });
+  }, [isLoggedIn, navigate]);
 
   function handleSubmit(e) {
     e.preventDefault();

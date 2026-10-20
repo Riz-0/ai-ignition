@@ -100,6 +100,25 @@ const useAuthStore = create(
       // ── Logout ───────────────────────────────────────────────
       logout: () => set({ currentUser: null, isLoggedIn: false }),
 
+      // ── Adopt a session handed off from the website ───────────
+      // The marketing site passes the account via a URL hash
+      // (#session=<base64>) because localStorage is per-origin and is
+      // NOT shared between the website and the app. We merge the account
+      // into the local list (so sign-in works later too) and log in.
+      adoptSession: (account) => {
+        if (!account?.username) return { success: false };
+        const accounts = get().accounts;
+        const existing = accounts.find(
+          a => a.id === account.id || a.username.toLowerCase() === account.username.toLowerCase()
+        );
+        if (existing) {
+          set({ currentUser: existing, isLoggedIn: true });
+          return { success: true, accountId: existing.id, role: existing.role };
+        }
+        set(s => ({ accounts: [...s.accounts, account], currentUser: account, isLoggedIn: true }));
+        return { success: true, accountId: account.id, role: account.role };
+      },
+
       // ── Sync from storage ────────────────────────────────────
       // Call once on app mount to pick up a session written by the website.
       syncFromStorage: () => {
