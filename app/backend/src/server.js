@@ -15,6 +15,7 @@ import catalogueRouter     from './routes/catalogue.js';
 import customersRouter     from './routes/customers.js';
 import journeysRouter      from './routes/journeys.js';
 import dashboardRouter     from './routes/dashboard.js';
+import supportRouter       from './routes/support.js';
 
 import { errorHandler }    from './middleware/errorHandler.js';
 import { initDb }          from './db/init.js';
@@ -39,6 +40,7 @@ app.use('/api/catalogue',     catalogueRouter);
 app.use('/api/customers',     customersRouter);
 app.use('/api/journeys',      journeysRouter);
 app.use('/api/dashboard',     dashboardRouter);
+app.use('/api/support',       supportRouter);
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', ts: new Date().toISOString() }));
 

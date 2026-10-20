@@ -5,6 +5,7 @@ import App from './App.jsx';
 import { I18nProvider } from './i18n/I18nProvider.jsx';
 import useAppStore  from './store/appStore.js';
 import useAuthStore from './store/authStore.js';
+import { DEMO_ACCOUNTS } from './store/demoAccounts.js';
 import './index.css';
 
 /* ── Apply persisted theme + language before render ────────
@@ -32,12 +33,56 @@ function ThemeSync() {
   return null;
 }
 
-/* ── Pick up a session written by the website ──────────────── */
+/* ── Read a session handed off from the marketing website ──────
+   The website deep-links to the app as  .../login#session=<base64>
+   because localStorage is per-origin and is NOT shared between the
+   two sites. We decode it, adopt the account, and clean the URL. */
+function readSessionFromHash() {
+  try {
+    const m = window.location.hash.match(/session=([^&]+)/);
+    if (!m) return null;
+    const json = decodeURIComponent(escape(atob(m[1])));
+    const payload = JSON.parse(json);
+    // Strip the hash so a refresh doesn't re-trigger it.
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+    return payload?.user ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/* ── Pick up a session (from URL hash or shared storage) and load
+      that account's per-account profile into the active slots ──── */
 function StorageSync() {
-  const syncFromStorage = useAuthStore((s) => s.syncFromStorage);
+  const syncFromStorage  = useAuthStore((s) => s.syncFromStorage);
+  const adoptSession     = useAuthStore((s) => s.adoptSession);
+  const currentUser      = useAuthStore((s) => s.currentUser);
+  const activeAccountId  = useAppStore((s) => s.activeAccountId);
+  const setActiveAccount = useAppStore((s) => s.setActiveAccount);
+  const seedDemoProfiles = useAppStore((s) => s.seedDemoProfiles);
+
   React.useEffect(() => {
+    // 0. Make sure every demo/persona account has its ready-to-go profile.
+    seedDemoProfiles(DEMO_ACCOUNTS);
+
+    // 1. Website handoff via URL hash takes priority.
+    const handoff = readSessionFromHash();
+    if (handoff) {
+      const res = adoptSession(handoff);
+      if (res?.accountId) setActiveAccount(res.accountId);
+      return;
+    }
+    // 2. Otherwise pick up a same-origin session.
     syncFromStorage();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Whenever the logged-in account changes, swap in its saved profile.
+  React.useEffect(() => {
+    if (currentUser?.id && activeAccountId !== currentUser.id) {
+      setActiveAccount(currentUser.id);
+    }
+  }, [currentUser, activeAccountId, setActiveAccount]);
+
   return null;
 }
 

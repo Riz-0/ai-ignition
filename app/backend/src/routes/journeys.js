@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { v4 as uuid } from 'uuid';
 import { getDb } from '../db/init.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
+import { verifyProductAvailability } from '../services/journeyService.js';
 
 const router = Router();
 
@@ -40,13 +41,29 @@ router.post('/', asyncHandler(async (req, res) => {
     return res.status(429).json({ error: `Contact limit of ${limit} per day reached for this customer.` });
   }
 
-  // Block customers with unresolved issues
+  // Block customers with unresolved issues / opt-out / holdout
   const customer = db.prepare('SELECT * FROM customers WHERE id = ?').get(customer_id);
   if (customer?.segment === 'unresolved_issue') {
     return res.status(409).json({ error: 'Cannot start journey: customer has an unresolved support issue.' });
   }
   if (customer?.segment === 'opted_out') {
     return res.status(409).json({ error: 'Cannot start journey: customer has opted out.' });
+  }
+  if (customer?.holdout === 1) {
+    return res.status(409).json({ error: 'Customer is in the holdout (control) group and is excluded from journeys.' });
+  }
+
+  // Recheck stock/price before presenting an offer (spec §7.7).
+  // journeyService is now actually used here.
+  let availability = null;
+  if (product_id) {
+    availability = verifyProductAvailability(product_id);
+    if (!availability.available) {
+      return res.status(409).json({
+        error: `Cannot start journey: ${availability.note ?? 'product unavailable'}`,
+        availability,
+      });
+    }
   }
 
   const id = uuid();
@@ -59,7 +76,17 @@ router.post('/', asyncHandler(async (req, res) => {
   res.status(201).json({
     ...db.prepare('SELECT * FROM journeys WHERE id = ?').get(id),
     events: [],
+    availability,
   });
+}));
+
+// GET /api/journeys/:id/recheck  — re-verify stock/price before a reminder fires
+router.get('/:id/recheck', asyncHandler(async (req, res) => {
+  const db      = getDb();
+  const journey = db.prepare('SELECT * FROM journeys WHERE id = ?').get(req.params.id);
+  if (!journey) return res.status(404).json({ error: 'Journey not found' });
+  if (!journey.product_id) return res.json({ available: true, note: 'No product linked.' });
+  res.json(verifyProductAvailability(journey.product_id));
 }));
 
 // POST /api/journeys/:id/event  — log a customer response

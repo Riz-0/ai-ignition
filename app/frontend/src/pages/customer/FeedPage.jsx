@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import useAppStore from '../../store/appStore.js';
+import { getPersonaFeed } from '../../store/personaFeeds.js';
 import styles from './FeedPage.module.css';
 
-// Demo feed cards — in the full build these come from the merchant catalogue + AI ranking
+// Generic fallback feed (used when the account has no persona feed)
 const DEMO_FEED = [
   {
     id: 'f1', type: 'demo', merchant: 'Brew & Bites', category: 'Coffee',
@@ -37,37 +38,80 @@ const DEMO_FEED = [
 
 const TYPE_LABEL = { demo: 'Product', comparison: 'Comparison', bundle: 'Group Deal' };
 const TAG_STYLE  = {
-  replenishment:    'badge-coral',
+  replenishment:      'badge-coral',
   returning_customer: 'badge-violet',
-  comparison:       'badge-teal',
-  group_deal:       'badge-amber',
-  interest_match:   'badge-green',
-  within_budget:    'badge-green',
+  comparison:         'badge-teal',
+  group_deal:         'badge-amber',
+  interest_match:     'badge-green',
+  within_budget:      'badge-green',
+  trending:           'badge-violet',
+  travel:             'badge-teal',
+  value_set:          'badge-amber',
+  goal_linked:        'badge-amber',
+  collectible:        'badge-violet',
 };
 
 export default function FeedPage() {
-  const { customerProfile, addToWishlist } = useAppStore();
+  const { shopperProfile, activeAccountId, addToWishlist, feedback, recordSkip, applyFeedback } = useAppStore();
   const [saved, setSaved] = useState({});
 
+  // Personalised discovery feed for this persona (Emily → beauty/travel,
+  // John → fitness/collectibles), falling back to the generic demo feed.
+  const personaFeed = getPersonaFeed(activeAccountId, shopperProfile?.userType);
+  const sourceFeed  = personaFeed ?? DEMO_FEED;
+
+  // Feed reacts to stored feedback (Phase 2 explicit + implicit loops):
+  //  - hide items the user skipped
+  //  - hide items in a disliked category
+  //  - hide items above the lowered price threshold
+  const visibleFeed = sourceFeed.filter(item => {
+    if (feedback.skippedFeedIds.includes(item.id)) return false;
+    if (feedback.dislikedCategories.includes(item.category)) return false;
+    if (feedback.priceThreshold != null && item.price != null && item.price > feedback.priceThreshold) return false;
+    return true;
+  });
+
   function saveProduct(item) {
-    addToWishlist({ title: item.title, price: item.price?.toFixed(2) });
+    addToWishlist({ title: item.title, price: item.price?.toFixed(2), budget: shopperProfile?.budget ?? null });
+    applyFeedback('interested', { category: item.category });
     setSaved(s => ({ ...s, [item.id]: true }));
+  }
+
+  function skip(item) {
+    recordSkip(item.id);                                  // implicit signal
+    applyFeedback('not_interested', { category: item.category });
   }
 
   return (
     <div>
       <h1 className="page-title">Discover</h1>
       <p className="page-sub">
-        Personalized picks based on your interests: {customerProfile?.interests?.join(', ') || 'everything'}.
+        {shopperProfile?.name ? `Hand-picked for ${shopperProfile.name} — ` : 'Personalised picks — '}
+        based on your interests: {shopperProfile?.interests?.join(', ') || 'everything'}.
       </p>
+
+      {/* Feedback summary — shows the loop is working */}
+      {(feedback.priceThreshold != null || feedback.dislikedCategories.length > 0 || feedback.skippedFeedIds.length > 0) && (
+        <div className={styles.feedbackBar}>
+          <span>🎯 Tuned to your taste:</span>
+          {feedback.priceThreshold != null && <span className="badge badge-green">under ${feedback.priceThreshold}</span>}
+          {feedback.dislikedCategories.map(c => <span key={c} className="badge badge-coral">hiding {c}</span>)}
+          {feedback.skippedFeedIds.length > 0 && <span className="badge badge-violet">{feedback.skippedFeedIds.length} skipped</span>}
+        </div>
+      )}
 
       <div className={styles.disclaimer}>
         <span>🔬</span>
-        <p>This feed uses sample merchant data for the hackathon demo. All products, prices and deals are illustrative. Simulated content is labelled.</p>
+        <p>Picks reference real brands matched to your interests; prices are indicative and may differ at checkout. Links open the official store. Bundles marked SIMULATED are illustrative.</p>
       </div>
 
       <div className={styles.feed}>
-        {DEMO_FEED.map(item => (
+        {visibleFeed.length === 0 && (
+          <div className={`card ${styles.card}`} style={{ textAlign: 'center' }}>
+            <p className={styles.cardDesc}>No picks match your current preferences. Try saving an item or relaxing a filter in Settings.</p>
+          </div>
+        )}
+        {visibleFeed.map(item => (
           <div key={item.id} className={`card ${styles.card}`}>
             <div className={styles.cardHeader}>
               <span className={styles.cardEmoji}>{item.emoji}</span>
@@ -87,6 +131,7 @@ export default function FeedPage() {
               </div>
               <div className={styles.cardActions}>
                 {item.price && <span className={styles.price}>${item.price.toFixed(2)}</span>}
+                <button className="btn btn-ghost btn-sm" onClick={() => skip(item)} title="Not interested">✕ Skip</button>
                 <button
                   className={`btn btn-ghost btn-sm ${saved[item.id] ? styles.savedBtn : ''}`}
                   onClick={() => saveProduct(item)}
@@ -94,7 +139,13 @@ export default function FeedPage() {
                 >
                   {saved[item.id] ? '❤️ Saved' : '❤️ Save'}
                 </button>
-                <button className="btn btn-primary btn-sm">{item.cta}</button>
+                {item.url ? (
+                  <a className="btn btn-primary btn-sm" href={item.url} target="_blank" rel="noopener noreferrer">
+                    {item.cta}
+                  </a>
+                ) : (
+                  <button className="btn btn-primary btn-sm">{item.cta}</button>
+                )}
               </div>
             </div>
           </div>

@@ -30,25 +30,139 @@ const useAppStore = create(
       setTheme: (theme) => set({ theme }),
       toggleTheme: () => set((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
 
-      // ── Shopper profile (student + working adult) ─────────────
-      shopperProfile: null,
-      // {
-      //   name, userType: 'student'|'working',
-      //   interests[], budget, quietStart, quietEnd,
-      //   paydayDate, notifFreq,
-      //   // working adult extras:
-      //   income, planningPeriod: 'monthly'|'custom',
-      //   essentialReserve, savingsAllocation, buffer,
-      //   // student extras:
-      //   allowance, allowancePeriod: 'weekly'|'monthly',
-      //   essentialReserveStudent,
-      //   gamificationEnabled: true
-      // }
-      setShopperProfile: (p) => set({ shopperProfile: p }),
+      // ── Per-account profiles ─────────────────────────────────
+      // Profiles are keyed by the logged-in account id so that two
+      // accounts in the same browser never clobber each other, and
+      // signing out does NOT wipe a user's saved onboarding.
+      // { [accountId]: { shopper?: {...}, merchant?: {...} } }
+      profilesByAccount: {},
+      activeAccountId: null,
 
-      // backward compat alias
-      get customerProfile() { return get().shopperProfile; },
-      setCustomerProfile: (p) => set({ shopperProfile: p }),
+      // The active profiles mirror the entry for activeAccountId. Pages
+      // read these directly. setActiveAccount() swaps them in on login.
+      shopperProfile: null,
+      merchantProfile: null,
+
+      /**
+       * Point the store at a given account. Loads that account's saved
+       * shopper/merchant profiles into the active slots. Call on login.
+       */
+      setActiveAccount: (accountId) =>
+        set((s) => {
+          const entry = s.profilesByAccount[accountId] ?? {};
+          return {
+            activeAccountId: accountId,
+            shopperProfile:  entry.shopper  ?? null,
+            merchantProfile: entry.merchant ?? null,
+          };
+        }),
+
+      setShopperProfile: (p) =>
+        set((s) => {
+          const id = s.activeAccountId;
+          if (!id) return { shopperProfile: p };
+          const entry = { ...(s.profilesByAccount[id] ?? {}), shopper: p };
+          return {
+            shopperProfile: p,
+            profilesByAccount: { ...s.profilesByAccount, [id]: entry },
+          };
+        }),
+
+      /**
+       * Seed pre-filled profiles + savings goals for the demo/persona
+       * accounts so they skip onboarding. Idempotent: only fills a slot if
+       * that account has no profile yet, so it never overwrites real edits.
+       *
+       * @param {Array} bundles  from demoAccounts.DEMO_ACCOUNTS
+       */
+      seedDemoProfiles: (bundles) =>
+        set((s) => {
+          const profiles = { ...s.profilesByAccount };
+          let goals = s.savingsGoals ? [...s.savingsGoals] : [];
+          let touched = false;
+
+          for (const b of bundles) {
+            const id = b?.account?.id;
+            if (!id || !b.profile) continue;
+            if (profiles[id]) continue; // already has a profile — leave it
+
+            const entry = {};
+            if (b.profile.kind === 'merchant') entry.merchant = b.profile.data;
+            else                                entry.shopper  = b.profile.data;
+            profiles[id] = entry;
+            touched = true;
+
+            // Attach this account's demo savings goals (tagged by account).
+            if (Array.isArray(b.goals) && b.goals.length) {
+              const hasGoals = goals.some(g => g.accountId === id);
+              if (!hasGoals) {
+                b.goals.forEach(g => {
+                  goals.push({
+                    id: crypto.randomUUID(),
+                    accountId: id,
+                    createdAt: new Date().toISOString(),
+                    status: 'active',
+                    currentAmount: 0,
+                    ...g,
+                  });
+                });
+              }
+            }
+          }
+
+          return touched ? { profilesByAccount: profiles, savingsGoals: goals } : {};
+        }),
+
+      // backward-compat setter only. NOTE: no `customerProfile` getter here —
+      // Zustand's Object.assign snapshot freezes getters to their first value
+      // (null), the stale-profile bug. Pages read `shopperProfile` directly.
+      setCustomerProfile: (p) => get().setShopperProfile(p),
+
+      // ── Feedback signals (explicit + implicit) ───────────────
+      // Persisted so taps actually change future recommendations.
+      // shape: { priceThreshold, dislikedCategories[], likedCategories[],
+      //          skippedFeedIds[], lastResponse, updatedAt }
+      feedback: {
+        priceThreshold: null,
+        dislikedCategories: [],
+        likedCategories: [],
+        skippedFeedIds: [],
+        lastResponse: null,
+      },
+
+      /**
+       * Explicit feedback loop (Phase 2). A quick-reply tap or typed
+       * response updates stored preferences:
+       *  - 'too_expensive' lowers the price threshold by 20%
+       *  - 'wrong_style' / 'not_interested' record a disliked category
+       *  - 'interested' records a liked category
+       */
+      applyFeedback: (intent, { category, currentPrice } = {}) =>
+        set((s) => {
+          const fb = { ...s.feedback, lastResponse: intent, updatedAt: new Date().toISOString() };
+          if (intent === 'too_expensive' || intent === 'price_objection') {
+            const base = Number(currentPrice) || s.feedback.priceThreshold || s.shopperProfile?.budget || 0;
+            if (base > 0) fb.priceThreshold = Math.round(base * 0.8 * 100) / 100; // −20%
+          }
+          if ((intent === 'wrong_style' || intent === 'not_interested') && category) {
+            fb.dislikedCategories = [...new Set([...s.feedback.dislikedCategories, category])];
+            fb.likedCategories    = s.feedback.likedCategories.filter(c => c !== category);
+          }
+          if (intent === 'interested' && category) {
+            fb.likedCategories    = [...new Set([...s.feedback.likedCategories, category])];
+            fb.dislikedCategories = s.feedback.dislikedCategories.filter(c => c !== category);
+          }
+          return { feedback: fb };
+        }),
+
+      /** Implicit feedback loop — record a skipped feed item. */
+      recordSkip: (feedId) =>
+        set((s) => ({
+          feedback: {
+            ...s.feedback,
+            skippedFeedIds: [...new Set([...s.feedback.skippedFeedIds, feedId])],
+          },
+        })),
 
       // ── Wishlist ─────────────────────────────────────────────
       wishlist: [],
@@ -69,6 +183,7 @@ const useAppStore = create(
         set((s) => ({
           savingsGoals: [...s.savingsGoals, {
             id: crypto.randomUUID(),
+            accountId: s.activeAccountId ?? null, // tag to the logged-in account
             createdAt: new Date().toISOString(),
             currentAmount: 0,
             status: 'active',
@@ -79,6 +194,17 @@ const useAppStore = create(
         set((s) => ({ savingsGoals: s.savingsGoals.map((g) => g.id === id ? { ...g, ...u } : g) })),
       deleteSavingsGoal: (id) =>
         set((s) => ({ savingsGoals: s.savingsGoals.filter((g) => g.id !== id) })),
+
+      /**
+       * Goals visible to the active account. A goal with no accountId
+       * (legacy / created before scoping) shows for everyone; a tagged
+       * goal shows only for its owner. Keeps persona goals separate.
+       */
+      getActiveGoals: () => {
+        const s = get();
+        const id = s.activeAccountId;
+        return s.savingsGoals.filter(g => !g.accountId || g.accountId === id);
+      },
 
       // ── Savings ledger entries ───────────────────────────────
       savingsLedger: [],
@@ -177,8 +303,17 @@ const useAppStore = create(
         set((s) => ({ purchaseHistory: [...s.purchaseHistory, { id: crypto.randomUUID(), confirmedAt: new Date().toISOString(), ...p }] })),
 
       // ── Business / Merchant ──────────────────────────────────
-      merchantProfile: null,
-      setMerchantProfile: (p) => set({ merchantProfile: p }),
+      // merchantProfile is declared in the per-account section above.
+      setMerchantProfile: (p) =>
+        set((s) => {
+          const id = s.activeAccountId;
+          if (!id) return { merchantProfile: p };
+          const entry = { ...(s.profilesByAccount[id] ?? {}), merchant: p };
+          return {
+            merchantProfile: p,
+            profilesByAccount: { ...s.profilesByAccount, [id]: entry },
+          };
+        }),
 
       catalogue: [],
       addProduct: (p) =>
@@ -262,23 +397,40 @@ const useAppStore = create(
         };
       },
 
-      // ── Reset ────────────────────────────────────────────────
-      reset: () => set({
+      // ── Switch mode (safe) ───────────────────────────────────
+      // Clears the ACTIVE view so the user returns to mode-select, but
+      // PRESERVES each account's saved onboarding (profilesByAccount) and
+      // display preferences. This is what the sidebar "switch view" button
+      // calls, so switching or signing out never wipes a user's quiz.
+      switchMode: () => set({
         appMode: null,
-        // NOTE: language and theme are intentionally preserved across reset —
-        // a user switching modes shouldn't lose their display preferences.
         shopperProfile: null,
-        wishlist: [], savingsGoals: [], savingsLedger: [], expenses: [],
-        savedLinks: [], conversations: [], reminders: [], purchaseHistory: [],
-        connections: {
-          shopee:    { status: 'demo', label: 'Shopee',      route: 'link-only' },
-          shein:     { status: 'demo', label: 'SHEIN',       route: 'link-only' },
-          tiktok:    { status: 'demo', label: 'TikTok Shop', route: 'link-only' },
-          taobao:    { status: 'demo', label: 'Taobao',      route: 'link-only' },
-          pinduoduo: { status: 'demo', label: 'Pinduoduo',   route: 'link-only' },
-        },
-        merchantProfile: null, catalogue: [], customers: [],
-        journeys: [], supportHandovers: [],
+        merchantProfile: null,
+      }),
+
+      // ── Reset (full wipe) ─────────────────────────────────────
+      // Explicit "Reset all data" — clears the CURRENT account's saved
+      // profile plus all working data. Language and theme are preserved.
+      reset: () => set((s) => {
+        const next = { ...s.profilesByAccount };
+        if (s.activeAccountId) delete next[s.activeAccountId];
+        return {
+          appMode: null,
+          profilesByAccount: next,
+          shopperProfile: null,
+          merchantProfile: null,
+          feedback: { priceThreshold: null, dislikedCategories: [], likedCategories: [], skippedFeedIds: [], lastResponse: null },
+          wishlist: [], savingsGoals: [], savingsLedger: [], expenses: [],
+          savedLinks: [], conversations: [], reminders: [], purchaseHistory: [],
+          connections: {
+            shopee:    { status: 'demo', label: 'Shopee',      route: 'link-only' },
+            shein:     { status: 'demo', label: 'SHEIN',       route: 'link-only' },
+            tiktok:    { status: 'demo', label: 'TikTok Shop', route: 'link-only' },
+            taobao:    { status: 'demo', label: 'Taobao',      route: 'link-only' },
+            pinduoduo: { status: 'demo', label: 'Pinduoduo',   route: 'link-only' },
+          },
+          catalogue: [], customers: [], journeys: [], supportHandovers: [],
+        };
       }),
     }),
     { name: '2am-shoppers-store' }

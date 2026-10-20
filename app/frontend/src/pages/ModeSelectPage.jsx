@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAppStore  from '../store/appStore.js';
 import useAuthStore from '../store/authStore.js';
@@ -7,10 +7,18 @@ import { UIPrefsCluster } from '../components/UIPrefs.jsx';
 import styles from './ModeSelectPage.module.css';
 
 export default function ModeSelectPage() {
-  const { setAppMode, shopperProfile, merchantProfile, reset } = useAppStore();
+  const { setAppMode, shopperProfile, merchantProfile, activeAccountId, setActiveAccount, reset } = useAppStore();
   const { currentUser, isAdmin, logout } = useAuthStore();
   const t = useT();
   const navigate = useNavigate();
+
+  // If a session was restored (e.g. logged in from the website) the active
+  // account may not be set yet. Sync it so the correct profile loads.
+  useEffect(() => {
+    if (currentUser?.id && activeAccountId !== currentUser.id) {
+      setActiveAccount(currentUser.id);
+    }
+  }, [currentUser, activeAccountId, setActiveAccount]);
 
   function choose(mode) {
     setAppMode(mode);

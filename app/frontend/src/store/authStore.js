@@ -1,31 +1,27 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { DEMO_ACCOUNT_LIST } from './demoAccounts.js';
 
 /**
  * Auth store — manages login sessions and user accounts.
  *
- * Pre-seeded admin account:
- *   username : user
- *   password : password
- *   role     : admin   (can access both customer and business views,
- *                        and skip onboarding entirely)
+ * Pre-seeded demo accounts (see demoAccounts.js):
+ *   user / password          → admin (all modes, skips onboarding)
+ *   emily / emilypassword    → Emily, student persona
+ *   john / johnpassword      → John, working-adult persona
+ *   student / student        → demo student account
+ *   working / working        → demo working-adult account
+ *   business / business      → demo business account
  *
  * Additional accounts can be created via the signup flow.
  * Passwords are stored as-is here (frontend demo only).
  * In production use bcrypt on the backend and never store plain passwords.
  */
 
-const SEED_ACCOUNTS = [
-  {
-    id:        'admin-001',
-    username:  'user',
-    password:  'password',
-    email:     'admin@2amshoppers.com',
-    name:      'Admin',
-    role:      'admin',   // 'admin' | 'customer' | 'merchant'
-    createdAt: '2026-01-01T00:00:00.000Z',
-  },
-];
+const SEED_ACCOUNTS = DEMO_ACCOUNT_LIST.map(a => ({
+  createdAt: '2026-01-01T00:00:00.000Z',
+  ...a,
+}));
 
 const useAuthStore = create(
   persist(
@@ -67,7 +63,7 @@ const useAuthStore = create(
         );
         if (!account) return { success: false, error: 'Incorrect username or password.' };
         set({ currentUser: account, isLoggedIn: true });
-        return { success: true, role: account.role };
+        return { success: true, role: account.role, accountId: account.id };
       },
 
       // ── Sign up ──────────────────────────────────────────────
@@ -94,11 +90,30 @@ const useAuthStore = create(
         };
 
         set(s => ({ accounts: [...s.accounts, newAccount], currentUser: newAccount, isLoggedIn: true }));
-        return { success: true, role: newAccount.role };
+        return { success: true, role: newAccount.role, accountId: newAccount.id };
       },
 
       // ── Logout ───────────────────────────────────────────────
       logout: () => set({ currentUser: null, isLoggedIn: false }),
+
+      // ── Adopt a session handed off from the website ───────────
+      // The marketing site passes the account via a URL hash
+      // (#session=<base64>) because localStorage is per-origin and is
+      // NOT shared between the website and the app. We merge the account
+      // into the local list (so sign-in works later too) and log in.
+      adoptSession: (account) => {
+        if (!account?.username) return { success: false };
+        const accounts = get().accounts;
+        const existing = accounts.find(
+          a => a.id === account.id || a.username.toLowerCase() === account.username.toLowerCase()
+        );
+        if (existing) {
+          set({ currentUser: existing, isLoggedIn: true });
+          return { success: true, accountId: existing.id, role: existing.role };
+        }
+        set(s => ({ accounts: [...s.accounts, account], currentUser: account, isLoggedIn: true }));
+        return { success: true, accountId: account.id, role: account.role };
+      },
 
       // ── Sync from storage ────────────────────────────────────
       // Call once on app mount to pick up a session written by the website.

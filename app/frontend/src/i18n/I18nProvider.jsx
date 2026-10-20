@@ -38,6 +38,7 @@ export function I18nProvider({ children }) {
     if (nav.startsWith('ja')) detected = 'ja';
     else if (nav.startsWith('zh')) detected = 'zh';
     else if (nav.startsWith('th')) detected = 'th';
+    else if (nav.startsWith('ko')) detected = 'ko';
     setLang(detected);
   }, [lang, setLang]);
 

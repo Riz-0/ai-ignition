@@ -13,6 +13,27 @@
  * listing rather than presenting an unverified offer.
  */
 
+// ── Safety keywords ──────────────────────────────────────────
+// A refund/complaint/escalation must PAUSE sales prompts and route to
+// a human. Checked before every other rule (markdown §7 / Phase 1).
+export const SAFETY_KEYWORDS = [
+  'refund', 'return it', 'broken', 'faulty', 'damaged', 'complaint',
+  'complain', 'scam', 'cheated', 'report', 'speak to a human',
+  'talk to a person', 'customer service', 'this is wrong', 'never arrived',
+  'didnt arrive', "didn't arrive", 'wrong item', 'defective',
+];
+
+const SAFETY_REPLY =
+  "I'm sorry to hear that. I've paused shopping suggestions and flagged this for a human support agent who will follow up. Is there anything you'd like me to pass on to them?";
+
+/**
+ * Returns true if the message trips a safety/complaint keyword.
+ */
+export function isSafetyMessage(message = '') {
+  const lower = message.toLowerCase();
+  return SAFETY_KEYWORDS.some(kw => lower.includes(kw));
+}
+
 // Response-based adaptation map (mirrors markdown §4 Step 5)
 const ADAPTATION_RULES = [
   {
@@ -22,7 +43,7 @@ const ADAPTATION_RULES = [
   },
   {
     keywords: ['remind me later', 'remind me', 'later', 'not now', 'come back'],
-    reply: "No problem! When would you like me to remind you? You can say something like "the 25th" or "next Friday".",
+    reply: 'No problem! When would you like me to remind you? You can say something like "the 25th" or "next Friday".',
     intent: 'defer',
   },
   {
@@ -81,31 +102,68 @@ const FALLBACK_REPLY =
   "Got it — I'm updating your recommendations based on that. Is there anything specific you'd like me to find for you?";
 
 /**
+ * Guard against invented prices (Phase 1 "No invented prices").
+ * Given a product row, only return a price string if the record is
+ * verified and has a numeric price. Otherwise ask the user to check
+ * the listing.
+ *
+ * @param {{ verified?: number, price?: number|null, name?: string }} product
+ * @returns {string} safe phrasing for the price
+ */
+export function safePriceStatement(product) {
+  if (!product) return 'Please check the listing for the current price.';
+  const verified = product.verified === 1 || product.verified === true;
+  if (verified && product.price != null) {
+    return `The verified price is $${Number(product.price).toFixed(2)}.`;
+  }
+  return "I don't have a verified current price for that, so please check the listing before buying.";
+}
+
+/**
  * Generate an AI reply for a given user message.
  *
+ * Returns a structured object so the caller can act on intent
+ * (e.g. raise a support handover on a safety pause).
+ *
  * @param {string} userMessage
- * @param {Array<{role: string, text: string}>} history  — prior messages for context
- * @returns {Promise<string>}
+ * @param {Array<{role: string, text: string}>} history
+ * @returns {Promise<{ reply: string, intent: string, safetyPause: boolean }>}
  */
 export async function getAIReply(userMessage, history = []) {
-  if (process.env.OPENAI_API_KEY) {
-    return getLLMReply(userMessage, history);
+  // Safety pause always wins
+  if (isSafetyMessage(userMessage)) {
+    return { reply: SAFETY_REPLY, intent: 'safety_pause', safetyPause: true };
   }
-  return getRuleBasedReply(userMessage);
+
+  if (process.env.OPENAI_API_KEY) {
+    const reply = await getLLMReply(userMessage, history);
+    return { reply, intent: matchIntent(userMessage), safetyPause: false };
+  }
+
+  const { reply, intent } = getRuleBasedReply(userMessage);
+  return { reply, intent, safetyPause: false };
+}
+
+/**
+ * Match a message to an intent without generating a reply.
+ */
+function matchIntent(message) {
+  const lower = message.toLowerCase();
+  const rule  = ADAPTATION_RULES.find(r => r.keywords.some(kw => lower.includes(kw)));
+  return rule?.intent ?? 'general';
 }
 
 /**
  * Rule-based fallback — used when no LLM key is configured.
- * Matches keywords in the customer message to a canned response.
  */
 function getRuleBasedReply(message) {
   const lower = message.toLowerCase();
   for (const rule of ADAPTATION_RULES) {
     if (rule.keywords.some(kw => lower.includes(kw))) {
-      return rule.reply;
+      return { reply: rule.reply, intent: rule.intent };
     }
   }
-  return FALLBACK_REPLY;
+  return { reply: FALLBACK_REPLY, intent: 'general' };
 }
 
 /**

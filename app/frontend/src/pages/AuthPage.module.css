@@ -16,7 +16,7 @@
 
 .card {
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -216,3 +216,86 @@
   text-decoration: none;
 }
 .downloadLink a:hover { text-decoration: underline; }
+
+/* ── Brand row (login/signup header) ────────────────────────── */
+.brandRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.brandIcon { font-size: 1.5rem; line-height: 1; }
+.brandName { font-weight: 800; font-size: 1.05rem; color: var(--text); letter-spacing: -.01em; }
+
+/* ── Demo accounts (collapsible, secondary) ─────────────────── */
+.demoSection {
+  margin: 4px 24px 0;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.demoToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 4px 2px;
+  transition: color .15s;
+}
+.demoToggle:hover { color: var(--text); }
+.demoChevron { font-size: .6rem; opacity: .7; }
+
+.demoList {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 10px;
+  animation: cardIn .25s ease;
+}
+
+.demoRow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  text-align: left;
+  background: rgba(255,255,255,.02);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 9px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .12s, border-color .12s, transform .12s;
+}
+.demoRow:hover {
+  background: rgba(255,255,255,.05);
+  border-color: var(--border-light, var(--border));
+  transform: translateX(2px);
+}
+
+.demoEmoji {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  border-radius: 9px;
+}
+.demoInfo { display: flex; flex-direction: column; gap: 0; min-width: 0; flex: 1; }
+.demoName { font-weight: 700; font-size: .88rem; color: var(--text); }
+.demoTag  { font-size: .72rem; font-weight: 600; }
+.demoGo {
+  flex-shrink: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  opacity: .55;
+  transition: opacity .12s, transform .12s;
+}
+.demoRow:hover .demoGo { opacity: 1; transform: translateX(3px); }
