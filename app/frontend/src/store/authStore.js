@@ -23,6 +23,28 @@ const SEED_ACCOUNTS = DEMO_ACCOUNT_LIST.map(a => ({
   ...a,
 }));
 
+// Ids of the pre-seeded demo/persona accounts. Their credentials live in
+// source (demoAccounts.js) and must ALWAYS win over anything in localStorage,
+// otherwise a stale session from an older build (e.g. an old emily123 password)
+// can shadow the current one and break login.
+const SEED_IDS = new Set(SEED_ACCOUNTS.map(a => a.id));
+
+/**
+ * Union a persisted account list onto the seed list.
+ * Demo accounts (ids in SEED_IDS) always keep the fresh seed copy; any other
+ * accounts (real signups) are merged in. Returns a new array.
+ */
+function reconcileAccounts(seed, persisted) {
+  const byId = new Map(seed.map(a => [a.id, a]));
+  for (const a of persisted ?? []) {
+    if (!a?.id) continue;
+    // Never let a persisted copy override a demo/seed account.
+    if (SEED_IDS.has(a.id)) continue;
+    byId.set(a.id, a);
+  }
+  return [...byId.values()];
+}
+
 const useAuthStore = create(
   persist(
     (set, get) => ({
@@ -35,27 +57,25 @@ const useAuthStore = create(
 
       // ── Login ────────────────────────────────────────────────
       login: (username, password) => {
-        // Start with in-memory accounts (includes the seed + any accounts
-        // created while the app was running).
-        let accounts = get().accounts;
+        // Rebuild the account list from the authoritative SEED_ACCOUNTS so
+        // demo/persona credentials from source always win, then union in any
+        // real signups that exist in memory or in localStorage.
+        const inMemoryExtras = get().accounts.filter(a => !SEED_IDS.has(a.id));
+        let accounts = reconcileAccounts(SEED_ACCOUNTS, inMemoryExtras);
 
         // Merge any accounts written to localStorage by the website or another
         // tab — Zustand doesn't rehydrate on external writes after init.
-        // We do a union by id so we never lose accounts from either side.
         try {
           const raw = localStorage.getItem('2am-shoppers-auth');
           if (raw) {
             const persisted = JSON.parse(raw)?.state?.accounts;
             if (Array.isArray(persisted) && persisted.length > 0) {
-              const existingIds = new Set(accounts.map(a => a.id));
-              const newAccounts = persisted.filter(a => !existingIds.has(a.id));
-              if (newAccounts.length > 0) {
-                accounts = [...accounts, ...newAccounts];
-                set({ accounts });
-              }
+              accounts = reconcileAccounts(accounts, persisted);
             }
           }
         } catch { /* ignore parse errors */ }
+
+        set({ accounts });
 
         const account = accounts.find(
           a => a.username.toLowerCase() === username.toLowerCase().trim()
@@ -95,6 +115,16 @@ const useAuthStore = create(
 
       // ── Logout ───────────────────────────────────────────────
       logout: () => set({ currentUser: null, isLoggedIn: false }),
+
+      // ── Switch the active session to another account by id ────
+      // Used by the admin account picker: an admin can jump into any
+      // seeded account without re-entering credentials.
+      switchToAccount: (accountId) => {
+        const account = get().accounts.find(a => a.id === accountId);
+        if (!account) return { success: false, error: 'Account not found.' };
+        set({ currentUser: account, isLoggedIn: true });
+        return { success: true, role: account.role, accountId: account.id };
+      },
 
       // ── Adopt a session handed off from the website ───────────
       // The marketing site passes the account via a URL hash
@@ -148,6 +178,25 @@ const useAuthStore = create(
     {
       name: '2am-shoppers-auth',
 
+      // Bump this whenever seed credentials change. On load, any persisted
+      // state with an older version is migrated: demo/seed accounts are
+      // dropped (so the fresh source copies take over) and only real signups
+      // are kept. This guarantees an old `emily123`-style session can never
+      // keep shadowing the current credentials.
+      version: 2,
+      migrate: (persisted) => {
+        if (!persisted) return persisted;
+        const kept = (persisted.accounts ?? []).filter(a => a?.id && !SEED_IDS.has(a.id));
+        // If the logged-in user was a demo account, force a fresh login.
+        const staleDemoSession = persisted.currentUser && SEED_IDS.has(persisted.currentUser.id);
+        return {
+          ...persisted,
+          accounts: kept,
+          currentUser: staleDemoSession ? null : persisted.currentUser,
+          isLoggedIn: staleDemoSession ? false : persisted.isLoggedIn,
+        };
+      },
+
       /**
        * Custom storage: merges accounts on every write so that entries written
        * by the website (same localStorage key) are never silently dropped when
@@ -180,14 +229,21 @@ const useAuthStore = create(
        * accounts with the initial SEED_ACCOUNTS so neither side drops entries.
        */
       merge: (persisted, current) => {
-        const persistedAccounts = persisted?.accounts ?? [];
-        const currentAccounts   = current.accounts ?? [];
-        const allIds = new Set(currentAccounts.map(a => a.id));
-        const merged = [
-          ...currentAccounts,
-          ...persistedAccounts.filter(a => !allIds.has(a.id)),
-        ];
-        return { ...current, ...persisted, accounts: merged };
+        // Demo accounts always keep their fresh source copy; real signups merge in.
+        const merged = reconcileAccounts(
+          current.accounts ?? SEED_ACCOUNTS,
+          persisted?.accounts ?? []
+        );
+
+        // Restore a persisted session, but if the logged-in user is a demo
+        // account, refresh its object from the (authoritative) seed so a stale
+        // currentUser from an older build can never shadow current credentials.
+        let currentUser = persisted?.currentUser ?? current.currentUser ?? null;
+        if (currentUser && SEED_IDS.has(currentUser.id)) {
+          currentUser = merged.find(a => a.id === currentUser.id) ?? currentUser;
+        }
+
+        return { ...current, ...persisted, accounts: merged, currentUser };
       },
     }
   )
