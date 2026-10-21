@@ -1,80 +1,78 @@
-.modeBadge {
+.page { display: flex; flex-direction: column; gap: 18px; }
+
+/* ── Greeting ── */
+.greet { }
+.modeChip {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: .72rem; font-weight: 700; padding: 3px 12px;
-  border-radius: 99px; border: 1px solid; margin-bottom: 10px;
+  border-radius: 99px; margin-bottom: 8px;
+  background: var(--bg-card2); color: var(--text-muted); border: 1px solid var(--border);
 }
+.hello { font-size: 1.5rem; font-weight: 800; color: var(--text); }
 
-/* Budget card */
-.budgetCard { margin-bottom: 20px; }
-.budgetStudent { border-top: 2px solid var(--violet-light); }
-.budgetWorking { border-top: 2px solid var(--coral-light); }
-
-.budgetLabel {
-  font-size: .72rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .1em; color: var(--text-dim); margin-bottom: 12px;
+/* ── Hero budget (one big number) ── */
+.hero {
+  border-radius: 18px; padding: 26px 24px; text-align: center;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
 }
-.budgetGrid { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
-.budgetRow  { display: flex; justify-content: space-between; font-size: .875rem; color: var(--text-muted); }
-.minus      { color: var(--text-dim); }
-.budgetResult { border-top: 1px solid var(--border); padding-top: 6px; margin-top: 4px; font-weight: 700; }
-.ok  { color: var(--green-light); }
-.low { color: var(--red-light); }
-.budgetNote { font-size: .72rem; color: var(--text-dim); font-style: italic; }
+.heroStudent { background: linear-gradient(135deg, rgba(124,58,237,.14), rgba(124,58,237,.04)); border-color: rgba(124,58,237,.3); }
+.heroWorking { background: linear-gradient(135deg, rgba(240,78,110,.14), rgba(240,78,110,.04)); border-color: rgba(240,78,110,.3); }
 
-/* Next-step card */
-.nextStep { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 4px; }
-.nsIcon   { font-size: 1.5rem; flex-shrink: 0; margin-top: 2px; }
-.nsTitle  { font-size: .92rem; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-.nsSub    { font-size: .8rem; color: var(--text-muted); }
-.nsSub a  { color: var(--violet-light); }
+.heroLabel { font-size: .82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+.heroNum   { font-size: 3rem; font-weight: 900; color: var(--text); line-height: 1; letter-spacing: -.02em; }
+.heroNum.low { color: var(--red-light); }
+.heroLink  { display: inline-block; margin-top: 12px; font-size: .8rem; font-weight: 600; color: var(--text-muted); }
+.heroLink:hover { color: var(--text); }
 
-/* Quick actions */
-.quickGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
-.quickCard {
-  display: flex; align-items: center; gap: 12px;
+/* ── Quick-action tiles ── */
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.tile {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 18px 8px; border-radius: 14px; text-decoration: none;
   background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 14px 16px;
-  text-decoration: none; transition: all .2s;
+  transition: transform .15s, border-color .15s, background .15s;
 }
-.quickCard:hover         { border-color: var(--violet); background: var(--bg-card2); }
-.qcStudent:hover         { border-color: var(--violet-light); }
-.qcWorking:hover         { border-color: var(--coral-light); }
-.quickCard > span        { font-size: 1.3rem; flex-shrink: 0; }
-.qTitle { font-size: .88rem; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-.qSub   { font-size: .75rem; color: var(--text-muted); }
+.tile:hover { transform: translateY(-3px); border-color: var(--violet-light); background: var(--bg-card2); }
+.tileIcon  { font-size: 1.6rem; }
+.tileLabel { font-size: .8rem; font-weight: 600; color: var(--text); }
 
-/* Demo notification */
-.notifCard { transition: border-color .2s; }
-.notifCard:hover { border-color: var(--violet); }
-.notifTop  { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
-.notifEmoji { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
-.notifText  { flex: 1; font-size: .88rem; color: var(--text); line-height: 1.5; }
-.notifX {
-  background: none; border: none; color: var(--text-dim);
-  cursor: pointer; font-size: .9rem; flex-shrink: 0;
-  width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
-  border-radius: 50%; transition: background .2s;
+/* ── AI nudge ── */
+.nudge {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 16px 18px;
 }
-.notifX:hover { background: var(--bg-card2); color: var(--text); }
-.notifBtns   { display: flex; flex-wrap: wrap; gap: 7px; }
-.notifBtn {
+.nudgeEmoji { font-size: 1.5rem; flex-shrink: 0; }
+.nudgeBody  { flex: 1; }
+.nudgeText  { font-size: .9rem; color: var(--text); line-height: 1.5; margin-bottom: 10px; }
+.nudgeBtns  { display: flex; flex-wrap: wrap; gap: 7px; }
+.nudgeBtn {
   background: var(--bg-card2); border: 1px solid var(--border-light);
-  border-radius: 99px; padding: 5px 13px; font-size: .79rem;
-  font-weight: 500; color: var(--text-muted); cursor: pointer;
-  font-family: var(--font); transition: all .15s;
+  border-radius: 99px; padding: 6px 14px; font-size: .8rem; font-weight: 600;
+  color: var(--text-muted); cursor: pointer; font-family: var(--font); transition: all .15s;
 }
-.notifBtn:hover { background: rgba(124,58,237,.12); border-color: var(--violet-light); color: var(--violet-light); }
-.notifReply {
-  background: rgba(5,150,105,.08); border: 1px solid rgba(5,150,105,.25);
-  border-radius: 8px; padding: 8px 12px; font-size: .84rem; color: var(--green-light);
+.nudgeBtn:hover { background: rgba(124,58,237,.12); border-color: var(--violet-light); color: var(--violet-light); }
+.nudgeReply {
+  background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.28);
+  border-radius: 10px; padding: 8px 13px; font-size: .84rem; color: var(--green-light);
 }
 
-/* Gamification */
-.gamCard      { margin-top: 20px; }
-.gamTitle     { font-size: .88rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-.gamDesc      { font-size: .83rem; margin-bottom: 10px; }
-.gamProgress  { background: var(--bg-card2); border-radius: 99px; height: 8px; overflow: hidden; margin-bottom: 8px; }
-.gamBar       { height: 100%; background: linear-gradient(90deg, var(--violet), var(--violet-light)); border-radius: 99px; transition: width .5s; }
-.gamNote      { font-size: .72rem; color: var(--text-dim); font-style: italic; }
+/* ── Streak ── */
+.streak {
+  display: flex; gap: 12px; align-items: center;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 14px 18px;
+}
+.streakIcon { font-size: 1.4rem; }
+.streakBody { flex: 1; }
+.streakTop  { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 7px; }
+.streakTitle { font-size: .85rem; font-weight: 700; color: var(--text); }
+.streakCount { font-size: .76rem; color: var(--text-muted); }
+.streakTrack { background: var(--bg-card2); border-radius: 99px; height: 8px; overflow: hidden; }
+.streakFill  { height: 100%; background: linear-gradient(90deg, var(--amber), var(--amber-light)); border-radius: 99px; transition: width .5s; }
 
-@media (max-width: 480px) { .quickGrid { grid-template-columns: 1fr; } }
+@media (max-width: 420px) {
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .heroNum { font-size: 2.4rem; }
+}
