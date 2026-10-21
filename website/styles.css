@@ -122,22 +122,38 @@ a { text-decoration: none; color: inherit; }
    NAV
    ============================================================ */
 .nav {
-  position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 100;
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
-  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid transparent; transition: border-color .3s, background .3s;
+  position: fixed; top: 14px; left: 0; right: 0; z-index: 100;
+  transition: top .3s ease;
 }
-.nav.scrolled { border-bottom-color: var(--border); }
-.nav-inner { display: flex; align-items: center; justify-content: space-between; height: 100%; gap: 16px; }
+/* The visible floating pill. (Scoped to override the shared .container rule.) */
+.nav .nav-inner {
+  position: relative;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  height: var(--nav-h);
+  margin: 0 auto; max-width: 1120px; width: calc(100% - 48px);
+  padding: 0 22px; border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 30px rgba(0,0,0,.28);
+  transition: box-shadow .3s ease, background .3s ease, border-color .3s ease;
+}
+.nav.scrolled { top: 8px; }
+.nav.scrolled .nav-inner {
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  box-shadow: 0 10px 36px rgba(0,0,0,.4);
+}
+[data-theme="light"] .nav-inner { box-shadow: 0 8px 30px rgba(100,80,180,.14); }
+[data-theme="light"] .nav.scrolled .nav-inner { box-shadow: 0 10px 36px rgba(100,80,180,.2); }
 
-.brand { display: flex; align-items: center; gap: 8px; font-family: var(--head); font-weight: 700; font-size: 1.05rem; color: var(--text); }
+.brand { display: flex; align-items: center; gap: 8px; font-family: var(--head); font-weight: 700; font-size: 1.05rem; color: var(--text); flex-shrink: 0; }
 .brand-icon { font-size: 1.3rem; }
 
-.nav-links { display: flex; gap: 26px; }
-.nav-links a { font-size: .9rem; font-weight: 500; color: var(--text-mut); transition: color .2s; }
+.nav-links { display: flex; gap: 22px; }
+.nav-links a { font-size: .9rem; font-weight: 500; color: var(--text-mut); transition: color .2s; white-space: nowrap; }
 .nav-links a:hover, .nav-links a.active { color: var(--text); }
 
-.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 
 /* language */
 .lang { position: relative; }
@@ -167,12 +183,15 @@ a { text-decoration: none; color: inherit; }
 .theme-btn:hover { border-color: var(--violet-l); }
 
 .nav-toggle { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
-.nav-toggle span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: .25s; }
+.nav-toggle span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: transform .25s, opacity .25s; transform-origin: center; }
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ============================================================
    HERO
    ============================================================ */
-.hero { position: relative; padding: calc(var(--nav-h) + 56px) 0 70px; overflow: hidden; }
+.hero { position: relative; padding: calc(var(--nav-h) + 78px) 0 70px; overflow: hidden; }
 .hero-bg { position: absolute; inset: 0; pointer-events: none; }
 .hero-grid {
   position: absolute; inset: 0;
@@ -349,12 +368,22 @@ a { text-decoration: none; color: inherit; }
 .goal-foot { font-size: .85rem; color: var(--green-l); font-weight: 600; }
 
 /* ============================================================
-   QUOTES
+   MISSION / VALUES
    ============================================================ */
-.quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 40px; }
-.quote { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; }
-.quote p { font-size: 1rem; color: var(--text); font-style: italic; margin-bottom: 14px; line-height: 1.55; }
-.quote-by { font-size: .85rem; color: var(--text-dim); font-weight: 600; }
+.values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 44px; }
+.value-card {
+  position: relative; overflow: hidden;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 28px 24px; transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+.value-card::before {
+  content: ''; position: absolute; inset: 0 0 auto 0; height: 3px;
+  background: var(--grad); opacity: .85;
+}
+.value-card:hover { transform: translateY(-4px); border-color: var(--violet-l); box-shadow: var(--shadow); }
+.value-icon { font-size: 1.9rem; margin-bottom: 12px; }
+.value-card h3 { font-size: 1.05rem; margin-bottom: 8px; color: var(--text); }
+.value-card p  { font-size: .9rem; line-height: 1.6; }
 
 /* ============================================================
    START / AUTH
@@ -505,18 +534,28 @@ a { text-decoration: none; color: inherit; }
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+@media (max-width: 960px) {
+  /* Collapse the desktop links into the hamburger menu before the bar crowds.
+     The dropdown floats below the hovering pill as its own rounded card. */
+  .nav-links {
+    display: none; position: absolute; top: calc(100% + 10px); left: 0; right: 0;
+    flex-direction: column; background: color-mix(in srgb, var(--bg) 92%, transparent);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border); border-radius: 18px;
+    padding: 16px 20px; gap: 14px; box-shadow: var(--shadow);
+  }
+  .nav-links.open { display: flex; }
+  .nav-toggle { display: flex; }
+}
 @media (max-width: 900px) {
-  .who-grid, .why-grid, .quotes { grid-template-columns: 1fr 1fr; }
+  .who-grid, .why-grid, .values-grid { grid-template-columns: 1fr 1fr; }
   .save-split { grid-template-columns: 1fr; gap: 32px; }
 }
 @media (max-width: 760px) {
-  .nav-links { display: none; position: absolute; top: var(--nav-h); left: 0; right: 0; flex-direction: column; background: var(--bg); border-bottom: 1px solid var(--border); padding: 18px 24px; gap: 16px; }
-  .nav-links.open { display: flex; }
-  .nav-toggle { display: flex; }
   .btn-ghost-sm[data-i18n="navSignIn"] { display: none; }
   .steps { flex-direction: column; align-items: center; }
   .step-arrow { transform: rotate(90deg); }
-  .who-grid, .why-grid, .quotes { grid-template-columns: 1fr; }
+  .who-grid, .why-grid, .values-grid { grid-template-columns: 1fr; }
   .section { padding: 64px 0; }
 }
 @media (max-width: 420px) {

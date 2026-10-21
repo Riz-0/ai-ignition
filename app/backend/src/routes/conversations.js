@@ -28,7 +28,7 @@ router.post('/', asyncHandler(async (req, res) => {
   const db = getDb();
   const id = uuid();
   db.prepare('INSERT INTO conversations (id, shopper_id, product_id, title) VALUES (?, ?, ?, ?)')
-    .run(id, shopper_id, product_id ?? null, title ?? 'Shopping assistant');
+    .run(id, shopper_id, product_id ?? null, title ?? '2AM Assistant');
   res.status(201).json({ ...db.prepare('SELECT * FROM conversations WHERE id = ?').get(id), messages: [] });
 }));
 

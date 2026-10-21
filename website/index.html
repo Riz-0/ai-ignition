@@ -21,9 +21,10 @@
       </a>
 
       <nav class="nav-links" id="nav-links">
+        <a href="#mission" data-i18n="navMission">Our mission</a>
         <a href="#how" data-i18n="navHow">How it works</a>
         <a href="#who" data-i18n="navWho">Who it's for</a>
-        <a href="#why" data-i18n="navWhy">Why people love it</a>
+        <a href="#why" data-i18n="navWhy">What we stand for</a>
         <a href="#get-app" data-i18n="navGetApp">Get the app</a>
         <a href="#faq" data-i18n="navFaq">FAQ</a>
       </nav>
@@ -46,7 +47,7 @@
         <button class="theme-btn" id="theme-btn" aria-label="Toggle theme">🌙</button>
         <!-- CTAs -->
         <a href="#start" class="btn-ghost-sm" data-i18n="navSignIn" onclick="switchTab('signin')">Sign in</a>
-        <a href="#start" class="btn-primary-sm" data-i18n="navStart" onclick="switchTab('signup')">Start free</a>
+        <a href="#start" class="btn-primary-sm" data-i18n="navStart" onclick="switchTab('signup')">Get started</a>
       </div>
 
       <button class="nav-toggle" id="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -79,14 +80,14 @@
       </div>
 
       <div class="hero-cta">
-        <a href="#start" class="btn-primary-lg" data-i18n="heroCtaMain">Get your shopping buddy — free</a>
-        <a href="#how" class="btn-ghost-lg" data-i18n="heroCtaSub">See how it works</a>
+        <a href="#start" class="btn-primary-lg" data-i18n="heroCtaMain">Meet your shopping buddy</a>
+        <a href="#mission" class="btn-ghost-lg" data-i18n="heroCtaSub">What we stand for</a>
       </div>
 
       <div class="hero-trust">
-        <span data-i18n="heroTrust1">⭐ Built for students &amp; working adults</span>
+        <span data-i18n="heroTrust1">🤝 Built for students, workers &amp; small businesses</span>
         <span data-i18n="heroTrust2">🔒 Your money data stays private</span>
-        <span data-i18n="heroTrust3">💸 Free to start</span>
+        <span data-i18n="heroTrust3">🌏 Made for everyone, across Asia</span>
       </div>
 
       <!-- Phone mockup -->
@@ -117,8 +118,57 @@
     </div>
   </section>
 
+  <!-- ================= MISSION / VALUES ================= -->
+  <section class="section" id="mission">
+    <div class="container narrow center">
+      <div class="eyebrow" data-i18n="missionEyebrow">Our mission</div>
+      <h2 class="h2" data-i18n="missionTitle">Smart money shouldn't be a luxury.</h2>
+      <p class="lead center" data-i18n="missionLead">
+        The best financial tools have always been built for people who already have money and know-how.
+        We're flipping that. We put approachable, everyday AI in the hands of students, working people
+        and the small businesses that serve them — so smarter spending and real growth are open to everyone,
+        not just the few.
+      </p>
+    </div>
+
+    <div class="container">
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">🌍</div>
+          <h3 data-i18n="value1T">AI for everyone</h3>
+          <p data-i18n="value1P">No finance degree, no spreadsheets, no jargon. If you can chat, you can use it — at any age, in your own language.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🤝</div>
+          <h3 data-i18n="value2T">On your side, always</h3>
+          <p data-i18n="value2P">We make money when you shop well, not when you overspend. Our buddy works for you — never for the loudest advertiser.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🌱</div>
+          <h3 data-i18n="value3T">Lift people and businesses together</h3>
+          <p data-i18n="value3P">Shoppers save for what matters; small businesses keep loyal customers. Good outcomes on both sides, built to last.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🔒</div>
+          <h3 data-i18n="value4T">Respect by default</h3>
+          <p data-i18n="value4P">Your budget, your pace, your privacy. We earn trust with quiet, honest help — not pressure or spam.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🧭</div>
+          <h3 data-i18n="value5T">Simple on purpose</h3>
+          <p data-i18n="value5P">Powerful tech, kept effortless. Learn it in minutes, master it in a day — because tools should fit your life, not the reverse.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🌏</div>
+          <h3 data-i18n="value6T">Built for our region</h3>
+          <p data-i18n="value6P">From Taiwan to Thailand, Japan to Singapore — many languages, many markets, one welcoming experience.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= PROBLEM (relatable) ================= -->
-  <section class="section" id="pain">
+  <section class="section section-alt" id="pain">
     <div class="container narrow center">
       <h2 class="h2" data-i18n="painTitle">Sound familiar?</h2>
       <div class="pain-row">
@@ -132,7 +182,7 @@
   </section>
 
   <!-- ================= HOW IT WORKS (3 steps) ================= -->
-  <section class="section section-alt" id="how">
+  <section class="section" id="how">
     <div class="container">
       <div class="eyebrow" data-i18n="howEyebrow">How it works</div>
       <h2 class="h2 center" data-i18n="howTitle">Three taps. That's it.</h2>
@@ -163,7 +213,7 @@
   </section>
 
   <!-- ================= WHO IT'S FOR ================= -->
-  <section class="section" id="who">
+  <section class="section section-alt" id="who">
     <div class="container">
       <div class="eyebrow" data-i18n="whoEyebrow">Who it's for</div>
       <h2 class="h2 center" data-i18n="whoTitle">One buddy. Your way.</h2>
@@ -192,9 +242,9 @@
   </section>
 
   <!-- ================= WHY (benefits) ================= -->
-  <section class="section section-alt" id="why">
+  <section class="section" id="why">
     <div class="container">
-      <div class="eyebrow" data-i18n="whyEyebrow">Why people love it</div>
+      <div class="eyebrow" data-i18n="whyEyebrow">What makes it different</div>
       <h2 class="h2 center" data-i18n="whyTitle">A buddy, not a billboard.</h2>
 
       <div class="why-grid">
@@ -233,7 +283,7 @@
   </section>
 
   <!-- ================= SAVINGS TEASER ================= -->
-  <section class="section" id="save">
+  <section class="section section-alt" id="save">
     <div class="container save-split">
       <div class="save-copy">
         <div class="eyebrow" data-i18n="saveEyebrow">Save without thinking</div>
@@ -272,33 +322,12 @@
     </div>
   </section>
 
-  <!-- ================= SOCIAL PROOF ================= -->
-  <section class="section section-alt" id="loved">
-    <div class="container">
-      <h2 class="h2 center" data-i18n="lovedTitle">People are into it 💜</h2>
-      <div class="quotes">
-        <div class="quote">
-          <p data-i18n="quote1">"Finally stopped impulse-buying. It literally told me to wait and save — and I did."</p>
-          <div class="quote-by" data-i18n="quote1By">— Mia, student</div>
-        </div>
-        <div class="quote">
-          <p data-i18n="quote2">"It reorders my coffee right before I run out. Feels like it reads my mind."</p>
-          <div class="quote-by" data-i18n="quote2By">— Daniel, working adult</div>
-        </div>
-        <div class="quote">
-          <p data-i18n="quote3">"My regulars come back more — and they don't feel spammed. Win-win."</p>
-          <div class="quote-by" data-i18n="quote3By">— Brew &amp; Bites, café</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ================= START / AUTH ================= -->
   <section class="section start-section" id="start">
     <div class="container narrow center">
       <div class="eyebrow" data-i18n="startEyebrow">Get started</div>
       <h2 class="h2" data-i18n="startTitle">Meet your buddy in 30 seconds</h2>
-      <p class="lead center" data-i18n="startLead">Create a free account, then we'll drop you right into the app.</p>
+      <p class="lead center" data-i18n="startLead">Create an account, then we'll drop you right into the app.</p>
 
       <div class="auth">
         <div class="auth-tabs">
@@ -341,7 +370,7 @@
         </div>
       </div>
 
-      <p class="auth-foot" data-i18n="authFoot">Free forever to start · No card needed · Takes under a minute</p>
+      <p class="auth-foot" data-i18n="authFoot">Takes under a minute · Your data stays private · Built for everyone</p>
     </div>
   </section>
 
@@ -356,11 +385,11 @@
         <div class="get-app-card">
           <div class="get-app-qr">
             <img id="qr-img"
-              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&data=http%3A%2F%2Flocalhost%3A3003%2Fdownload"
+              src="qr%20code.jpg"
               width="200" height="200"
               alt="QR code — scan to open the install page"
               onerror="this.style.display='none'; document.getElementById('qr-fallback').style.display='flex';" />
-            <div id="qr-fallback" class="qr-fallback">localhost:3003/download</div>
+            <div id="qr-fallback" class="qr-fallback">Scan the QR code</div>
           </div>
           <p class="get-app-qr-label" data-i18n="getAppScan">📷 Scan with your phone camera</p>
         </div>
@@ -403,8 +432,8 @@
       <h2 class="h2 center" data-i18n="faqTitle">Quick questions</h2>
       <div class="faq">
         <details class="faq-item" open>
-          <summary data-i18n="faqQ1">Is it really free?</summary>
-          <p data-i18n="faqA1">Yes — creating an account and using your shopping buddy is free to start. No card required.</p>
+          <summary data-i18n="faqQ1">Who is this really for?</summary>
+          <p data-i18n="faqA1">Anyone who wants to shop with intention — students stretching an allowance, working adults planning around payday, and small businesses who want loyal customers. No finance background needed.</p>
         </details>
         <details class="faq-item">
           <summary data-i18n="faqQ2">Can it see my bank account?</summary>
@@ -425,9 +454,9 @@
   <!-- ================= FINAL CTA ================= -->
   <section class="section final-cta">
     <div class="container center">
-      <h2 class="final-h2" data-i18n="finalTitle">Your wallet will thank you.</h2>
-      <p class="final-p" data-i18n="finalP">Join the shoppers who buy smarter and save for what matters.</p>
-      <a href="#start" class="btn-primary-lg" data-i18n="finalCta">Get your buddy — it's free</a>
+      <h2 class="final-h2" data-i18n="finalTitle">Smarter shopping, open to everyone.</h2>
+      <p class="final-p" data-i18n="finalP">Join the shoppers and businesses choosing intention over impulse.</p>
+      <a href="#start" class="btn-primary-lg" data-i18n="finalCta">Meet your buddy</a>
     </div>
   </section>
 
@@ -436,7 +465,7 @@
     <div class="container footer-inner">
       <div class="footer-brand"><span>🛒</span> 2am Shoppers</div>
       <p class="footer-tag" data-i18n="footerTag">Shop smarter. Spend less. Save for what matters.</p>
-      <p class="footer-note" data-i18n="footerNote">Eslitec Hackathon · Problem Statement 1 · A concept demo</p>
+      <p class="footer-note" data-i18n="footerNote">AI-Ignition · Problem Statement 1 · 2AM Deployers </p>
     </div>
   </footer>
 
