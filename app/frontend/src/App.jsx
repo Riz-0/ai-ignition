@@ -16,6 +16,7 @@ import ChatPage             from './pages/customer/ChatPage.jsx';
 import CustomerSettings     from './pages/customer/CustomerSettings.jsx';
 import SavingsPage          from './pages/customer/SavingsPage.jsx';
 import ConnectionsPage      from './pages/customer/ConnectionsPage.jsx';
+import ProductFeed          from './components/ProductFeed.jsx'
 
 // Business
 import BusinessOnboarding   from './pages/business/BusinessOnboarding.jsx';
