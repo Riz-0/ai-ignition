@@ -24,7 +24,7 @@ export default function WishlistPage() {
   return (
     <div>
       <h1 className="page-title">Wishlist</h1>
-      <p className="page-sub">Products you've saved. Set a budget or a reminder date and your AI companion will follow up.</p>
+      <p className="page-sub">Products you've saved. Set a budget or a reminder date and your 2AM Assistant will follow up.</p>
 
       <div className={styles.toolbar}>
         <span className={styles.count}>{wishlist.length} item{wishlist.length !== 1 ? 's' : ''}</span>
@@ -115,7 +115,7 @@ function WishlistCard({ item, onRemove, onUpdate }) {
       </div>
       {overBudget && (
         <div className={styles.budgetAlert}>
-          ⚠️ Listed price is above your budget. Your AI companion will alert you if it drops within range.
+          ⚠️ Listed price is above your budget. Your 2AM Assistant will alert you if it drops within range.
         </div>
       )}
     </div>
