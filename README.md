@@ -11,9 +11,11 @@
 ```
 ai-ignition/
 ├── website/          Presentation site — open index.html in any browser
-│   ├── index.html    7 sections: hero, problem, 3 modes, savings, connections, journeys, MVP
-│   ├── styles.css    Tri-colour design system (violet=student, coral=working, amber=business)
-│   └── script.js     Nav, fade-in, typewriter, auth panel (3-role, shares localStorage with app)
+│   ├── index.html    Landing page: hero, features, savings, how it works, who it's for, get the app, FAQ
+│   ├── login.html    Log in page
+│   ├── signup.html   Create-account page (student / working adult)
+│   ├── styles.css    Design system (violet=student, coral=working)
+│   └── script.js     Nav, fade-in, typewriter, i18n, auth (shares localStorage with app)
 │
 ├── app/
 │   ├── frontend/     React + Vite — three tailored interfaces
@@ -41,7 +43,7 @@ Shopper budgets, goal balances and expense records are never visible on the busi
 
 ### Presentation website
 Open `website/index.html` directly in any browser. No build step needed.  
-The auth section (Sign in / Create account) shares `localStorage` with the app — create an account on the website and sign in from the app at `localhost:3003`.
+The Log in / Sign up pages share `localStorage` with the app — create an account on the website and sign in from the app at `localhost:3003`.
 
 **Admin account:** username `user` · password `password`
 

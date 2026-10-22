@@ -14,19 +14,19 @@
 
   <!-- ================= NAV ================= -->
   <header class="nav" id="nav">
-    <div class="container nav-inner">
+    <div class="nav-inner">
       <a href="#top" class="brand">
         <span class="brand-icon">🛒</span>
         <span class="brand-name">2am Shoppers</span>
       </a>
 
       <nav class="nav-links" id="nav-links">
-        <a href="#mission" data-i18n="navMission">Our mission</a>
+        <a href="#features" data-i18n="navFeatures">Features</a>
         <a href="#how" data-i18n="navHow">How it works</a>
         <a href="#who" data-i18n="navWho">Who it's for</a>
-        <a href="#why" data-i18n="navWhy">What we stand for</a>
         <a href="#get-app" data-i18n="navGetApp">Get the app</a>
         <a href="#faq" data-i18n="navFaq">FAQ</a>
+        <a href="login.html" class="nav-menu-only" data-i18n="navLogin">Log in</a>
       </nav>
 
       <div class="nav-right">
@@ -45,9 +45,9 @@
         </div>
         <!-- Theme -->
         <button class="theme-btn" id="theme-btn" aria-label="Toggle theme">🌙</button>
-        <!-- CTAs -->
-        <a href="#start" class="btn-ghost-sm" data-i18n="navSignIn" onclick="switchTab('signin')">Sign in</a>
-        <a href="#start" class="btn-primary-sm" data-i18n="navStart" onclick="switchTab('signup')">Get started</a>
+        <!-- Auth -->
+        <a href="login.html" class="nav-login" data-i18n="navLogin">Log in</a>
+        <a href="signup.html" class="btn-primary-sm" data-i18n="navSignup">Sign up</a>
       </div>
 
       <button class="nav-toggle" id="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
@@ -80,12 +80,12 @@
       </div>
 
       <div class="hero-cta">
-        <a href="#start" class="btn-primary-lg" data-i18n="heroCtaMain">Meet your shopping buddy</a>
-        <a href="#mission" class="btn-ghost-lg" data-i18n="heroCtaSub">What we stand for</a>
+        <a href="signup.html" class="btn-primary-lg" data-i18n="heroCtaMain">Meet your shopping buddy</a>
+        <a href="#features" class="btn-ghost-lg" data-i18n="heroCtaSub">See what it does</a>
       </div>
 
       <div class="hero-trust">
-        <span data-i18n="heroTrust1">🤝 Built for students, workers &amp; small businesses</span>
+        <span data-i18n="heroTrust1">🤝 Built for students &amp; working adults</span>
         <span data-i18n="heroTrust2">🔒 Your money data stays private</span>
         <span data-i18n="heroTrust3">🌏 Made for everyone, across Asia</span>
       </div>
@@ -118,55 +118,6 @@
     </div>
   </section>
 
-  <!-- ================= MISSION / VALUES ================= -->
-  <section class="section" id="mission">
-    <div class="container narrow center">
-      <div class="eyebrow" data-i18n="missionEyebrow">Our mission</div>
-      <h2 class="h2" data-i18n="missionTitle">Smart money shouldn't be a luxury.</h2>
-      <p class="lead center" data-i18n="missionLead">
-        The best financial tools have always been built for people who already have money and know-how.
-        We're flipping that. We put approachable, everyday AI in the hands of students, working people
-        and the small businesses that serve them — so smarter spending and real growth are open to everyone,
-        not just the few.
-      </p>
-    </div>
-
-    <div class="container">
-      <div class="values-grid">
-        <div class="value-card">
-          <div class="value-icon">🌍</div>
-          <h3 data-i18n="value1T">AI for everyone</h3>
-          <p data-i18n="value1P">No finance degree, no spreadsheets, no jargon. If you can chat, you can use it — at any age, in your own language.</p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon">🤝</div>
-          <h3 data-i18n="value2T">On your side, always</h3>
-          <p data-i18n="value2P">We make money when you shop well, not when you overspend. Our buddy works for you — never for the loudest advertiser.</p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon">🌱</div>
-          <h3 data-i18n="value3T">Lift people and businesses together</h3>
-          <p data-i18n="value3P">Shoppers save for what matters; small businesses keep loyal customers. Good outcomes on both sides, built to last.</p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon">🔒</div>
-          <h3 data-i18n="value4T">Respect by default</h3>
-          <p data-i18n="value4P">Your budget, your pace, your privacy. We earn trust with quiet, honest help — not pressure or spam.</p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon">🧭</div>
-          <h3 data-i18n="value5T">Simple on purpose</h3>
-          <p data-i18n="value5P">Powerful tech, kept effortless. Learn it in minutes, master it in a day — because tools should fit your life, not the reverse.</p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon">🌏</div>
-          <h3 data-i18n="value6T">Built for our region</h3>
-          <p data-i18n="value6P">From Taiwan to Thailand, Japan to Singapore — many languages, many markets, one welcoming experience.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ================= PROBLEM (relatable) ================= -->
   <section class="section section-alt" id="pain">
     <div class="container narrow center">
@@ -178,6 +129,143 @@
         <div class="pain-chip">📢 <span data-i18n="pain4">"Why do all these ads feel random?"</span></div>
       </div>
       <p class="pain-punch" data-i18n="painPunch">You don't need another shopping app. You need a buddy who actually gets your money.</p>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES (selling points) ================= -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="eyebrow" data-i18n="featEyebrow">Features</div>
+      <h2 class="h2 center" data-i18n="featTitle">Everything you need to shop with intention</h2>
+      <p class="lead center" data-i18n="featLead">From "should I buy this?" to "I saved for it" — one app covers the whole journey.</p>
+
+      <div class="feat-grid">
+        <!-- 1. Assistant -->
+        <article class="feat-card">
+          <div class="feat-preview">
+            <div class="pv-bubble pv-me" data-i18n="pv1Me">Should I get these $59 earbuds?</div>
+            <div class="pv-bubble pv-ai" data-i18n="pv1Ai">You've got $52 left this week. Wait for Friday's sale?</div>
+          </div>
+          <h3><span class="feat-icon">💬</span><span data-i18n="feat1T">2AM Assistant</span></h3>
+          <p data-i18n="feat1P">Ask before you buy. It knows your budget and gives you an honest second opinion, any time of night.</p>
+        </article>
+
+        <!-- 2. Budget -->
+        <article class="feat-card">
+          <div class="feat-preview">
+            <div class="pv-row"><span data-i18n="pv2Label">Left this week</span><strong class="pv-big">$52</strong></div>
+            <div class="pv-bar"><div class="pv-fill" style="width: 65%"></div></div>
+            <div class="pv-row pv-small"><span data-i18n="pv2Spent">Spent $28</span><span>$80</span></div>
+          </div>
+          <h3><span class="feat-icon">📊</span><span data-i18n="feat2T">A budget that fits your life</span></h3>
+          <p data-i18n="feat2P">Weekly for students, monthly for working adults. Always see what's left after essentials and savings.</p>
+        </article>
+
+        <!-- 3. Goal pockets -->
+        <article class="feat-card">
+          <div class="feat-preview">
+            <div class="pv-row"><span>✈️ <span data-i18n="saveGoalName">Japan trip</span></span><span class="pv-pct">64%</span></div>
+            <div class="pv-bar"><div class="pv-fill" style="width: 64%"></div></div>
+            <div class="pv-row"><span>👟 <span data-i18n="saveGoal2Name">New sneakers</span></span><span class="pv-pct">80%</span></div>
+            <div class="pv-bar"><div class="pv-fill" style="width: 80%"></div></div>
+          </div>
+          <h3><span class="feat-icon">🎯</span><span data-i18n="feat3T">Goal pockets</span></h3>
+          <p data-i18n="feat3P">Turn "someday" into a plan. Set a goal, add a little each week and watch it fill up.</p>
+        </article>
+
+        <!-- 4. Sleep on it (wishlist) -->
+        <article class="feat-card">
+          <div class="feat-preview">
+            <div class="pv-item">
+              <span class="pv-thumb">🎧</span>
+              <div class="pv-item-text"><span data-i18n="pv4Item">Wireless earbuds</span><span class="pv-muted">$59</span></div>
+              <span class="pv-tag pv-tag-amber" data-i18n="pv4Tag">⏰ 9:00 AM</span>
+            </div>
+            <div class="pv-item">
+              <span class="pv-thumb">👕</span>
+              <div class="pv-item-text"><span data-i18n="pv4Item2">Linen shirt</span><span class="pv-muted">$34</span></div>
+              <span class="pv-tag pv-tag-green" data-i18n="pv4Tag2">✓ In budget</span>
+            </div>
+          </div>
+          <h3><span class="feat-icon">🌙</span><span data-i18n="feat4T">Sleep on it</span></h3>
+          <p data-i18n="feat4P">Save it to your wishlist at 2am, decide in the morning. We check in before you buy, not while you scroll.</p>
+        </article>
+
+        <!-- 5. Discover feed -->
+        <article class="feat-card">
+          <div class="feat-preview pv-discover">
+            <div class="pv-video"><span class="pv-play">▶</span><span class="pv-cap" data-i18n="pv5Cap">Cold brew kit · $18</span></div>
+            <div class="pv-chips">
+              <span data-i18n="pv5Chip1">☕ Coffee</span>
+              <span data-i18n="pv5Chip2">Under $20</span>
+            </div>
+          </div>
+          <h3><span class="feat-icon">🎥</span><span data-i18n="feat5T">Discover, filtered for you</span></h3>
+          <p data-i18n="feat5P">Swipe short product videos picked for your interests and filtered to what you can afford.</p>
+        </article>
+
+        <!-- 6. Every shop -->
+        <article class="feat-card">
+          <div class="feat-preview">
+            <div class="pv-chips pv-shops">
+              <span>Shopee</span><span>SHEIN</span><span>TikTok Shop</span><span>Taobao</span><span>Pinduoduo</span>
+            </div>
+            <div class="pv-arrow">↓</div>
+            <div class="pv-one">❤️ <span data-i18n="pv6">One wishlist</span></div>
+          </div>
+          <h3><span class="feat-icon">🛍️</span><span data-i18n="feat6T">Every shop, one list</span></h3>
+          <p data-i18n="feat6P">Save links from Shopee, SHEIN, TikTok Shop, Taobao and Pinduoduo into one tidy wishlist.</p>
+        </article>
+      </div>
+
+      <!-- Privacy band -->
+      <div class="priv-strip">
+        <div class="priv-icon">🔒</div>
+        <div>
+          <h3 data-i18n="privT">Privacy first</h3>
+          <p data-i18n="privP">Your budget, savings and wishlist stay on your device. Shops never see your numbers, and we never ask for your marketplace passwords.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SAVINGS SPOTLIGHT ================= -->
+  <section class="section section-alt" id="save">
+    <div class="container save-split">
+      <div class="save-copy">
+        <div class="eyebrow eyebrow-left" data-i18n="saveEyebrow">Save without thinking</div>
+        <h2 class="h2" data-i18n="saveTitle">Turn "I want it" into "I got it."</h2>
+        <p class="lead" data-i18n="saveLead">See something you love but it's over budget? Your buddy sets up a goal pocket and quietly helps you get there — then checks the price is still right before you buy.</p>
+        <ul class="save-list">
+          <li data-i18n="saveLi1">✅ Set a goal in one tap</li>
+          <li data-i18n="saveLi2">✅ Watch the progress bar fill up</li>
+          <li data-i18n="saveLi3">✅ Buy when you're actually ready</li>
+        </ul>
+      </div>
+      <div class="save-visual">
+        <div class="goal-card">
+          <div class="goal-top">
+            <span class="goal-emoji">✈️</span>
+            <div>
+              <div class="goal-name" data-i18n="saveGoalName">Japan trip</div>
+              <div class="goal-sub" data-i18n="saveGoalSub">$320 of $500 saved</div>
+            </div>
+          </div>
+          <div class="goal-bar"><div class="goal-fill"></div></div>
+          <div class="goal-foot" data-i18n="saveGoalFoot">🎉 64% there — about 4 weeks to go</div>
+        </div>
+        <div class="goal-card goal-card-2">
+          <div class="goal-top">
+            <span class="goal-emoji">👟</span>
+            <div>
+              <div class="goal-name" data-i18n="saveGoal2Name">New sneakers</div>
+              <div class="goal-sub" data-i18n="saveGoal2Sub">$48 of $60 saved</div>
+            </div>
+          </div>
+          <div class="goal-bar"><div class="goal-fill goal-fill-2"></div></div>
+          <div class="goal-foot" data-i18n="saveGoal2Foot">Almost there! 🔥</div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -231,150 +319,60 @@
           <p data-i18n="whoWorkingP">Plan around payday. Keep your subscriptions, savings and treats in balance — without a spreadsheet.</p>
           <div class="who-tag" data-i18n="whoWorkingTag">Monthly plan · Smart reminders · Reorders</div>
         </div>
-        <div class="who-card who-business">
-          <div class="who-emoji">🏪</div>
-          <h3 data-i18n="whoBusinessT">Businesses</h3>
-          <p data-i18n="whoBusinessP">Turn one-time buyers into regulars with friendly, well-timed nudges — that respect the customer's budget.</p>
-          <div class="who-tag" data-i18n="whoBusinessTag">Real customers · Right timing · Repeat sales</div>
-        </div>
       </div>
     </div>
   </section>
 
-  <!-- ================= WHY (benefits) ================= -->
-  <section class="section" id="why">
-    <div class="container">
-      <div class="eyebrow" data-i18n="whyEyebrow">What makes it different</div>
-      <h2 class="h2 center" data-i18n="whyTitle">A buddy, not a billboard.</h2>
-
-      <div class="why-grid">
-        <div class="why-card">
-          <div class="why-icon">🧠</div>
-          <h3 data-i18n="why1T">Remembers everything</h3>
-          <p data-i18n="why1P">Every product, price and payday — so you don't have to.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">💰</div>
-          <h3 data-i18n="why2T">Protects your budget</h3>
-          <p data-i18n="why2P">It'll never push something you can't comfortably afford.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">🔕</div>
-          <h3 data-i18n="why3T">Zero spam</h3>
-          <p data-i18n="why3P">Quiet hours, your frequency. It only pings when it helps.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">🎯</div>
-          <h3 data-i18n="why4T">Saves for your goals</h3>
-          <p data-i18n="why4P">Goal pockets turn "someday" into "almost there."</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">🛍️</div>
-          <h3 data-i18n="why5T">All your shops, one place</h3>
-          <p data-i18n="why5P">Shopee, SHEIN, TikTok, Taobao, Pinduoduo — one tidy list.</p>
-        </div>
-        <div class="why-card">
-          <div class="why-icon">🔒</div>
-          <h3 data-i18n="why6T">Private by default</h3>
-          <p data-i18n="why6P">Your budget and savings are yours. Shops never see them.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= SAVINGS TEASER ================= -->
-  <section class="section section-alt" id="save">
-    <div class="container save-split">
-      <div class="save-copy">
-        <div class="eyebrow" data-i18n="saveEyebrow">Save without thinking</div>
-        <h2 class="h2" data-i18n="saveTitle">Turn "I want it" into "I got it."</h2>
-        <p class="lead" data-i18n="saveLead">See something you love but it's over budget? Your buddy sets up a goal pocket and quietly helps you get there — then checks the price is still right before you buy.</p>
-        <ul class="save-list">
-          <li data-i18n="saveLi1">✅ Set a goal in one tap</li>
-          <li data-i18n="saveLi2">✅ Watch the progress bar fill up</li>
-          <li data-i18n="saveLi3">✅ Buy when you're actually ready</li>
-        </ul>
-      </div>
-      <div class="save-visual">
-        <div class="goal-card">
-          <div class="goal-top">
-            <span class="goal-emoji">✈️</span>
-            <div>
-              <div class="goal-name" data-i18n="saveGoalName">Japan trip</div>
-              <div class="goal-sub" data-i18n="saveGoalSub">$320 of $500 saved</div>
-            </div>
-          </div>
-          <div class="goal-bar"><div class="goal-fill"></div></div>
-          <div class="goal-foot" data-i18n="saveGoalFoot">🎉 64% there — about 4 weeks to go</div>
-        </div>
-        <div class="goal-card goal-card-2">
-          <div class="goal-top">
-            <span class="goal-emoji">👟</span>
-            <div>
-              <div class="goal-name" data-i18n="saveGoal2Name">New sneakers</div>
-              <div class="goal-sub" data-i18n="saveGoal2Sub">$48 of $60 saved</div>
-            </div>
-          </div>
-          <div class="goal-bar"><div class="goal-fill goal-fill-2"></div></div>
-          <div class="goal-foot" data-i18n="saveGoal2Foot">Almost there! 🔥</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= START / AUTH ================= -->
-  <section class="section start-section" id="start">
+  <!-- ================= MISSION / VALUES ================= -->
+  <section class="section" id="mission">
     <div class="container narrow center">
-      <div class="eyebrow" data-i18n="startEyebrow">Get started</div>
-      <h2 class="h2" data-i18n="startTitle">Meet your buddy in 30 seconds</h2>
-      <p class="lead center" data-i18n="startLead">Create an account, then we'll drop you right into the app.</p>
+      <div class="eyebrow" data-i18n="missionEyebrow">Our mission</div>
+      <h2 class="h2" data-i18n="missionTitle">Smart money shouldn't be a luxury.</h2>
+      <p class="lead center" data-i18n="missionLead">
+        The best financial tools have always been built for people who already have money and know-how.
+        We're flipping that. We put approachable, everyday AI in the hands of students and working people —
+        so smarter spending is open to everyone, not just the few.
+      </p>
+    </div>
 
-      <div class="auth">
-        <div class="auth-tabs">
-          <button class="auth-tab active" id="tab-signup" onclick="switchTab('signup')" data-i18n="tabSignup">Create account</button>
-          <button class="auth-tab" id="tab-signin" onclick="switchTab('signin')" data-i18n="tabSignin">Sign in</button>
+    <div class="container">
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">🌍</div>
+          <h3 data-i18n="value1T">AI for everyone</h3>
+          <p data-i18n="value1P">No finance degree, no spreadsheets, no jargon. If you can chat, you can use it — at any age, in your own language.</p>
         </div>
-
-        <!-- SIGN UP -->
-        <div class="auth-panel" id="panel-signup">
-          <div class="role-pick" data-i18n-label="rolePick">
-            <button class="role active" id="role-student"  onclick="pickRole('student', this)">🎓 <span data-i18n="roleStudent">Student</span></button>
-            <button class="role"        id="role-working"  onclick="pickRole('working', this)">💼 <span data-i18n="roleWorking">Working</span></button>
-          </div>
-          <form class="auth-form" id="form-signup" onsubmit="handleSignup(event)">
-            <input class="auth-input" id="signup-username" type="text" autocomplete="username" data-i18n-ph="phUsername" placeholder="Pick a username" required />
-            <input class="auth-input" id="signup-email" type="email" autocomplete="email" data-i18n-ph="phEmail" placeholder="Email (optional)" />
-            <div class="pw-wrap">
-              <input class="auth-input" id="signup-password" type="password" autocomplete="new-password" data-i18n-ph="phPassword" placeholder="Password (6+ characters)" required />
-              <button type="button" class="pw-toggle" onclick="togglePw('signup-password', this)">👁️</button>
-            </div>
-            <input class="auth-input" id="signup-confirm" type="password" autocomplete="new-password" data-i18n-ph="phConfirm" placeholder="Confirm password" required />
-            <div class="auth-error" id="signup-error" aria-live="polite"></div>
-            <button type="submit" class="btn-primary-lg full" id="signup-btn" data-i18n="signupBtn">Create my account →</button>
-          </form>
+        <div class="value-card">
+          <div class="value-icon">🤝</div>
+          <h3 data-i18n="value2T">On your side, always</h3>
+          <p data-i18n="value2P">We make money when you shop well, not when you overspend. Our buddy works for you — never for the loudest advertiser.</p>
         </div>
-
-        <!-- SIGN IN -->
-        <div class="auth-panel hidden" id="panel-signin">
-          <div class="demo-hint">⚡ <span data-i18n="demoHint">Try the demo — user: <strong>user</strong> · pass: <strong>password</strong></span></div>
-          <form class="auth-form" id="form-signin" onsubmit="handleSignin(event)">
-            <input class="auth-input" id="signin-username" type="text" autocomplete="username" data-i18n-ph="phUsername2" placeholder="Username" required />
-            <div class="pw-wrap">
-              <input class="auth-input" id="signin-password" type="password" autocomplete="current-password" data-i18n-ph="phPassword2" placeholder="Password" required />
-              <button type="button" class="pw-toggle" onclick="togglePw('signin-password', this)">👁️</button>
-            </div>
-            <div class="auth-error" id="signin-error" aria-live="polite"></div>
-            <button type="submit" class="btn-primary-lg full" id="signin-btn" data-i18n="signinBtn">Sign in &amp; open the app →</button>
-          </form>
+        <div class="value-card">
+          <div class="value-icon">🌱</div>
+          <h3 data-i18n="value3T">Good habits, gently</h3>
+          <p data-i18n="value3P">Small wins add up. Goal pockets, streaks and friendly check-ins help better money habits stick — no guilt trips.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🔒</div>
+          <h3 data-i18n="value4T">Respect by default</h3>
+          <p data-i18n="value4P">Your budget, your pace, your privacy. We earn trust with quiet, honest help — not pressure or spam.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🧭</div>
+          <h3 data-i18n="value5T">Simple on purpose</h3>
+          <p data-i18n="value5P">Powerful tech, kept effortless. Learn it in minutes, master it in a day — because tools should fit your life, not the reverse.</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon">🌏</div>
+          <h3 data-i18n="value6T">Built for our region</h3>
+          <p data-i18n="value6P">From Taiwan to Thailand, Japan to Singapore — many languages, many markets, one welcoming experience.</p>
         </div>
       </div>
-
-      <p class="auth-foot" data-i18n="authFoot">Takes under a minute · Your data stays private · Built for everyone</p>
     </div>
   </section>
 
   <!-- ================= GET THE APP (QR) ================= -->
-  <section class="section" id="get-app">
+  <section class="section section-alt" id="get-app">
     <div class="container">
       <div class="eyebrow" data-i18n="getAppEyebrow">Get the app</div>
       <h2 class="h2 center" data-i18n="getAppTitle">Scan. Install. Shop smarter.</h2>
@@ -426,13 +424,13 @@
   </section>
 
   <!-- ================= FAQ ================= -->
-  <section class="section section-alt" id="faq">
+  <section class="section" id="faq">
     <div class="container narrow">
       <h2 class="h2 center" data-i18n="faqTitle">Quick questions</h2>
       <div class="faq">
         <details class="faq-item" open>
           <summary data-i18n="faqQ1">Who is this really for?</summary>
-          <p data-i18n="faqA1">Anyone who wants to shop with intention — students stretching an allowance, working adults planning around payday, and small businesses who want loyal customers. No finance background needed.</p>
+          <p data-i18n="faqA1">Anyone who wants to shop with intention — students stretching an allowance and working adults planning around payday. No finance background needed.</p>
         </details>
         <details class="faq-item">
           <summary data-i18n="faqQ2">Can it see my bank account?</summary>
@@ -454,8 +452,8 @@
   <section class="section final-cta">
     <div class="container center">
       <h2 class="final-h2" data-i18n="finalTitle">Smarter shopping, open to everyone.</h2>
-      <p class="final-p" data-i18n="finalP">Join the shoppers and businesses choosing intention over impulse.</p>
-      <a href="#start" class="btn-primary-lg" data-i18n="finalCta">Meet your buddy</a>
+      <p class="final-p" data-i18n="finalP">Join the shoppers choosing intention over impulse.</p>
+      <a href="signup.html" class="btn-primary-lg" data-i18n="finalCta">Meet your buddy</a>
     </div>
   </section>
 
@@ -467,18 +465,6 @@
       <p class="footer-note" data-i18n="footerNote">AI-Ignition · Problem Statement 1 · 2AM Deployers </p>
     </div>
   </footer>
-
-  <!-- ================= CONGRATS / HANDOFF OVERLAY ================= -->
-  <div class="overlay" id="congrats-overlay">
-    <div class="overlay-box" id="congrats-box">
-      <button class="overlay-close" id="congrats-close" aria-label="Close">✕</button>
-      <div class="overlay-emoji" id="congrats-emoji">🎉</div>
-      <h2 class="overlay-title" id="congrats-title">You're in!</h2>
-      <p class="overlay-sub" id="congrats-sub">Opening your shopping buddy…</p>
-      <a id="congrats-btn" href="#" target="_blank" rel="noopener" class="btn-primary-lg full">Open the app →</a>
-      <p class="overlay-small" id="congrats-small">Didn't open? Make sure the app is running, then tap the button.</p>
-    </div>
-  </div>
 
   <script src="script.js"></script>
 </body>

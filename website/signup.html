@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign up — 2am Shoppers</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="auth-page">
+
+  <header class="auth-top">
+    <a href="index.html" class="brand">
+      <span class="brand-icon">🛒</span>
+      <span class="brand-name">2am Shoppers</span>
+    </a>
+    <div class="nav-right">
+      <div class="lang" id="lang">
+        <button class="lang-btn" id="lang-btn" aria-haspopup="true" aria-expanded="false">
+          <span id="lang-flag">🇬🇧</span><span id="lang-label">EN</span><span class="caret">▾</span>
+        </button>
+        <div class="lang-menu" id="lang-menu" role="menu">
+          <button class="lang-opt" data-lang="en">🇬🇧 <span>English</span></button>
+          <button class="lang-opt" data-lang="ja">🇯🇵 <span>日本語</span></button>
+          <button class="lang-opt" data-lang="zh">🇨🇳 <span>中文</span></button>
+          <button class="lang-opt" data-lang="th">🇹🇭 <span>ไทย</span></button>
+          <button class="lang-opt" data-lang="ko">🇰🇷 <span>한국어</span></button>
+        </div>
+      </div>
+      <button class="theme-btn" id="theme-btn" aria-label="Toggle theme">🌙</button>
+    </div>
+  </header>
+
+  <main class="auth-main">
+    <div class="auth-card">
+      <div class="auth-head">
+        <div class="auth-emoji">🛒</div>
+        <h1 class="auth-title" data-i18n="signupTitle">Create your account</h1>
+        <p class="auth-sub" data-i18n="signupSub">Takes under a minute. Then we'll take you straight into the app.</p>
+      </div>
+
+      <div class="role-pick">
+        <button type="button" class="role active" id="role-student" onclick="pickRole('student', this)">🎓 <span data-i18n="roleStudent">Student</span></button>
+        <button type="button" class="role"        id="role-working" onclick="pickRole('working', this)">💼 <span data-i18n="roleWorking">Working</span></button>
+      </div>
+
+      <form class="auth-form" id="form-signup" onsubmit="handleSignup(event)">
+        <input class="auth-input" id="signup-username" type="text" autocomplete="username" data-i18n-ph="phUsername" placeholder="Pick a username" required autofocus />
+        <input class="auth-input" id="signup-email" type="email" autocomplete="email" data-i18n-ph="phEmail" placeholder="Email (optional)" />
+        <div class="pw-wrap">
+          <input class="auth-input" id="signup-password" type="password" autocomplete="new-password" data-i18n-ph="phPassword" placeholder="Password (6+ characters)" required />
+          <button type="button" class="pw-toggle" onclick="togglePw('signup-password', this)" aria-label="Show password">👁️</button>
+        </div>
+        <input class="auth-input" id="signup-confirm" type="password" autocomplete="new-password" data-i18n-ph="phConfirm" placeholder="Confirm password" required />
+        <div class="auth-error" id="signup-error" aria-live="polite"></div>
+        <button type="submit" class="btn-primary-lg full" id="signup-btn" data-i18n="signupBtn">Create my account →</button>
+      </form>
+
+      <p class="auth-switch auth-switch-small">
+        <span data-i18n="haveAccount">Already a member?</span>
+        <a href="login.html" data-i18n="signInLink">Sign in</a>
+      </p>
+    </div>
+
+    <p class="auth-foot" data-i18n="authFoot">Takes under a minute · Your data stays private · Built for everyone</p>
+    <a href="index.html" class="auth-back" data-i18n="backHome">← Back to home</a>
+  </main>
+
+  <!-- Handoff overlay -->
+  <div class="overlay" id="congrats-overlay">
+    <div class="overlay-box" id="congrats-box">
+      <button class="overlay-close" id="congrats-close" aria-label="Close">✕</button>
+      <div class="overlay-emoji" id="congrats-emoji">🎉</div>
+      <h2 class="overlay-title" id="congrats-title">You're in!</h2>
+      <p class="overlay-sub" id="congrats-sub">Opening your shopping buddy…</p>
+      <a id="congrats-btn" href="#" target="_blank" rel="noopener" class="btn-primary-lg full">Open the app →</a>
+      <p class="overlay-small" id="congrats-small">Didn't open? Make sure the app is running, then tap the button.</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
