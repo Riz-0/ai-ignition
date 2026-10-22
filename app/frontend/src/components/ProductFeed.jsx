@@ -6,6 +6,15 @@ import { getFeedVideos } from '../data/feedVideos.js';
 // Button text for the shop link, by how exact the link is.
 const SHOP_LABEL = { product: 'Buy', brand: 'Shop', search: 'Find' };
 
+// The sound on/off choice is remembered on this device.
+const SOUND_KEY = '2am-feed-sound';
+function readSoundPref() {
+  try { return localStorage.getItem(SOUND_KEY) === 'on'; } catch { return false; }
+}
+function saveSoundPref(on) {
+  try { localStorage.setItem(SOUND_KEY, on ? 'on' : 'off'); } catch { /* storage unavailable */ }
+}
+
 export default function ProductFeed() {
   // Pull wishlist state and actions directly from global app store
   const { wishlist, addToWishlist, removeFromWishlist, addReminder, activeAccountId, shopperProfile } = useAppStore();
@@ -18,6 +27,15 @@ export default function ProductFeed() {
   // Store refs for all video elements so we can control them imperatively
   const videoRefs = useRef([]);
 
+  // Sound: browsers only autoplay muted video until the user taps. If sound
+  // was left on last time but the browser blocks it, play muted and turn it
+  // back on with the next tap on the feed.
+  const [soundOn, setSoundOn] = useState(readSoundPref);
+  const [soundBlocked, setSoundBlocked] = useState(false);
+  const muted = !soundOn || soundBlocked;
+  const mutedRef = useRef(muted);
+  mutedRef.current = muted;
+
   useEffect(() => {
     setProducts(getFeedVideos(activeAccountId, shopperProfile));
     setCurrentIndex(0);
@@ -29,12 +47,50 @@ export default function ProductFeed() {
       if (!videoEl) return;
       if (index === currentIndex) {
         videoEl.currentTime = 0;
-        videoEl.play().catch((err) => console.log("Autoplay prevented:", err));
+        videoEl.muted = mutedRef.current;
+        videoEl.play().catch(() => {
+          // Sound not allowed yet: play muted until the user taps.
+          if (!videoEl.muted) {
+            videoEl.muted = true;
+            setSoundBlocked(true);
+            videoEl.play().catch(() => {});
+          }
+        });
       } else {
         videoEl.pause();
       }
     });
   }, [currentIndex, products]);
+
+  // Apply sound changes to the playing video without restarting it.
+  useEffect(() => {
+    const v = videoRefs.current[currentIndex];
+    if (v) v.muted = muted;
+  }, [muted, currentIndex]);
+
+  const toggleSound = () => {
+    const next = muted;            // muted now → turn sound on, and vice versa
+    setSoundOn(next);
+    setSoundBlocked(false);
+    saveSoundPref(next);
+    // Unmute inside the tap itself, so the browser counts it as permission.
+    const v = videoRefs.current[currentIndex];
+    if (v) {
+      v.muted = !next;
+      if (next) v.play().catch(() => {});
+    }
+  };
+
+  // Sound was on last time but blocked on load: the first tap turns it back on.
+  const resumeSound = () => {
+    if (!soundBlocked) return;
+    setSoundBlocked(false);
+    const v = videoRefs.current[currentIndex];
+    if (v) {
+      v.muted = false;
+      v.play().catch(() => {});
+    }
+  };
 
   // Tell the floating 2AM Assistant which product is on screen, so it can pop
   // a budget-aware nudge while the user scrolls. Cleared when the feed unmounts.
@@ -135,6 +191,7 @@ export default function ProductFeed() {
         className="feed-viewport" 
         ref={feedRef} 
         onScroll={handleScroll}
+        onPointerDown={resumeSound}
       >
         {products.map((product, index) => {
           const isWishlisted = wishlist.some((item) => item.id === product.id);
@@ -161,6 +218,16 @@ export default function ProductFeed() {
                 </div>
 
                 <div className="action-sidebar">
+                  <button
+                    type="button"
+                    onClick={toggleSound}
+                    className={`wishlist-btn sound-btn ${soundBlocked ? 'sound-hint' : ''}`}
+                    aria-pressed={!muted}
+                    aria-label={muted ? 'Turn sound on' : 'Turn sound off'}
+                  >
+                    <span className="icon">{muted ? '🔇' : '🔊'}</span>
+                    <span className="label">{soundBlocked ? 'Tap for sound' : muted ? 'Sound off' : 'Sound on'}</span>
+                  </button>
                   {product.url && (
                     <a href={product.url} target="_blank" rel="noopener noreferrer"
                       className="wishlist-btn shop-btn"

@@ -327,6 +327,14 @@ strong { color: var(--text); }
   font-weight: 600;
 }
 
+/* Sound on/off on each Discover video */
+.sound-btn .label { white-space: nowrap; }
+.sound-hint { animation: soundPulse 1.6s ease-in-out infinite; }
+@keyframes soundPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.45); }
+  50%      { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
+}
+
 /* Shop link on each Discover video */
 .shop-btn { text-decoration: none; background: rgba(240, 78, 110, 0.55); }
 .shop-btn:hover { background: rgba(240, 78, 110, 0.75); }
