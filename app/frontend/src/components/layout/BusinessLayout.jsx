@@ -4,6 +4,7 @@ import useAppStore  from '../../store/appStore.js';
 import useAuthStore from '../../store/authStore.js';
 import { useT } from '../../i18n/I18nProvider.jsx';
 import { UIPrefsCluster } from '../../components/UIPrefs.jsx';
+import FloatingAssistant from '../../components/FloatingAssistant.jsx';
 import styles from './Layout.module.css';
 
 const NAV_BASE = [
@@ -82,6 +83,9 @@ export default function BusinessLayout() {
         </header>
         <main className={styles.content}><Outlet /></main>
       </div>
+
+      {/* 2AM Assistant floats in the corner on every business page too */}
+      <FloatingAssistant />
     </div>
   );
 }

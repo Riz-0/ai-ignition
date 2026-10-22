@@ -17,7 +17,6 @@ const CustomerOnboarding = lazy(() => import('./pages/customer/CustomerOnboardin
 const CustomerHome       = lazy(() => import('./pages/customer/CustomerHome.jsx'));
 const WishlistPage       = lazy(() => import('./pages/customer/WishlistPage.jsx'));
 const FeedPage           = lazy(() => import('./pages/customer/FeedPage.jsx'));
-const ChatPage           = lazy(() => import('./pages/customer/ChatPage.jsx'));
 const CustomerSettings   = lazy(() => import('./pages/customer/CustomerSettings.jsx'));
 const SavingsPage        = lazy(() => import('./pages/customer/SavingsPage.jsx'));
 const ConnectionsPage    = lazy(() => import('./pages/customer/ConnectionsPage.jsx'));
@@ -98,7 +97,9 @@ export default function App() {
         <Route index          element={<CustomerHome />} />
         <Route path="wishlist"    element={<WishlistPage />} />
         <Route path="feed"        element={<FeedPage />} />
-        <Route path="chat"        element={<ChatPage />} />
+        {/* /customer/chat removed — the 2AM Assistant is now a global
+            floating bot. Redirect any old links to Home. */}
+        <Route path="chat"        element={<Navigate to="/customer" replace />} />
         <Route path="savings"     element={<SavingsPage />} />
         <Route path="connections" element={<ConnectionsPage />} />
         <Route path="settings"    element={<CustomerSettings />} />

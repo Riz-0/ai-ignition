@@ -6,6 +6,7 @@ import { useT } from '../../i18n/I18nProvider.jsx';
 import { UIPrefsCluster } from '../../components/UIPrefs.jsx';
 import CoachTour, { TourPrompt } from '../../components/CoachTour.jsx';
 import PrivacyBadge from '../../components/PrivacyBadge.jsx';
+import FloatingAssistant from '../../components/FloatingAssistant.jsx';
 import styles from './Layout.module.css';
 
 export default function CustomerLayout() {
@@ -26,7 +27,6 @@ export default function CustomerLayout() {
         { tour: 'feed',         to: '/customer/feed',         icon: '🎥', label: t('nav.discover')    },
         { tour: 'savings',      to: '/customer/savings',      icon: '🎯', label: t('nav.save')        },
         { tour: 'wishlist',     to: '/customer/wishlist',     icon: '❤️', label: t('nav.wishlist')    },
-        { tour: 'chat',         to: '/customer/chat',         icon: '💬', label: t('nav.assistant')   },
         { tour: 'connections',  to: '/customer/connections',  icon: '🔗', label: t('nav.connections') },
         { tour: 'settings',     to: '/customer/settings',     icon: '⚙️', label: t('nav.settings')   },
       ]
@@ -35,7 +35,6 @@ export default function CustomerLayout() {
         { tour: 'feed',         to: '/customer/feed',         icon: '📊', label: t('nav.spending')    },
         { tour: 'savings',      to: '/customer/savings',      icon: '📈', label: t('nav.savings')     },
         { tour: 'wishlist',     to: '/customer/wishlist',     icon: '🛒', label: t('nav.shopping')    },
-        { tour: 'chat',         to: '/customer/chat',         icon: '💬', label: t('nav.assistant')   },
         { tour: 'connections',  to: '/customer/connections',  icon: '🔗', label: t('nav.connections') },
         { tour: 'settings',     to: '/customer/settings',     icon: '⚙️', label: t('nav.settings')   },
       ];
@@ -70,7 +69,7 @@ export default function CustomerLayout() {
       { target: 'nav-feed',        inSidebar: true, title: label('feed'),        body: t(`tour.feed${mode}`) },
       { target: 'nav-savings',     inSidebar: true, title: label('savings'),     body: t('tour.savings') },
       { target: 'nav-wishlist',    inSidebar: true, title: label('wishlist'),    body: t('tour.wishlist') },
-      { target: 'nav-chat',        inSidebar: true, title: label('chat'),        body: t('tour.assistant') },
+      { target: 'assistant-fab',                    title: t('nav.assistant'),   body: t('tour.assistant') },
       { target: 'nav-connections', inSidebar: true, title: label('connections'), body: t('tour.connections') },
       { target: 'privacy',                          title: t('privacy.badge'),   body: t('tour.privacy') },
       { target: 'nav-settings',    inSidebar: true, title: label('settings'),    body: t('tour.settings') },
@@ -158,6 +157,9 @@ export default function CustomerLayout() {
         </header>
         <main className={styles.content}><Outlet /></main>
       </div>
+
+      {/* 2AM Assistant floats in the corner on every customer page */}
+      <FloatingAssistant />
     </div>
   );
 }

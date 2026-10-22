@@ -30,6 +30,12 @@ const useAppStore = create(
       setTheme: (theme) => set({ theme }),
       toggleTheme: () => set((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
 
+      // suggestionsEnabled — whether the 2AM Assistant shows proactive
+      // budget-aware nudges while browsing (the floating pop-ups). On by
+      // default; users can turn it off in Settings. Preserved across reset.
+      suggestionsEnabled: true,
+      setSuggestionsEnabled: (v) => set({ suggestionsEnabled: !!v }),
+
       // ── Per-account profiles ─────────────────────────────────
       // Profiles are keyed by the logged-in account id so that two
       // accounts in the same browser never clobber each other, and

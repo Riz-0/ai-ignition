@@ -45,10 +45,8 @@ export default function CustomerHome() {
           <span className={styles.tileIcon}>❤️</span>
           <span className={styles.tileLabel}>{t('homeExtra.tileWishlist')}</span>
         </Link>
-        <Link to="/customer/chat" className={styles.tile}>
-          <span className={styles.tileIcon}>💬</span>
-          <span className={styles.tileLabel}>{t('homeExtra.tileChat')}</span>
-        </Link>
+        {/* Assistant tile removed — the 2AM Assistant is now the global
+            floating bot in the corner, available on every page. */}
       </div>
 
       {/* One AI nudge */}
