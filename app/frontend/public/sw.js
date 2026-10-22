@@ -5,7 +5,8 @@
    index.html. Keeps the bundle small and the demo reliable.
    ============================================================ */
 
-const CACHE_VERSION = 'v1';
+// Bump this whenever caching rules change: old caches are deleted on activate.
+const CACHE_VERSION = 'v3';
 const SHELL_CACHE = `2am-shell-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `2am-runtime-${CACHE_VERSION}`;
 
@@ -47,6 +48,14 @@ self.addEventListener('fetch', (event) => {
 
   // Don't touch the Vite HMR / dev API (proxy) — those must hit the network.
   if (url.origin === location.origin && url.pathname.startsWith('/api')) return;
+
+  // Dev-server source modules (/src, /@vite, /node_modules) change on every
+  // edit; serving a cached copy would run stale code. Always use the network.
+  if (url.origin === location.origin && /^\/(src|@vite|@id|@fs|@react-refresh|node_modules)\b/.test(url.pathname)) return;
+
+  // Videos stream in byte ranges (206 responses) and are large: let the
+  // browser fetch them directly instead of going through the cache.
+  if (req.headers.has('range') || /\.(mp4|webm|mov)$/i.test(url.pathname)) return;
 
   // Cross-origin (fonts, QR API, etc.) — stale-while-revalidate
   if (url.origin !== location.origin) {

@@ -88,11 +88,23 @@ function StorageSync() {
 
 /* ── Register the PWA service worker ─────────────────────── */
 if ('serviceWorker' in navigator) {
+  // When an updated service worker takes over a page that an older one was
+  // controlling, reload once so the page isn't left running stale cached code.
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController || reloaded) return;
+    reloaded = true;
+    window.location.reload();
+  });
+
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch((err) => {
-      // SW registration is best-effort; the app still works without it.
-      console.warn('SW registration failed:', err);
-    });
+    navigator.serviceWorker.register('/sw.js')
+      .then((reg) => reg.update())
+      .catch((err) => {
+        // SW registration is best-effort; the app still works without it.
+        console.warn('SW registration failed:', err);
+      });
   });
 }
 
