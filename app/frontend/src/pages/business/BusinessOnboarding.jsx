@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAppStore from '../../store/appStore.js';
+import { useT } from '../../i18n/I18nProvider.jsx';
 import styles from './BusinessOnboarding.module.css';
 
-const GOALS = [
-  { id: 'second_purchase', label: 'Increase second purchases', desc: 'Turn first-time buyers into returning customers within 60 days.' },
-  { id: 'replenishment',   label: 'Drive replenishment',       desc: 'Remind existing customers to reorder repeat-use products.' },
-  { id: 'reactivation',   label: 'Reactivate inactive customers', desc: 'Re-engage customers with no new order beyond a chosen interval.' },
-  { id: 'upsell',         label: 'Introduce complementary products', desc: 'Offer relevant additions to customers who already buy from you.' },
-];
+const GOAL_IDS = ['second_purchase', 'replenishment', 'reactivation', 'upsell'];
 
 const DEMO_PRODUCTS = [
   { id: 'p1', name: 'House Blend — 250g', price: 12.90, category: 'Coffee', inStock: true },
@@ -34,6 +30,12 @@ export default function BusinessOnboarding() {
   const [approvalRoles, setApproval] = useState({ owner: true, marketer: false, support: false });
 
   const { setMerchantProfile, addProduct, addCustomer } = useAppStore();
+  const t = useT();
+  const lookup = (key, fallback) => {
+    const v = t(key);
+    return v === key ? fallback : v;
+  };
+  const segLabel = (s) => lookup('customers.seg_' + s, s.replace(/_/g, ' '));
   const navigate = useNavigate();
 
   function finish() {
@@ -45,19 +47,19 @@ export default function BusinessOnboarding() {
     navigate('/business');
   }
 
-  const titles = ['Your business profile', 'Engagement goal', 'Product catalogue', 'Import customers', 'Permissions & limits'];
+  const titles = [t('bizOnboard.t_profile'), t('bizOnboard.t_goal'), t('bizOnboard.t_catalogue'), t('bizOnboard.t_customers'), t('bizOnboard.t_settings')];
   const canNext = [merchantName.trim().length > 0, goal.length > 0, true, true, true];
 
   return (
     <div className={styles.page}>
       <div className={styles.card}>
         <div className={styles.header}>
-          <div className={styles.logo}>🛒 2am Shoppers — Business</div>
+          <div className={styles.logo}>🛒 {t('bizOnboard.headerTitle')}</div>
           <div className={styles.progress}>
             {STEPS.map((_, i) => <div key={i} className={`${styles.dot} ${i <= step ? styles.dotOn : ''}`} />)}
           </div>
           <h1 className={styles.title}>{titles[step]}</h1>
-          <p className={styles.stepLabel}>Step {step + 1} of {STEPS.length}</p>
+          <p className={styles.stepLabel}>{t('bizOnboard.stepLabel', { n: step + 1, total: STEPS.length })}</p>
         </div>
 
         <div className={styles.body}>
@@ -65,27 +67,27 @@ export default function BusinessOnboarding() {
           {/* Step 0 — profile */}
           {step === 0 && (
             <div className={styles.stack}>
-              <label className={styles.label}>Business / shop name *
-                <input className={styles.input} placeholder="e.g. Brew & Bites"
+              <label className={styles.label}>{t('bizOnboard.bizName')}
+                <input className={styles.input} placeholder={t('bizOnboard.bizNamePh')}
                   value={merchantName} onChange={e => setName(e.target.value)} />
               </label>
-              <label className={styles.label}>Support email (for customer handovers)
-                <input className={styles.input} type="email" placeholder="support@yourshop.com"
+              <label className={styles.label}>{t('bizOnboard.supportEmail')}
+                <input className={styles.input} type="email" placeholder={t('bizOnboard.supportEmailPh')}
                   value={supportEmail} onChange={e => setEmail(e.target.value)} />
               </label>
-              <p className={styles.subtle}>Customer records remain scoped to your business. Other merchants do not receive your customer data. Personal shopper budgets and goal balances are never visible here.</p>
+              <p className={styles.subtle}>{t('bizOnboard.profileNote')}</p>
             </div>
           )}
 
           {/* Step 1 — goal */}
           {step === 1 && (
             <div className={styles.goalGrid}>
-              {GOALS.map(g => (
-                <button key={g.id} type="button"
-                  className={`${styles.goalCard} ${goal === g.id ? styles.goalSelected : ''}`}
-                  onClick={() => setGoal(g.id)}>
-                  <div className={styles.goalLabel}>{g.label}</div>
-                  <div className={styles.goalDesc}>{g.desc}</div>
+              {GOAL_IDS.map(id => (
+                <button key={id} type="button"
+                  className={`${styles.goalCard} ${goal === id ? styles.goalSelected : ''}`}
+                  onClick={() => setGoal(id)}>
+                  <div className={styles.goalLabel}>{t('bizOnboard.goal_' + id)}</div>
+                  <div className={styles.goalDesc}>{t('bizOnboard.goal_' + id + '_desc')}</div>
                 </button>
               ))}
             </div>
@@ -94,75 +96,75 @@ export default function BusinessOnboarding() {
           {/* Step 2 — catalogue */}
           {step === 2 && (
             <div className={styles.stack}>
-              <p className={styles.bodyText}>In the full build you import your live product catalogue. For the hackathon demo, sample products are pre-loaded. Product claims must come from verified catalogue data.</p>
+              <p className={styles.bodyText}>{t('bizOnboard.catalogueNote')}</p>
               <div className={styles.demoTable}>
                 {DEMO_PRODUCTS.map(p => (
                   <div key={p.id} className={styles.demoRow}>
                     <span className={styles.demoName}>{p.name}</span>
                     <span className={styles.demoCategory}>{p.category}</span>
                     <span className={styles.demoPrice}>${p.price.toFixed(2)}</span>
-                    <span className="badge badge-green">In stock</span>
+                    <span className="badge badge-green">{t('bizOnboard.inStock')}</span>
                   </div>
                 ))}
               </div>
-              <p className={styles.subtle}>All prices and stock shown here are illustrative sample data.</p>
+              <p className={styles.subtle}>{t('bizOnboard.catalogueSubtle')}</p>
             </div>
           )}
 
           {/* Step 3 — customers */}
           {step === 3 && (
             <div className={styles.stack}>
-              <p className={styles.bodyText}>Import existing customer records with appropriate consent. Demo customers are available to show student and working adult wording variants in journeys.</p>
+              <p className={styles.bodyText}>{t('bizOnboard.customersNote')}</p>
               <label className={styles.checkLabel}>
                 <input type="checkbox" checked={loadDemo} onChange={e => setLoadDemo(e.target.checked)} />
-                Load demo customers (Alicia · Ben · Chloe) and catalogue
+                {t('bizOnboard.loadDemoLabel')}
               </label>
               <div className={styles.demoTable}>
                 {DEMO_CUSTOMERS.map(c => (
                   <div key={c.id} className={styles.demoRow}>
                     <span className={styles.demoName}>{c.name}</span>
                     <span className={`badge ${c.segment === 'returning_customer' ? 'badge-green' : c.segment === 'first_time' ? 'badge-teal' : 'badge-amber'}`}>
-                      {c.segment.replace(/_/g, ' ')}
+                      {segLabel(c.segment)}
                     </span>
                     <span className={styles.demoCategory}>{c.mode === 'student' ? '🎓' : '💼'}</span>
-                    <span className={styles.demoPrice}>{c.orders} order{c.orders !== 1 ? 's' : ''}</span>
+                    <span className={styles.demoPrice}>{t(c.orders !== 1 ? 'bizOnboard.orders' : 'bizOnboard.order', { n: c.orders })}</span>
                   </div>
                 ))}
               </div>
-              <p className={styles.subtle}>Match records only using authorised identifiers. Do not assume accounts on different marketplaces belong to the same person.</p>
+              <p className={styles.subtle}>{t('bizOnboard.customersSubtle')}</p>
             </div>
           )}
 
           {/* Step 4 — settings */}
           {step === 4 && (
             <div className={styles.stack}>
-              <label className={styles.label}>Max contact attempts per customer per day
+              <label className={styles.label}>{t('bizOnboard.maxContact')}
                 <input className={styles.input} type="number" min="1" max="5"
                   value={contactLimit} onChange={e => setLimit(Number(e.target.value))} />
               </label>
-              <div className={styles.label}>Campaign approval roles
+              <div className={styles.label}>{t('bizOnboard.approvalRoles')}
                 <div className={styles.checkStack}>
                   {Object.keys(approvalRoles).map(role => (
                     <label key={role} className={styles.checkLabel}>
                       <input type="checkbox" checked={approvalRoles[role]}
                         onChange={e => setApproval(r => ({ ...r, [role]: e.target.checked }))} />
-                      {role.charAt(0).toUpperCase() + role.slice(1)} can approve campaigns
+                      {t('bizOnboard.roleCanApprove', { role: lookup('bizOnboard.role_' + role, role.charAt(0).toUpperCase() + role.slice(1)) })}
                     </label>
                   ))}
                 </div>
               </div>
-              <p className={styles.subtle}>New paid campaigns, spending changes and discounts outside merchant-approved rules require business approval before activation.</p>
+              <p className={styles.subtle}>{t('bizOnboard.settingsNote')}</p>
             </div>
           )}
         </div>
 
         <div className={styles.footer}>
           {step > 0
-            ? <button className="btn btn-ghost" onClick={() => setStep(s => s - 1)}>← Back</button>
+            ? <button className="btn btn-ghost" onClick={() => setStep(s => s - 1)}>{t('bizOnboard.back')}</button>
             : <div />}
           {step < STEPS.length - 1
-            ? <button className="btn btn-primary" disabled={!canNext[step]} onClick={() => setStep(s => s + 1)}>Next →</button>
-            : <button className="btn btn-primary" onClick={finish}>💼 Open dashboard</button>}
+            ? <button className="btn btn-primary" disabled={!canNext[step]} onClick={() => setStep(s => s + 1)}>{t('bizOnboard.next')}</button>
+            : <button className="btn btn-primary" onClick={finish}>{t('bizOnboard.openDashboard')}</button>}
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useAppStore from '../store/appStore.js';
+import { setFocusedProduct } from './assistantBus.js';
 
 export default function ProductFeed() {
   const [products, setProducts] = useState([]);
@@ -32,6 +33,14 @@ export default function ProductFeed() {
       }
     });
   }, [currentIndex, products]);
+
+  // Tell the floating 2AM Assistant which product is on screen, so it can pop
+  // a budget-aware nudge while the user scrolls. Cleared when the feed unmounts.
+  useEffect(() => {
+    if (products.length) setFocusedProduct(products[currentIndex] ?? null);
+  }, [currentIndex, products]);
+
+  useEffect(() => () => setFocusedProduct(null), []);
 
   // Keyboard navigation support for desktop (Arrow Up / Arrow Down)
   useEffect(() => {

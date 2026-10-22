@@ -332,3 +332,18 @@ strong { color: var(--text); }
     display: none;
   }
 }
+
+/* ── Accessibility & low-end device: honour reduced-motion ──
+   Disables non-essential animation (pulses, fades, typewriter, tour
+   spotlight transitions) for users who ask for it in their OS settings. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Long translated labels (Thai/Japanese/Korean) must wrap, not clip ── */
+.page-title, .page-sub, .section-title { overflow-wrap: anywhere; }

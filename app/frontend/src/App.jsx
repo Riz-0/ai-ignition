@@ -1,32 +1,32 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import LoginPage            from './pages/LoginPage.jsx';
-import SignupPage           from './pages/SignupPage.jsx';
-import ModeSelectPage       from './pages/ModeSelectPage.jsx';
-import DownloadPage         from './pages/DownloadPage.jsx';
-import PrivacyPage          from './pages/PrivacyPage.jsx';
-
-// Customer (student + working adult)
-import CustomerOnboarding   from './pages/customer/CustomerOnboarding.jsx';
+// Layouts stay eager — they're the shell shown immediately after auth.
 import CustomerLayout       from './components/layout/CustomerLayout.jsx';
-import CustomerHome         from './pages/customer/CustomerHome.jsx';
-import WishlistPage         from './pages/customer/WishlistPage.jsx';
-import FeedPage             from './pages/customer/FeedPage.jsx';
-import ChatPage             from './pages/customer/ChatPage.jsx';
-import CustomerSettings     from './pages/customer/CustomerSettings.jsx';
-import SavingsPage          from './pages/customer/SavingsPage.jsx';
-import ConnectionsPage      from './pages/customer/ConnectionsPage.jsx';
-import ProductFeed          from './components/ProductFeed.jsx'
-
-// Business
-import BusinessOnboarding   from './pages/business/BusinessOnboarding.jsx';
 import BusinessLayout       from './components/layout/BusinessLayout.jsx';
-import BusinessDashboard    from './pages/business/BusinessDashboard.jsx';
-import CustomersPage        from './pages/business/CustomersPage.jsx';
-import JourneysPage         from './pages/business/JourneysPage.jsx';
-import CataloguePage        from './pages/business/CataloguePage.jsx';
-import SupportPage          from './pages/business/SupportPage.jsx';
+
+// Pages are lazy-loaded so the first paint (login / landing) ships a small
+// bundle and heavier views (business dashboard, chat, feed) load on demand.
+const LoginPage          = lazy(() => import('./pages/LoginPage.jsx'));
+const SignupPage         = lazy(() => import('./pages/SignupPage.jsx'));
+const ModeSelectPage     = lazy(() => import('./pages/ModeSelectPage.jsx'));
+const DownloadPage       = lazy(() => import('./pages/DownloadPage.jsx'));
+const PrivacyPage        = lazy(() => import('./pages/PrivacyPage.jsx'));
+
+const CustomerOnboarding = lazy(() => import('./pages/customer/CustomerOnboarding.jsx'));
+const CustomerHome       = lazy(() => import('./pages/customer/CustomerHome.jsx'));
+const WishlistPage       = lazy(() => import('./pages/customer/WishlistPage.jsx'));
+const FeedPage           = lazy(() => import('./pages/customer/FeedPage.jsx'));
+const CustomerSettings   = lazy(() => import('./pages/customer/CustomerSettings.jsx'));
+const SavingsPage        = lazy(() => import('./pages/customer/SavingsPage.jsx'));
+const ConnectionsPage    = lazy(() => import('./pages/customer/ConnectionsPage.jsx'));
+
+const BusinessOnboarding = lazy(() => import('./pages/business/BusinessOnboarding.jsx'));
+const BusinessDashboard  = lazy(() => import('./pages/business/BusinessDashboard.jsx'));
+const CustomersPage      = lazy(() => import('./pages/business/CustomersPage.jsx'));
+const JourneysPage       = lazy(() => import('./pages/business/JourneysPage.jsx'));
+const CataloguePage      = lazy(() => import('./pages/business/CataloguePage.jsx'));
+const SupportPage        = lazy(() => import('./pages/business/SupportPage.jsx'));
 
 import useAuthStore  from './store/authStore.js';
 import useAppStore   from './store/appStore.js';
@@ -55,10 +55,23 @@ function LandingRouter() {
   return <Navigate to={shopperProfile ? '/customer' : '/customer/onboarding'} replace />;
 }
 
+/** Minimal full-screen fallback shown while a lazy route chunk loads. */
+function RouteFallback() {
+  return (
+    <div style={{
+      minHeight: '100vh', display: 'flex', alignItems: 'center',
+      justifyContent: 'center', color: 'var(--text-dim)', fontSize: '.9rem',
+    }}>
+      <span>Loading…</span>
+    </div>
+  );
+}
+
 export default function App() {
   const { shopperProfile, merchantProfile } = useAppStore();
 
   return (
+    <Suspense fallback={<RouteFallback />}>
     <Routes>
 
       {/* ── Public ─────────────────────────────────────────── */}
@@ -84,7 +97,9 @@ export default function App() {
         <Route index          element={<CustomerHome />} />
         <Route path="wishlist"    element={<WishlistPage />} />
         <Route path="feed"        element={<FeedPage />} />
-        <Route path="chat"        element={<ChatPage />} />
+        {/* /customer/chat removed — the 2AM Assistant is now a global
+            floating bot. Redirect any old links to Home. */}
+        <Route path="chat"        element={<Navigate to="/customer" replace />} />
         <Route path="savings"     element={<SavingsPage />} />
         <Route path="connections" element={<ConnectionsPage />} />
         <Route path="settings"    element={<CustomerSettings />} />
@@ -110,5 +125,6 @@ export default function App() {
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </Suspense>
   );
 }

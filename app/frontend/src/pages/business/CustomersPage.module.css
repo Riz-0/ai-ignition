@@ -53,8 +53,18 @@
 .empty { text-align: center; font-size: .88rem; color: var(--text-muted); padding: 32px; }
 
 @media (max-width: 640px) {
-  .tableHead, .tableRow { grid-template-columns: 1fr 1fr; }
-  .tableHead span:nth-child(n+3), .tableRow span:nth-child(n+3) { display: none; }
-  .rowActions { grid-column: 1 / -1; }
+  /* Hide the desktop header row; each record becomes a stacked card that
+     keeps ALL fields visible (orders / last order no longer disappear). */
+  .tableHead { display: none; }
+  .tableRow {
+    grid-template-columns: 1fr auto;
+    grid-auto-rows: min-content;
+    gap: 6px 12px;
+    padding: 14px 16px;
+  }
+  .tableRow > :first-child { grid-column: 1 / -1; }   /* name + notes full width */
+  .custOrders::before { content: 'Orders: '; color: var(--text-dim); }
+  .custDate::before   { content: 'Last: ';   color: var(--text-dim); }
+  .rowActions { grid-column: 1 / -1; justify-content: flex-end; }
   .formGrid   { grid-template-columns: 1fr; }
 }

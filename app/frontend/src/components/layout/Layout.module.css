@@ -156,6 +156,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
+  /* Respect notch / rounded-corner safe areas on phones */
+  padding-left: max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
   position: sticky;
   top: 0;
   z-index: 10;
@@ -207,6 +210,8 @@
 }
 
 /* ── Responsive ── */
+
+/* Phones: sidebar becomes an off-canvas drawer toggled by the ☰ button. */
 @media (max-width: 768px) {
   .sidebar { transform: translateX(-100%); }
   .sidebar.open { transform: translateX(0); }
@@ -214,6 +219,18 @@
   .main { margin-left: 0; }
   .menuBtn { display: flex; }
   .content { padding: 18px 16px; }
+}
+
+/* Larger touch targets on touch devices (≥44px recommended). */
+@media (hover: none) and (pointer: coarse) {
+  .switchBtn, .logoutBtn { width: 40px; height: 40px; font-size: 1.1rem; }
+  .navItem { padding: 12px 12px; }
+  .menuBtn { padding: 8px; }
+}
+
+/* Safe-area padding at the bottom of the off-canvas sidebar on notched phones. */
+@media (max-width: 768px) {
+  .sidebarFooter { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
 }
 
 /* Logout button — sits next to the switch button in the sidebar footer */

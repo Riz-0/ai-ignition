@@ -8,7 +8,8 @@ const STUDENT_INTERESTS = ['Fashion', 'Coffee', 'Beauty', 'Stationery & Study', 
 const WORKING_INTERESTS = ['Fashion', 'Coffee', 'Beauty', 'Workday Essentials', 'Electronics', 'Food & Snacks', 'Home & Living', 'Gadgets'];
 
 export default function CustomerSettings() {
-  const { shopperProfile, setShopperProfile, reset, theme, setTheme, startTour } = useAppStore();
+  const { shopperProfile, setShopperProfile, reset, theme, setTheme, startTour,
+          suggestionsEnabled, setSuggestionsEnabled } = useAppStore();
   const t = useT();
   const { lang, setLang, languages } = useI18n();
   const navigate = useNavigate();
@@ -146,7 +147,7 @@ export default function CustomerSettings() {
           <label className={styles.label}>
             {t('settings.budgetLabel')}
             <input className={styles.input} type="number" min="0"
-              placeholder="Leave blank to not set"
+              placeholder={t('settings.budgetBlank')}
               value={form.budget}
               onChange={e => setForm({ ...form, budget: e.target.value })} />
           </label>
@@ -179,10 +180,28 @@ export default function CustomerSettings() {
           <label className={styles.label}>
             {isStudent ? t('settings.allowanceReminder') : t('settings.paydayReminder')}
             <input className={styles.input} type="number" min="1" max="31"
-              placeholder="e.g. 25"
+              placeholder={t('settings.reminderPh')}
               value={form.paydayDate}
               onChange={e => setForm({ ...form, paydayDate: e.target.value })} />
           </label>
+        </section>
+
+        {/* Suggestions — control the 2AM Assistant's proactive budget nudges */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionHead}>{t('settings.suggestions')}</h2>
+          <div className={styles.row}>
+            <button type="button"
+              className={`${styles.typeBtn} ${suggestionsEnabled !== false ? styles.typeBtnOn : ''}`}
+              onClick={() => setSuggestionsEnabled(true)}>
+              ✨ {t('settings.suggestionsOn')}
+            </button>
+            <button type="button"
+              className={`${styles.typeBtn} ${suggestionsEnabled === false ? styles.typeBtnOn : ''}`}
+              onClick={() => setSuggestionsEnabled(false)}>
+              🔕 {t('settings.suggestionsOff')}
+            </button>
+          </div>
+          <p className={styles.subtle}>{t('settings.suggestionsHint')}</p>
         </section>
 
         <div className={styles.actions}>

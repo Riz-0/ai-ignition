@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import useAppStore from '../../store/appStore.js';
+import { useT } from '../../i18n/I18nProvider.jsx';
 import styles from './WishlistPage.module.css';
 
 const EMPTY = { title: '', url: '', price: '', budget: '', reminderDate: '', notes: '' };
 
 export default function WishlistPage() {
   const { wishlist, addToWishlist, updateWishlistItem, removeFromWishlist, addReminder } = useAppStore();
+  const t = useT();
   const [showForm, setShowForm] = useState(false);
   const [form, setForm]         = useState(EMPTY);
 
@@ -23,75 +25,75 @@ export default function WishlistPage() {
 
   return (
     <div>
-      <h1 className="page-title">Wishlist</h1>
-      <p className="page-sub">Products you've saved. Set a budget or a reminder date and your 2AM Assistant will follow up.</p>
+      <h1 className="page-title">{t('wishlist.title')}</h1>
+      <p className="page-sub">{t('wishlist.sub')}</p>
 
       <div className={styles.toolbar}>
-        <span className={styles.count}>{wishlist.length} item{wishlist.length !== 1 ? 's' : ''}</span>
+        <span className={styles.count}>{t('wishlist.itemCount', { n: wishlist.length })}</span>
         <button className="btn btn-primary btn-sm" onClick={() => setShowForm(v => !v)}>
-          {showForm ? '✕ Cancel' : '+ Save product'}
+          {showForm ? t('wishlist.cancel') : t('wishlist.saveProduct')}
         </button>
       </div>
 
       {showForm && (
         <form className={`card ${styles.form}`} onSubmit={submit}>
-          <h3 className={styles.formTitle}>Add to wishlist</h3>
+          <h3 className={styles.formTitle}>{t('wishlist.addTitle')}</h3>
           <div className={styles.formGrid}>
             <label className={styles.label}>
-              Product name *
+              {t('wishlist.productName')}
               <input className={styles.input} required value={form.title}
                 onChange={e => setForm({ ...form, title: e.target.value })}
-                placeholder="e.g. Office shoes — black leather" />
+                placeholder={t('wishlist.productNamePh')} />
             </label>
             <label className={styles.label}>
-              Product URL
+              {t('wishlist.productUrl')}
               <input className={styles.input} type="url" value={form.url}
                 onChange={e => setForm({ ...form, url: e.target.value })}
                 placeholder="https://..." />
             </label>
             <label className={styles.label}>
-              Listed price ($)
+              {t('wishlist.listedPrice')}
               <input className={styles.input} type="number" min="0" value={form.price}
                 onChange={e => setForm({ ...form, price: e.target.value })}
-                placeholder="e.g. 45" />
+                placeholder={t('wishlist.listedPricePh')} />
             </label>
             <label className={styles.label}>
-              Your budget ($)
+              {t('wishlist.yourBudget')}
               <input className={styles.input} type="number" min="0" value={form.budget}
                 onChange={e => setForm({ ...form, budget: e.target.value })}
-                placeholder="e.g. 40" />
+                placeholder={t('wishlist.yourBudgetPh')} />
             </label>
             <label className={styles.label}>
-              Remind me on
+              {t('wishlist.remindMe')}
               <input className={styles.input} type="date" value={form.reminderDate}
                 onChange={e => setForm({ ...form, reminderDate: e.target.value })} />
             </label>
             <label className={`${styles.label} ${styles.full}`}>
-              Notes
+              {t('wishlist.notes')}
               <input className={styles.input} value={form.notes}
                 onChange={e => setForm({ ...form, notes: e.target.value })}
-                placeholder="e.g. Need size 7, prefer leather" />
+                placeholder={t('wishlist.notesPh')} />
             </label>
           </div>
-          <button type="submit" className="btn btn-primary">Save to wishlist</button>
+          <button type="submit" className="btn btn-primary">{t('wishlist.saveBtn')}</button>
         </form>
       )}
 
       {wishlist.length === 0 ? (
         <div className={`card ${styles.empty}`}>
           <span className={styles.emptyIcon}>❤️</span>
-          <p>Nothing saved yet. Add a product above to get started.</p>
+          <p>{t('wishlist.emptyBody')}</p>
         </div>
       ) : (
         <div className={styles.list}>
-          {wishlist.map(item => <WishlistCard key={item.id} item={item} onRemove={removeFromWishlist} onUpdate={updateWishlistItem} />)}
+          {wishlist.map(item => <WishlistCard key={item.id} item={item} onRemove={removeFromWishlist} onUpdate={updateWishlistItem} t={t} />)}
         </div>
       )}
     </div>
   );
 }
 
-function WishlistCard({ item, onRemove, onUpdate }) {
+function WishlistCard({ item, onRemove, onUpdate, t }) {
   const overBudget = item.price && item.budget && Number(item.price) > Number(item.budget);
 
   return (
@@ -101,21 +103,21 @@ function WishlistCard({ item, onRemove, onUpdate }) {
           <div className={styles.cardTitle}>{item.title}</div>
           {item.notes && <div className={styles.cardNotes}>{item.notes}</div>}
           <div className={styles.cardMeta}>
-            {item.price  && <span className={`badge ${overBudget ? 'badge-red' : 'badge-green'}`}>${item.price} listed</span>}
-            {item.budget && <span className="badge badge-amber">Budget: ${item.budget}</span>}
+            {item.price  && <span className={`badge ${overBudget ? 'badge-red' : 'badge-green'}`}>${item.price} {t('wishlist.listedLabel')}</span>}
+            {item.budget && <span className="badge badge-amber">{t('wishlist.budgetLabel')}${item.budget}</span>}
             {item.reminderDate && <span className="badge badge-teal">📅 {item.reminderDate}</span>}
           </div>
         </div>
         <div className={styles.cardActions}>
           {item.url && (
-            <a href={item.url} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm">View →</a>
+            <a href={item.url} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm">{t('wishlist.viewBtn')}</a>
           )}
           <button className="btn btn-danger btn-sm" onClick={() => onRemove(item.id)}>✕</button>
         </div>
       </div>
       {overBudget && (
         <div className={styles.budgetAlert}>
-          ⚠️ Listed price is above your budget. Your 2AM Assistant will alert you if it drops within range.
+          {t('wishlist.overBudgetAlert')}
         </div>
       )}
     </div>

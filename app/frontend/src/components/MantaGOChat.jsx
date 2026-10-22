@@ -1,22 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { buildMantagoUrl, MANTAGO_ORIGIN, isMantagoConfigured } from '../config/mantago.js';
 
 /**
- * MantaGOChat — mounts the live MantaGO web chat ("2AM Assistant")
- * INLINE, filling the area its parent gives it, instead of as a small
- * floating corner bubble.
+ * MantaGOChat — mounts the live MantaGO web chat ("2AM Assistant").
  *
- * The iframe is rendered inside this component's own element and sized
- * to 100% × 100% so it fills the ChatPage. We still speak MantaGO's
- * cookie postMessage protocol so the live-chat session persists, but we
- * ignore the widget's resize/drag messages because WE own the layout now.
+ * Two layout modes:
+ *   - inline  (default): the iframe fills the element its parent gives it.
+ *   - floating:          the iframe is a fixed bubble in the bottom-right
+ *                        corner, present on every page via the layouts.
  *
- * Privacy wall: we only load the bot. No budget, savings or ledger values
- * are posted to MantaGO — the user shares only what they type.
+ * Either way we speak MantaGO's cookie postMessage protocol so the live-chat
+ * session persists. We ignore the widget's own resize/drag messages because
+ * WE own the container size in both modes.
+ *
+ * Privacy wall: we only load the bot. No budget, savings or ledger values are
+ * posted to MantaGO — the user shares only what they type.
  *
  * The iframe reloads when `lang` changes so the bot follows the UI language.
  */
-export default function MantaGOChat({ lang = 'en', onFail }) {
+export default function MantaGOChat({ lang = 'en', onFail, mode = 'inline', open = true }) {
   const iframeRef = useRef(null);
 
   useEffect(() => {
@@ -31,8 +33,7 @@ export default function MantaGOChat({ lang = 'en', onFail }) {
       const iframe = iframeRef.current;
 
       // Cookie management — persist the MantaGO live-chat client id so the
-      // session survives reloads. (Resize/drag messages are ignored: the
-      // iframe is inline and fills its container.)
+      // session survives reloads.
       if (msg.type === 'setLiveChatCookie') {
         const expiry = new Date();
         expiry.setFullYear(expiry.getFullYear() + 10);
@@ -65,8 +66,10 @@ export default function MantaGOChat({ lang = 'en', onFail }) {
 
   if (!isMantagoConfigured()) return null;
 
+  const wrap = mode === 'floating' ? floatingWrap(open) : inlineWrap;
+
   return (
-    <div style={wrap}>
+    <div style={wrap} aria-hidden={mode === 'floating' && !open}>
       <iframe
         ref={iframeRef}
         src={buildMantagoUrl(lang)}
@@ -79,7 +82,7 @@ export default function MantaGOChat({ lang = 'en', onFail }) {
   );
 }
 
-const wrap = {
+const inlineWrap = {
   flex: 1,
   minHeight: 0,
   width: '100%',
@@ -89,6 +92,31 @@ const wrap = {
   background: 'var(--bg-card)',
   display: 'flex',
 };
+
+/* Floating panel sits just above the corner launcher button.
+   We keep it mounted (not unmounted) when closed so the MantaGO session
+   and its cookie survive toggling — we just hide it. */
+function floatingWrap(open) {
+  return {
+    position: 'fixed',
+    right: 'max(14px, env(safe-area-inset-right))',
+    bottom: 'calc(68px + env(safe-area-inset-bottom))',
+    width: 'min(380px, calc(100vw - 28px))',
+    height: 'min(560px, calc(100dvh - 140px))',
+    borderRadius: 16,
+    overflow: 'hidden',
+    border: '1px solid var(--border-light)',
+    background: 'var(--bg-card)',
+    boxShadow: '0 16px 48px rgba(0,0,0,.45)',
+    zIndex: 1000,
+    display: 'flex',
+    // Hide without unmounting so the chat session is preserved.
+    opacity: open ? 1 : 0,
+    transform: open ? 'translateY(0) scale(1)' : 'translateY(12px) scale(.98)',
+    pointerEvents: open ? 'auto' : 'none',
+    transition: 'opacity .18s ease, transform .18s ease',
+  };
+}
 
 const frame = {
   flex: 1,
