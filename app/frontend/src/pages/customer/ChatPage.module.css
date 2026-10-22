@@ -1,4 +1,6 @@
-.page { display: flex; flex-direction: column; height: calc(100vh - 54px - 56px); min-height: 520px; }
+/* Use dynamic viewport height (dvh) on mobile so the browser's address bar
+   doesn't cause the chat to overflow; fall back to vh where dvh is unsupported. */
+.page { display: flex; flex-direction: column; height: calc(100vh - 54px - 56px); height: calc(100dvh - 54px - 56px); min-height: 480px; }
 
 .header { padding-bottom: 14px; border-bottom: 1px solid var(--border); margin-bottom: 16px; flex-shrink: 0; }
 
