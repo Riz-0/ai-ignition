@@ -1,13 +1,24 @@
 import { getPersonaFeed } from '../../store/personaFeeds.js';
 import { DEMO_PRODUCTS, PLATFORM_META } from '../../data/demoProducts.js';
+import { getFeedVideos } from '../../data/feedVideos.js';
 
 /**
- * The products Hoot may recommend for this account: the account's own
- * Discover picks first (Emily's beauty and travel finds, John's fitness
- * gear…), then the demo shop items. One flat shape for the chat cards:
+ * The products Hoot may recommend for this account: the products in the
+ * account's Discover videos first, then its saved persona picks (Emily's
+ * beauty and travel finds, John's fitness gear…), then the demo shop items.
+ * One flat shape for the chat cards:
  *   { id, title, price, merchant, category, emoji, url }
  */
 export function buildCatalog(accountId, profile) {
+  const videos = getFeedVideos(accountId, profile).map(v => ({
+    id: v.id,
+    title: v.title,
+    price: v.price,
+    merchant: v.merchant,
+    category: v.category,
+    emoji: v.emoji,
+    url: v.url,
+  }));
   const persona = (getPersonaFeed(accountId, profile?.userType) ?? []).map(p => ({
     id: p.id,
     title: p.title,
@@ -26,5 +37,5 @@ export function buildCatalog(accountId, profile) {
     emoji: p.emoji,
     url: p.url,
   }));
-  return [...persona, ...shop];
+  return [...videos, ...persona, ...shop];
 }

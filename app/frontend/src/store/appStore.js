@@ -36,6 +36,14 @@ const useAppStore = create(
       suggestionsEnabled: true,
       setSuggestionsEnabled: (v) => set({ suggestionsEnabled: !!v }),
 
+      // notificationsEnabled — phone/desktop notifications (reminders, budget
+      // alerts). Off until the user turns them on and the browser allows it.
+      // lastBudgetAlert remembers which week/month already got a low-budget alert.
+      notificationsEnabled: false,
+      setNotificationsEnabled: (v) => set({ notificationsEnabled: !!v }),
+      lastBudgetAlert: null,
+      setLastBudgetAlert: (key) => set({ lastBudgetAlert: key }),
+
       // ── Per-account profiles ─────────────────────────────────
       // Profiles are keyed by the logged-in account id so that two
       // accounts in the same browser never clobber each other, and
@@ -315,6 +323,9 @@ const useAppStore = create(
         set((s) => ({ reminders: [...s.reminders, { id: crypto.randomUUID(), createdAt: new Date().toISOString(), fired: false, ...r }] })),
       dismissReminder: (id) =>
         set((s) => ({ reminders: s.reminders.map((r) => r.id === id ? { ...r, fired: true } : r) })),
+      // A notification was shown for this reminder (it still shows in the app until dismissed).
+      markReminderNotified: (id) =>
+        set((s) => ({ reminders: s.reminders.map((r) => r.id === id ? { ...r, notified: true } : r) })),
 
       // ── Purchase history ─────────────────────────────────────
       purchaseHistory: [],

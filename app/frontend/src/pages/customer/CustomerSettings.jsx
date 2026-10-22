@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAppStore from '../../store/appStore.js';
 import { useT, useI18n } from '../../i18n/I18nProvider.jsx';
+import {
+  notificationPermission, requestNotificationPermission, showNotification,
+} from '../../lib/notifications.js';
 import styles from './CustomerSettings.module.css';
 
 const STUDENT_INTERESTS = ['Fashion', 'Coffee', 'Beauty', 'Stationery & Study', 'Electronics', 'Food & Snacks', 'Sports', 'Books'];
@@ -9,7 +12,8 @@ const WORKING_INTERESTS = ['Fashion', 'Coffee', 'Beauty', 'Workday Essentials', 
 
 export default function CustomerSettings() {
   const { shopperProfile, setShopperProfile, reset, theme, setTheme, startTour,
-          suggestionsEnabled, setSuggestionsEnabled } = useAppStore();
+          suggestionsEnabled, setSuggestionsEnabled,
+          notificationsEnabled, setNotificationsEnabled } = useAppStore();
   const t = useT();
   const { lang, setLang, languages } = useI18n();
   const navigate = useNavigate();
@@ -25,6 +29,17 @@ export default function CustomerSettings() {
     notifFreq:   shopperProfile?.notifFreq   ?? 'occasional',
   });
   const [saved, setSaved] = useState(false);
+  const [permission, setPermission] = useState(notificationPermission());
+  const pushOn = notificationsEnabled && permission === 'granted';
+
+  async function turnOnNotifications() {
+    const result = await requestNotificationPermission();
+    setPermission(result);
+    if (result === 'granted') {
+      setNotificationsEnabled(true);
+      showNotification({ title: '🦉 Hoot here!', body: t('settings.pushWelcome'), tag: 'welcome' });
+    }
+  }
 
   const INTERESTS = form.userType === 'working' ? WORKING_INTERESTS : STUDENT_INTERESTS;
   const isStudent = form.userType === 'student';
@@ -156,6 +171,37 @@ export default function CustomerSettings() {
 
         <section className={styles.section}>
           <h2 className={styles.sectionHead}>{t('settings.notifications')}</h2>
+          {/* Phone & desktop notifications */}
+          <div className={styles.pushBox}>
+            <strong className={styles.pushTitle}>🔔 {t('settings.pushTitle')}</strong>
+            <p className={styles.subtle}>
+              {permission === 'unsupported' ? t('settings.pushUnsupported')
+                : permission === 'denied' ? t('settings.pushBlocked')
+                : pushOn ? t('settings.pushEnabled')
+                : t('settings.pushHint')}
+            </p>
+            {permission !== 'unsupported' && permission !== 'denied' && (
+              <div className={styles.pushActions}>
+                {pushOn ? (
+                  <>
+                    <button type="button" className="btn btn-ghost btn-sm"
+                      onClick={() => showNotification({ title: '🦉 Hoot here!', body: t('settings.pushTestBody'), tag: 'test' })}>
+                      {t('settings.pushTest')}
+                    </button>
+                    <button type="button" className="btn btn-ghost btn-sm" onClick={() => setNotificationsEnabled(false)}>
+                      {t('settings.pushOff')}
+                    </button>
+                  </>
+                ) : (
+                  <button type="button" className="btn btn-primary btn-sm" onClick={turnOnNotifications}>
+                    {t('settings.pushOn')}
+                  </button>
+                )}
+              </div>
+            )}
+            <p className={styles.subtle}>{t('settings.pushIos')}</p>
+          </div>
+
           <label className={styles.label}>
             {t('settings.frequency')}
             <select className={styles.input} value={form.notifFreq}

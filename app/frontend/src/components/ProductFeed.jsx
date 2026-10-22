@@ -1,25 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useAppStore from '../store/appStore.js';
 import { setFocusedProduct } from './assistantBus.js';
+import { getFeedVideos } from '../data/feedVideos.js';
+
+// Button text for the shop link, by how exact the link is.
+const SHOP_LABEL = { product: 'Buy', brand: 'Shop', search: 'Find' };
 
 export default function ProductFeed() {
-  const [products, setProducts] = useState([]);
+  // Pull wishlist state and actions directly from global app store
+  const { wishlist, addToWishlist, removeFromWishlist, addReminder, activeAccountId, shopperProfile } = useAppStore();
+
+  // Each account gets its own videos (Emily's, John's, or interest-matched).
+  const [products, setProducts] = useState(() => getFeedVideos(activeAccountId, shopperProfile));
   const [currentIndex, setCurrentIndex] = useState(0);
   const feedRef = useRef(null);
   
   // Store refs for all video elements so we can control them imperatively
   const videoRefs = useRef([]);
 
-  // Pull wishlist state and actions directly from global app store
-  const { wishlist, addToWishlist, removeFromWishlist } = useAppStore();
-
-  // Load local JSON on mount
   useEffect(() => {
-    fetch('/products.json')
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((err) => console.error('Failed to load products:', err));
-  }, []);
+    setProducts(getFeedVideos(activeAccountId, shopperProfile));
+    setCurrentIndex(0);
+  }, [activeAccountId, shopperProfile]);
 
   // Force active video to restart/play whenever currentIndex changes
   useEffect(() => {
@@ -92,9 +94,17 @@ export default function ProductFeed() {
         title: product.title,
         price: product.price,
         budget: product.price,
-        url: product.videoUrl,
+        url: product.url,
         notes: product.description
       });
+      // Saved between 10pm and 5am? Sleep on it: remind them tomorrow morning.
+      const hour = new Date().getHours();
+      if (hour >= 22 || hour < 5) {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + (hour >= 22 ? 1 : 0));
+        const date = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
+        addReminder({ productTitle: product.title, date, source: 'late-night-save' });
+      }
     }
   };
 
@@ -141,12 +151,24 @@ export default function ProductFeed() {
 
               <div className="feed-overlay">
                 <div className="product-details">
+                  <p className="merchant">{product.merchant} · {product.category}</p>
                   <h3>{product.title}</h3>
-                  <p className="price">${product.price.toFixed(2)}</p>
+                  <p className="price">
+                    {product.approx ? '~' : ''}${product.price.toFixed(2)}
+                    {product.approx && <span className="price-note"> typical price</span>}
+                  </p>
                   <p className="description">{product.description}</p>
                 </div>
 
                 <div className="action-sidebar">
+                  {product.url && (
+                    <a href={product.url} target="_blank" rel="noopener noreferrer"
+                      className="wishlist-btn shop-btn"
+                      title={product.linkType === 'search' ? 'Search for this item on Shopee' : `Open ${product.merchant}`}>
+                      <span className="icon">🛍️</span>
+                      <span className="label">{SHOP_LABEL[product.linkType] ?? 'Shop'} ↗</span>
+                    </a>
+                  )}
                   <button
                     onClick={() => handleToggleWishlist(product)}
                     className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}

@@ -75,6 +75,23 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(staleWhileRevalidate(req));
 });
 
+// Tapping a notification opens (or focuses) the app on the page it points to.
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = new URL(event.notification.data?.url || '/customer', self.location.origin).href;
+  event.waitUntil((async () => {
+    const wins = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const win of wins) {
+      if (new URL(win.url).origin === self.location.origin) {
+        await win.focus();
+        if ('navigate' in win) await win.navigate(url);
+        return;
+      }
+    }
+    await self.clients.openWindow(url);
+  })());
+});
+
 async function staleWhileRevalidate(req) {
   const cache = await caches.open(RUNTIME_CACHE);
   const cached = await cache.match(req);

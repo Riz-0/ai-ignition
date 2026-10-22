@@ -49,3 +49,14 @@
 }
 .typeBtn:hover  { border-color: var(--violet-light); color: var(--text); }
 .typeBtnOn      { border-color: var(--violet-light); background: rgba(124,58,237,.1); color: var(--violet-light); }
+
+/* Phone & desktop notifications box */
+.pushBox {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.pushTitle { display: block; font-size: .92rem; color: var(--text); margin-bottom: 4px; }
+.pushActions { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 6px; }

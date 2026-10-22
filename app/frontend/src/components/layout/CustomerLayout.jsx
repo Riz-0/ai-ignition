@@ -7,6 +7,7 @@ import { UIPrefsCluster } from '../../components/UIPrefs.jsx';
 import CoachTour, { TourPrompt } from '../../components/CoachTour.jsx';
 import PrivacyBadge from '../../components/PrivacyBadge.jsx';
 import FloatingAssistant from '../../components/FloatingAssistant.jsx';
+import useNotificationScheduler from '../../hooks/useNotificationScheduler.js';
 import styles from './Layout.module.css';
 
 export default function CustomerLayout() {
@@ -16,6 +17,9 @@ export default function CustomerLayout() {
   const t = useT();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Phone/desktop notifications for due reminders and low budget.
+  useNotificationScheduler();
 
   const isStudent    = shopperProfile?.userType !== 'working';
   const dueReminders = reminders.filter(r => !r.fired).length;
