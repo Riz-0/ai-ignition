@@ -232,3 +232,21 @@
   transition: all .2s;
 }
 .logoutBtn:hover { color: var(--red-light); border-color: var(--red-light); }
+
+/* Small confirmation after declining the tour */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  color: var(--text);
+  font-size: .82rem;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+}

@@ -83,3 +83,20 @@
   padding: 4px 0;
 }
 .skip:hover { color: var(--text); }
+
+/* ── Tour offer prompt ── */
+.prompt { text-align: center; padding: 22px 22px 14px; }
+.promptIcon { font-size: 1.8rem; margin-bottom: 6px; }
+.promptAccept { width: 100%; justify-content: center; margin-top: 16px; }
+.decline {
+  display: block;
+  margin: 8px auto 0;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: var(--font);
+  font-size: .76rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.decline:hover { color: var(--text-muted); text-decoration: underline; }

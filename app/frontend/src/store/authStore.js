@@ -107,6 +107,7 @@ const useAuthStore = create(
           name:      username.trim(),
           role:      role ?? 'student',  // 'student' | 'working' | 'admin'
           createdAt: new Date().toISOString(),
+          offerTour: true,               // new sign-ups get offered the app tour
         };
 
         set(s => ({ accounts: [...s.accounts, newAccount], currentUser: newAccount, isLoggedIn: true }));

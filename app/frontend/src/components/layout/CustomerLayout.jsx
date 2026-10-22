@@ -4,14 +4,14 @@ import useAppStore  from '../../store/appStore.js';
 import useAuthStore from '../../store/authStore.js';
 import { useT } from '../../i18n/I18nProvider.jsx';
 import { UIPrefsCluster } from '../../components/UIPrefs.jsx';
-import CoachTour from '../../components/CoachTour.jsx';
+import CoachTour, { TourPrompt } from '../../components/CoachTour.jsx';
 import PrivacyBadge from '../../components/PrivacyBadge.jsx';
 import styles from './Layout.module.css';
 
 export default function CustomerLayout() {
   const { shopperProfile, reminders, switchMode, activeAccountId,
-          toursSeen, tourActive, startTour, endTour } = useAppStore();
-  const { logout, isAdmin } = useAuthStore();
+          tourOffersHandled, handleTourOffer, tourActive, startTour, endTour } = useAppStore();
+  const { logout, isAdmin, currentUser } = useAuthStore();
   const t = useT();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -40,10 +40,26 @@ export default function CustomerLayout() {
         { tour: 'settings',     to: '/customer/settings',     icon: '⚙️', label: t('nav.settings')   },
       ];
 
-  // First visit for this account → run the coach-mark tour once.
+  // Only brand-new sign-ups are offered the tour, and only once.
+  const showTourOffer = !!currentUser?.offerTour
+    && !tourOffersHandled[activeAccountId ?? 'local'] && !tourActive;
+  const [declinedNote, setDeclinedNote] = useState(false);
+
+  function acceptTour() {
+    handleTourOffer();
+    startTour();
+  }
+
+  const declineTour = useCallback(() => {
+    handleTourOffer();
+    setDeclinedNote(true);
+  }, [handleTourOffer]);
+
   useEffect(() => {
-    if (!toursSeen[activeAccountId ?? 'local']) startTour();
-  }, [activeAccountId]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!declinedNote) return;
+    const id = setTimeout(() => setDeclinedNote(false), 4000);
+    return () => clearTimeout(id);
+  }, [declinedNote]);
 
   const tourSteps = useMemo(() => {
     const mode = isStudent ? 'Student' : 'Working';
@@ -73,7 +89,12 @@ export default function CustomerLayout() {
 
   return (
     <div className={styles.shell}>
+      {showTourOffer && (
+        <TourPrompt name={shopperProfile?.name || currentUser?.name}
+          onAccept={acceptTour} onDecline={declineTour} />
+      )}
       {tourActive && <CoachTour steps={tourSteps} onFinish={finishTour} onStep={handleTourStep} />}
+      {declinedNote && <div className={styles.toast} role="status">{t('tour.declined')}</div>}
       <aside className={`${styles.sidebar} ${open ? styles.open : ''}`}>
         <div className={styles.logo}>
           <span>🛒</span><span>2am Shoppers</span>

@@ -24,7 +24,6 @@ export default function SignupPage() {
   const ROLE_META = {
     student:  { label: `🎓 ${t('mode.student')}`,  desc: t('mode.studentDesc') },
     working:  { label: `💼 ${t('mode.working')}`,  desc: t('mode.workingDesc') },
-    business: { label: `🏪 ${t('mode.business')}`, desc: t('mode.businessDesc') },
   };
 
   function handleSubmit(e) {
@@ -47,8 +46,7 @@ export default function SignupPage() {
       setActiveAccount(result.accountId);
       // Set the mode so onboarding pre-selects the right type
       setAppMode(role);
-      // All roles onboard through their respective flows
-      navigate(role === 'business' ? '/business/onboarding' : '/customer/onboarding');
+      navigate('/customer/onboarding');
     }, 400);
   }
 
@@ -67,7 +65,7 @@ export default function SignupPage() {
 
         <form className={styles.form} onSubmit={handleSubmit}>
 
-          {/* 3-role toggle */}
+          {/* Shopper type toggle (merchant accounts aren't self-serve) */}
           <div className={styles.roleToggle}>
             {Object.entries(ROLE_META).map(([key, meta]) => (
               <button key={key} type="button"

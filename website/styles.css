@@ -405,7 +405,7 @@ a { text-decoration: none; color: inherit; }
 .auth-panel { padding: 24px; }
 .auth-panel.hidden { display: none; }
 
-.role-pick { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin-bottom: 16px; }
+.role-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 16px; }
 .role {
   display: flex; align-items: center; justify-content: center; gap: 5px;
   background: var(--card-2); border: 2px solid var(--border); border-radius: 10px;

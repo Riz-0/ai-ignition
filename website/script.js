@@ -691,6 +691,7 @@ window.handleSignup = function(e) {
       id: (crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
       username, password, email: email ?? '', name: username, role: signupRole,
       createdAt: new Date().toISOString(),
+      offerTour: true, // the app offers its tour to new sign-ups
     };
     writeAuthState({ accounts: [...accounts, account], currentUser: account, isLoggedIn: true });
     setLoading('signup-btn', false);

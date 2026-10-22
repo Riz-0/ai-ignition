@@ -119,16 +119,17 @@ const useAppStore = create(
       setCustomerProfile: (p) => get().setShopperProfile(p),
 
       // ── Coach-mark tour ──────────────────────────────────────
-      // toursSeen is keyed by account id so each account gets the tour
-      // once. tourActive is session-only (excluded from persistence).
-      toursSeen: {},
+      // New sign-ups carry `offerTour` on their account; once they accept
+      // or decline the offer it is recorded here by account id so it is
+      // never asked again. tourActive is session-only (not persisted).
+      tourOffersHandled: {},
+      handleTourOffer: () =>
+        set((s) => ({
+          tourOffersHandled: { ...s.tourOffersHandled, [s.activeAccountId ?? 'local']: true },
+        })),
       tourActive: false,
       startTour: () => set({ tourActive: true }),
-      endTour: () =>
-        set((s) => ({
-          tourActive: false,
-          toursSeen: { ...s.toursSeen, [s.activeAccountId ?? 'local']: true },
-        })),
+      endTour: () => set({ tourActive: false }),
 
       // ── Feedback signals (explicit + implicit) ───────────────
       // Persisted so taps actually change future recommendations.
@@ -426,12 +427,9 @@ const useAppStore = create(
       reset: () => set((s) => {
         const next = { ...s.profilesByAccount };
         if (s.activeAccountId) delete next[s.activeAccountId];
-        const tours = { ...s.toursSeen };
-        delete tours[s.activeAccountId ?? 'local'];
         return {
           appMode: null,
           profilesByAccount: next,
-          toursSeen: tours,
           tourActive: false,
           shopperProfile: null,
           merchantProfile: null,

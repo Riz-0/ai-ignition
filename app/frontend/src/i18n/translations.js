@@ -155,6 +155,10 @@ export const TRANSLATIONS = {
       next: 'Next',
       start: "Let's go",
       done: 'Got it',
+      promptTitle: 'Welcome, {name}! New here?',
+      promptBody: 'Want a quick tour of how the app works? It takes about a minute.',
+      promptAccept: 'Show me around',
+      promptDecline: 'No thanks',
       welcomeTitle: 'Welcome, {name}! 👋',
       welcomeBody: "Here's a quick tour of where everything lives. It takes about a minute, and you can replay it any time from Settings.",
       homeStudent: 'Your weekly budget at a glance: what you can spend this week after essentials and savings.',
@@ -167,6 +171,7 @@ export const TRANSLATIONS = {
       connections: 'Save links from Shopee, SHEIN, TikTok Shop and more so all your wishlists live in one place.',
       privacy: 'Tap this badge any time to see how your data is handled. Your budget stays on this device.',
       settings: 'Change your budget, quiet hours and language here, and replay this tour whenever you need it.',
+      declined: 'No problem. You can start the tour any time from Settings.',
     },
     privacy: {
       badge: 'Privacy first',

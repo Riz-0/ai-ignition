@@ -142,3 +142,38 @@ export default function CoachTour({ steps, onFinish, onStep }) {
     </div>
   );
 }
+
+/**
+ * Offer shown to new sign-ups before the tour: one clear "yes" and a
+ * small decline link so it never feels forced.
+ */
+export function TourPrompt({ name, onAccept, onDecline }) {
+  const t = useT();
+  const ref = useRef(null);
+
+  useEffect(() => { ref.current?.focus(); }, []);
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onDecline(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onDecline]);
+
+  return (
+    <div className={styles.root}>
+      <div className={`${styles.catcher} ${styles.dim}`} />
+      <div ref={ref} className={`${styles.tip} ${styles.centered} ${styles.prompt}`}
+        style={{ width: Math.min(TIP_W + 20, window.innerWidth - 32) }}
+        role="dialog" aria-modal="true" aria-labelledby="tour-prompt-title" tabIndex={-1}>
+        <div className={styles.promptIcon}>🧭</div>
+        <h3 id="tour-prompt-title" className={styles.title}>{t('tour.promptTitle', { name })}</h3>
+        <p className={styles.body}>{t('tour.promptBody')}</p>
+        <button type="button" className={`btn btn-primary ${styles.promptAccept}`} onClick={onAccept}>
+          {t('tour.promptAccept')}
+        </button>
+        <button type="button" className={styles.decline} onClick={onDecline}>
+          {t('tour.promptDecline')}
+        </button>
+      </div>
+    </div>
+  );
+}
