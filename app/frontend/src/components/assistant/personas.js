@@ -9,23 +9,23 @@
 export const TONES = {
   bestie: {
     label: 'Bestie mode',
-    greeting: (name) => `Hiii ${name || 'babe'}! 💕 It's Hoot, your 2AM shopping bestie. Spotted something cute? Tell me and I'll check it fits your budget ✨`,
-    chips: ['Can I afford something cute? 🛍️', 'How are my savings goals? ✨', "What's on my wishlist? 💕"],
+    greeting: (name) => `Hiii ${name || 'babe'}! 💕 It's Hoot, your 2AM shopping bestie. Want me to find you something cute, or check if something fits your budget? ✨`,
+    chips: ['Recommend something cute ✨', "What's my budget left? 💕", 'How are my savings goals? 🌸', "What's on my wishlist? 🛍️"],
   },
   coach: {
     label: 'Coach mode',
-    greeting: (name) => `Yo ${name || 'champ'} 👊 Hoot here, your 2AM spotter. Thinking of buying something? Run it by me first and we'll check the numbers.`,
-    chips: ["What's my budget left?", 'How are my goals tracking? 💪', 'Check my wishlist'],
+    greeting: (name) => `Yo ${name || 'champ'} 👊 Hoot here, your 2AM spotter. I can find you gear, run a purchase past your budget, or check your goals.`,
+    chips: ['Recommend some gear 💪', "What's my budget left?", 'How are my goals tracking?', 'Check my wishlist'],
   },
   friendly: {
     label: 'Friendly mode',
-    greeting: (name) => `Hey ${name || 'there'}! 👋 I'm Hoot, your 2AM assistant. Ask me if something fits your budget, or how your goals are going.`,
-    chips: ['How much can I spend?', 'How are my goals?', "What's on my wishlist?"],
+    greeting: (name) => `Hey ${name || 'there'}! 👋 I'm Hoot, your 2AM assistant. I can recommend products, check if something fits your budget, or see how your goals are going.`,
+    chips: ['Recommend something for me', 'How much can I spend?', 'How are my goals?', "What's on my wishlist?"],
   },
   calm: {
     label: 'Calm mode',
-    greeting: (name) => `Hi ${name || 'there'}, I'm Hoot, your 2AM assistant. I can check a purchase against your budget, track your goals, or review your wishlist.`,
-    chips: ['How much can I spend?', 'How are my goals?', "What's on my wishlist?"],
+    greeting: (name) => `Hi ${name || 'there'}, I'm Hoot, your 2AM assistant. I can recommend products, check a purchase against your budget, track your goals, or review your wishlist.`,
+    chips: ['Recommend something for me', 'How much can I spend?', 'How are my goals?', "What's on my wishlist?"],
   },
   pro: {
     label: 'Business mode',

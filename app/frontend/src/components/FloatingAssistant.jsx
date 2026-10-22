@@ -5,6 +5,7 @@ import { onFocusedProduct } from './assistantBus.js';
 import AssistantChat from './assistant/AssistantChat.jsx';
 import OwlIcon from './assistant/OwlIcon.jsx';
 import { pickTone } from './assistant/personas.js';
+import { buildCatalog } from './assistant/catalog.js';
 import styles from './FloatingAssistant.module.css';
 
 /**
@@ -33,6 +34,15 @@ export default function FloatingAssistant({ mode = 'shopper' }) {
   const [nudge, setNudge] = useState(null);       // { text, product } | null
   const [prefill, setPrefill] = useState(null);   // question to send when the chat opens
   const focusedRef = useRef(null);                // product currently on screen in Discover
+  const [blink, setBlink] = useState(false);       // Hoot blinks now and then
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setBlink(true);
+      setTimeout(() => setBlink(false), 180);
+    }, 4200);
+    return () => clearInterval(id);
+  }, []);
 
   const isBusiness = mode === 'business';
   const tone = pickTone(activeAccountId, shopperProfile, mode);
@@ -102,6 +112,12 @@ export default function FloatingAssistant({ mode = 'shopper' }) {
     };
   }, [isBusiness, getActiveGoals, wishlist, shopperProfile, isWorking, remaining]);
 
+  // Products Hoot may recommend (none in business mode).
+  const getCatalog = useCallback(
+    () => (isBusiness ? [] : buildCatalog(activeAccountId, shopperProfile)),
+    [isBusiness, activeAccountId, shopperProfile],
+  );
+
   return (
     <>
       {/* Budget-aware nudge (feed doom-scroll interjection) */}
@@ -124,21 +140,24 @@ export default function FloatingAssistant({ mode = 'shopper' }) {
         lang={lang}
         name={isBusiness ? null : shopperProfile?.name}
         getContext={getContext}
+        getCatalog={getCatalog}
         prefill={prefill}
         onPrefillSent={() => setPrefill(null)}
         L={Lx}
       />
 
-      {/* Launcher bubble */}
-      <button
-        data-tour="assistant-fab"
-        className={`${styles.launcher} ${open ? styles.launcherOpen : ''}`}
-        onClick={() => setOpen(v => !v)}
-        aria-label={open ? L(lang, 'close') : L(lang, 'openAria')}
-        title={open ? L(lang, 'close') : 'Hoot · 2AM Assistant'}
-      >
-        {open ? '✕' : <OwlIcon size={34} />}
-      </button>
+      {/* Launcher bubble — Hoot hovers in the corner; a label shows on hover */}
+      <div className={styles.launcherWrap}>
+        {!open && <span className={styles.launcherLabel} aria-hidden="true">{L(lang, 'hoverLabel')}</span>}
+        <button
+          data-tour="assistant-fab"
+          className={`${styles.launcher} ${open ? styles.launcherOpen : ''}`}
+          onClick={() => setOpen(v => !v)}
+          aria-label={open ? L(lang, 'close') : L(lang, 'openAria')}
+        >
+          {open ? '✕' : <OwlIcon size={48} blink={blink} />}
+        </button>
+      </div>
     </>
   );
 }
@@ -153,6 +172,8 @@ const STR = {
     askAbout: 'Is the {title} (${price}) worth it for me right now?',
     subtitle: 'Your 2AM assistant', placeholder: 'Message Hoot…', send: 'Send', typing: 'Hoot is typing',
     offline: 'Offline mode: Hoot is answering from your budget on this device.',
+    hoverLabel: 'Ask Hoot ✨', view: 'View', save: 'Save', saved: 'Saved', inBudget: 'In budget',
+    overBy: 'Over by ${amount}', priceVaries: 'Price varies',
   },
   ja: {
     fits: 'これは${price}で、今週は残り${left}あります。貯金を始めますか？',
@@ -162,6 +183,8 @@ const STR = {
     askAbout: '{title}（${price}）は今の私にとって買う価値ある？',
     subtitle: 'あなたの2AMアシスタント', placeholder: 'Hootにメッセージ…', send: '送信', typing: 'Hootが入力中',
     offline: 'オフラインモード：この端末の予算データから回答しています。',
+    hoverLabel: 'Hootに聞く ✨', view: '見る', save: '保存', saved: '保存済み', inBudget: '予算内',
+    overBy: '${amount} オーバー', priceVaries: '価格はさまざま',
   },
   zh: {
     fits: '这件 ${price}，你本周还剩 ${left}。要为它存钱吗？',
@@ -171,6 +194,8 @@ const STR = {
     askAbout: '{title}（${price}）现在值得我买吗？',
     subtitle: '你的 2AM 助手', placeholder: '给 Hoot 发消息…', send: '发送', typing: 'Hoot 正在输入',
     offline: '离线模式：Hoot 正根据此设备上的预算回答。',
+    hoverLabel: '问问 Hoot ✨', view: '查看', save: '收藏', saved: '已收藏', inBudget: '在预算内',
+    overBy: '超出 ${amount}', priceVaries: '价格不一',
   },
   th: {
     fits: 'ชิ้นนี้ ${price} และสัปดาห์นี้คุณเหลือ ${left} อยากเก็บเงินเพื่อซื้อไหม?',
@@ -180,6 +205,8 @@ const STR = {
     askAbout: '{title} (${price}) คุ้มไหมที่จะซื้อตอนนี้?',
     subtitle: 'ผู้ช่วย 2AM ของคุณ', placeholder: 'ส่งข้อความถึง Hoot…', send: 'ส่ง', typing: 'Hoot กำลังพิมพ์',
     offline: 'โหมดออฟไลน์: Hoot ตอบจากข้อมูลงบบนอุปกรณ์นี้',
+    hoverLabel: 'ถาม Hoot ✨', view: 'ดู', save: 'บันทึก', saved: 'บันทึกแล้ว', inBudget: 'อยู่ในงบ',
+    overBy: 'เกินงบ ${amount}', priceVaries: 'ราคาแตกต่างกัน',
   },
   ko: {
     fits: '이건 ${price}이고 이번 주에 ${left} 남았어요. 목표로 저축할까요?',
@@ -189,6 +216,8 @@ const STR = {
     askAbout: '{title}(${price}) 지금 사도 괜찮을까?',
     subtitle: '나의 2AM 어시스턴트', placeholder: 'Hoot에게 메시지…', send: '보내기', typing: 'Hoot가 입력 중',
     offline: '오프라인 모드: 이 기기의 예산 정보로 답하고 있어요.',
+    hoverLabel: 'Hoot에게 묻기 ✨', view: '보기', save: '저장', saved: '저장됨', inBudget: '예산 내',
+    overBy: '${amount} 초과', priceVaries: '가격 다양',
   },
 };
 function L(lang, key, vars) {

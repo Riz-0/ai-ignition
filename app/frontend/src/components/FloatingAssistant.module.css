@@ -1,40 +1,96 @@
-/* Corner launcher bubble — bottom-right on every page.
-   Size scales with the viewport via clamp(): ~40px on small phones up to
-   48px on desktop — smaller and less intrusive than before. */
-.launcher {
+/* Corner launcher — Hoot hovers bottom-right on every page.
+   ~56px on phones, 66px on desktop, gently floating up and down. */
+.launcherWrap {
   position: fixed;
-  right: max(14px, env(safe-area-inset-right));
-  bottom: calc(14px + env(safe-area-inset-bottom));
-  width: clamp(40px, 11vw, 48px);
-  height: clamp(40px, 11vw, 48px);
-  border-radius: 50%;
-  border: none;
-  background: var(--gradient);
-  color: #fff;
-  font-size: clamp(1.05rem, 3.4vw, 1.25rem);
-  line-height: 1;
-  cursor: pointer;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: calc(16px + env(safe-area-inset-bottom));
   z-index: 1001;
   display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 18px rgba(240,78,110,.42);
-  transition: transform .18s ease, box-shadow .18s ease;
+  gap: 10px;
+  pointer-events: none;   /* only the owl is clickable, not the hidden label's space */
 }
-.launcher:hover { transform: translateY(-2px) scale(1.05); }
+.launcherWrap > .launcher { pointer-events: auto; }
+.launcher {
+  position: relative;
+  width: clamp(56px, 15vw, 66px);
+  height: clamp(56px, 15vw, 66px);
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.22);
+  background: var(--gradient);
+  color: #fff;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 26px rgba(240,78,110,.45);
+  animation: hootFloat 3.2s ease-in-out infinite;
+  transition: box-shadow .2s ease;
+}
+/* Soft glow ring that breathes behind Hoot */
+.launcher::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(240,78,110,.35);
+  animation: hootRing 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+.launcher svg { transition: transform .25s cubic-bezier(.3,1.6,.5,1); }
+.launcher:hover,
+.launcher:focus-visible {
+  animation-play-state: paused;
+  box-shadow: 0 14px 34px rgba(240,78,110,.6);
+}
+.launcher:hover svg,
+.launcher:focus-visible svg { transform: scale(1.12) rotate(-8deg); }
+
 .launcherOpen {
   background: var(--bg-card);
   color: var(--text);
   border: 1px solid var(--border-light);
-  font-size: clamp(.9rem, 2.8vw, 1rem);
-  box-shadow: 0 6px 18px rgba(0,0,0,.4);
+  box-shadow: 0 8px 22px rgba(0,0,0,.4);
+  animation: none;
 }
+.launcherOpen::before { display: none; }
+
+@keyframes hootFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-7px); }
+}
+@keyframes hootRing {
+  0%, 100% { transform: translateY(0) scale(1);    opacity: .9; }
+  50%      { transform: translateY(-7px) scale(1.1); opacity: .25; }
+}
+
+/* "Ask Hoot ✨" label that slides out on hover */
+.launcherLabel {
+  order: -1;
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 99px;
+  padding: 7px 13px;
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(0,0,0,.3);
+  opacity: 0;
+  transform: translateX(8px);
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.launcherWrap:hover .launcherLabel,
+.launcherWrap:focus-within .launcherLabel { opacity: 1; transform: none; }
 
 /* Budget-aware nudge card — sits above the launcher. */
 .nudge {
   position: fixed;
   right: max(14px, env(safe-area-inset-right));
-  bottom: calc(68px + env(safe-area-inset-bottom));
+  bottom: calc(96px + env(safe-area-inset-bottom));
   width: min(300px, calc(100vw - 28px));
   background: var(--bg-card);
   border: 1px solid var(--coral-light);
@@ -82,5 +138,5 @@
 
 /* Respect reduced motion (global rule also disables these). */
 @media (prefers-reduced-motion: reduce) {
-  .launcher, .nudge { transition: none; animation: none; }
+  .launcher, .launcher::before, .nudge { transition: none; animation: none; }
 }

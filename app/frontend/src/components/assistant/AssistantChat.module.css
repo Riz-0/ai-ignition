@@ -2,9 +2,9 @@
 .panel {
   position: fixed;
   right: max(14px, env(safe-area-inset-right));
-  bottom: calc(76px + env(safe-area-inset-bottom));
-  width: min(370px, calc(100vw - 28px));
-  height: min(540px, calc(100dvh - 150px));
+  bottom: calc(96px + env(safe-area-inset-bottom));
+  width: min(380px, calc(100vw - 28px));
+  height: min(560px, calc(100dvh - 170px));
   display: flex;
   flex-direction: column;
   background: var(--bg-card);
@@ -94,6 +94,72 @@
   40% { opacity: 1; transform: translateY(-3px); }
 }
 
+.turn { display: flex; flex-direction: column; gap: 8px; }
+
+/* Recommended products */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 32px;
+}
+.card {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  animation: cardIn .25s ease both;
+}
+.card:nth-child(2) { animation-delay: .06s; }
+.card:nth-child(3) { animation-delay: .12s; }
+.card:nth-child(4) { animation-delay: .18s; }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+.cardThumb {
+  width: 46px; height: 46px; flex-shrink: 0;
+  display: grid; place-items: center;
+  font-size: 1.5rem;
+  background: var(--bg-card2);
+  border-radius: 10px;
+}
+.cardBody { flex: 1; min-width: 0; }
+.cardTitle {
+  margin: 0;
+  font-size: .82rem;
+  line-height: 1.3;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cardMeta { margin: 2px 0 0; font-size: .7rem; color: var(--text-muted); }
+.cardPriceRow { display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+.cardPrice { font-size: .86rem; color: var(--text); }
+.tag { font-size: .64rem; font-weight: 700; padding: 2px 7px; border-radius: 99px; }
+.tagOk { color: var(--green-light); background: rgba(5,150,105,.14); }
+.tagOver { color: var(--amber-light); background: rgba(245,158,11,.14); }
+.cardActions { display: flex; gap: 6px; margin-top: 8px; }
+.cardLink, .cardSave {
+  font-family: var(--font);
+  font-size: .72rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1.2;
+}
+.cardLink { color: #fff; background: var(--gradient); border: none; }
+.cardLink:hover { filter: brightness(1.08); }
+.cardSave { color: var(--text); background: transparent; border: 1px solid var(--border-light); }
+.cardSave:hover:not(:disabled) { border-color: var(--coral-light); }
+.cardSaved { color: var(--coral-light); border-color: rgba(240,78,110,.35); cursor: default; }
+
 .chips { display: flex; flex-wrap: wrap; gap: 6px; padding-left: 32px; }
 .chip {
   font-family: var(--font);
@@ -149,5 +215,5 @@
 
 @media (prefers-reduced-motion: reduce) {
   .panel, .open { transition: none; }
-  .typing span { animation: none; }
+  .typing span, .card { animation: none; }
 }
