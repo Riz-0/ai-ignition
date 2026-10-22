@@ -148,7 +148,7 @@ export default function AssistantChat({ open, onClose, tone, lang, name, getCont
 
 /** One recommended product: price vs budget, a shop link and save-to-wishlist. */
 function ProductCard({ product: p, remaining, L }) {
-  const { wishlist, addToWishlist } = useAppStore();
+  const { wishlist, addToWishlist, startPurchaseCheck } = useAppStore();
   const saved = wishlist.some(w => w.title === p.title);
   const hasPrice = typeof p.price === 'number';
   const fits = hasPrice && typeof remaining === 'number' ? p.price <= remaining : null;
@@ -178,7 +178,8 @@ function ProductCard({ product: p, remaining, L }) {
         </div>
         <div className={styles.cardActions}>
           {p.url && (
-            <a className={styles.cardLink} href={p.url} target="_blank" rel="noopener noreferrer">{L('view')} ↗</a>
+            <a className={styles.cardLink} href={p.url} target="_blank" rel="noopener noreferrer"
+              onClick={() => startPurchaseCheck(p, 'hoot')}>{L('view')} ↗</a>
           )}
           <button type="button" className={`${styles.cardSave} ${saved ? styles.cardSaved : ''}`} onClick={save} disabled={saved}>
             {saved ? `❤️ ${L('saved')}` : `♡ ${L('save')}`}

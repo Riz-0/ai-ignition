@@ -332,6 +332,27 @@ const useAppStore = create(
       recordPurchase: (p) =>
         set((s) => ({ purchaseHistory: [...s.purchaseHistory, { id: crypto.randomUUID(), confirmedAt: new Date().toISOString(), ...p }] })),
 
+      // ── "Did you buy it?" check ──────────────────────────────
+      // Set when the user opens a product's shop link; asked when they come
+      // back to the app. Persisted, so it survives closing the app.
+      // { title, price, url, merchant, category, emoji, source, openedAt, accountId }
+      pendingPurchaseCheck: null,
+      startPurchaseCheck: (product, source) =>
+        set((s) => ({
+          pendingPurchaseCheck: {
+            title: product.title,
+            price: typeof product.price === 'number' ? product.price : null,
+            url: product.url ?? null,
+            merchant: product.merchant ?? null,
+            category: product.category ?? null,
+            emoji: product.emoji ?? '🛍️',
+            source,
+            openedAt: new Date().toISOString(),
+            accountId: s.activeAccountId ?? 'local',
+          },
+        })),
+      clearPurchaseCheck: () => set({ pendingPurchaseCheck: null }),
+
       // ── Business / Merchant ──────────────────────────────────
       // merchantProfile is declared in the per-account section above.
       setMerchantProfile: (p) =>
@@ -452,7 +473,7 @@ const useAppStore = create(
           merchantProfile: null,
           feedback: { priceThreshold: null, dislikedCategories: [], likedCategories: [], skippedFeedIds: [], lastResponse: null },
           wishlist: [], savingsGoals: [], savingsLedger: [], expenses: [],
-          savedLinks: [], conversations: [], reminders: [], purchaseHistory: [],
+          savedLinks: [], conversations: [], reminders: [], purchaseHistory: [], pendingPurchaseCheck: null,
           connections: {
             shopee:    { status: 'demo', label: 'Shopee',      route: 'link-only' },
             shein:     { status: 'demo', label: 'SHEIN',       route: 'link-only' },

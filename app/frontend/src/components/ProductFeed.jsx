@@ -17,7 +17,8 @@ function saveSoundPref(on) {
 
 export default function ProductFeed() {
   // Pull wishlist state and actions directly from global app store
-  const { wishlist, addToWishlist, removeFromWishlist, addReminder, activeAccountId, shopperProfile } = useAppStore();
+  const { wishlist, addToWishlist, removeFromWishlist, addReminder, startPurchaseCheck,
+          activeAccountId, shopperProfile } = useAppStore();
 
   // Each account gets its own videos (Emily's, John's, or interest-matched).
   const [products, setProducts] = useState(() => getFeedVideos(activeAccountId, shopperProfile));
@@ -230,6 +231,7 @@ export default function ProductFeed() {
                   </button>
                   {product.url && (
                     <a href={product.url} target="_blank" rel="noopener noreferrer"
+                      onClick={() => startPurchaseCheck(product, 'discover')}
                       className="wishlist-btn shop-btn"
                       title={product.linkType === 'search' ? 'Search for this item on Shopee' : `Open ${product.merchant}`}>
                       <span className="icon">🛍️</span>

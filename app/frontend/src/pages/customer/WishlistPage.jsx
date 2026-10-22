@@ -94,6 +94,7 @@ export default function WishlistPage() {
 }
 
 function WishlistCard({ item, onRemove, onUpdate, t }) {
+  const startPurchaseCheck = useAppStore((s) => s.startPurchaseCheck);
   const overBudget = item.price && item.budget && Number(item.price) > Number(item.budget);
 
   return (
@@ -110,7 +111,8 @@ function WishlistCard({ item, onRemove, onUpdate, t }) {
         </div>
         <div className={styles.cardActions}>
           {item.url && (
-            <a href={item.url} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm">{t('wishlist.viewBtn')}</a>
+            <a href={item.url} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm"
+              onClick={() => startPurchaseCheck({ ...item, price: Number(item.price ?? item.budget) || null }, 'wishlist')}>{t('wishlist.viewBtn')}</a>
           )}
           <button className="btn btn-danger btn-sm" onClick={() => onRemove(item.id)}>✕</button>
         </div>

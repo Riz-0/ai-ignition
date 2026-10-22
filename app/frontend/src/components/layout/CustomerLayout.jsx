@@ -7,6 +7,7 @@ import { UIPrefsCluster } from '../../components/UIPrefs.jsx';
 import CoachTour, { TourPrompt } from '../../components/CoachTour.jsx';
 import PrivacyBadge from '../../components/PrivacyBadge.jsx';
 import FloatingAssistant from '../../components/FloatingAssistant.jsx';
+import PurchaseCheck from '../../components/PurchaseCheck.jsx';
 import useNotificationScheduler from '../../hooks/useNotificationScheduler.js';
 import styles from './Layout.module.css';
 
@@ -164,6 +165,7 @@ export default function CustomerLayout() {
 
       {/* 2AM Assistant floats in the corner on every customer page */}
       <FloatingAssistant />
+      <PurchaseCheck />
     </div>
   );
 }
