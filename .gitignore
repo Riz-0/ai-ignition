@@ -1,0 +1,22 @@
+# ── Secrets: never commit these ──────────────────────────────
+# API keys and passwords live in .env files (e.g. app/backend/.env).
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.keystore
+*.jks
+credentials.json
+service-account*.json
+
+# ── Dependencies and build output ────────────────────────────
+node_modules/
+dist/
+
+# ── Logs and OS clutter ──────────────────────────────────────
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
