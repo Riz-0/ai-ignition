@@ -85,7 +85,7 @@ export default function BusinessLayout() {
       </div>
 
       {/* 2AM Assistant floats in the corner on every business page too */}
-      <FloatingAssistant />
+      <FloatingAssistant mode="business" />
     </div>
   );
 }

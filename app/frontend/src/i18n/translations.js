@@ -2,7 +2,7 @@
    The 2am Shoppers — i18n translations
    Languages: English (en), Japanese (ja), Chinese (zh), Thai (th)
 
-   Eslitec/MantaGO is expanding into Thailand, Japan and Singapore,
+   Eslitec is expanding into Thailand, Japan and Singapore,
    so the app ships with these four languages to match that footprint.
    ============================================================ */
 
@@ -173,7 +173,7 @@ export const TRANSLATIONS = {
       feedWorking: 'Browse products and see how a purchase fits into this month before you commit.',
       savings: 'Set savings goals and watch them grow. Every bit you set aside shows up here.',
       wishlist: "Things you're thinking about buying. We'll check in before you buy, so the 2am impulse can wait until morning.",
-      assistant: 'Ask the 2AM Assistant for product help or a second opinion before you buy.',
+      assistant: 'Tap Hoot the owl, your 2AM Assistant, for product help or a second opinion before you buy.',
       connections: 'Save links from Shopee, SHEIN, TikTok Shop and more so all your wishlists live in one place.',
       privacy: 'Tap this badge any time to see how your data is handled. Your budget stays on this device.',
       settings: 'Change your budget, quiet hours and language here, and replay this tour whenever you need it.',
@@ -191,8 +191,8 @@ export const TRANSLATIONS = {
       pageSub: 'Plain answers, no fine print.',
       deviceTitle: 'Your money stays on your device',
       deviceBody: 'Your profile, budget, savings goals, wishlist and expenses are saved in this browser on this device. They are not uploaded to our servers.',
-      assistantTitle: 'The assistant only sees what you type',
-      assistantBody: 'The 2AM Assistant chat is powered by MantaGO (by Eslitec). Messages you type are sent there to get a reply. Your budget, savings and expense figures are never attached.',
+      assistantTitle: 'The assistant sees only what it needs',
+      assistantBody: 'Hoot, the 2AM Assistant, is powered by Claude, an AI model made by Anthropic. When you chat, your messages are sent with a short summary so answers fit you: your first name, interests, budget left this period, savings goals and wishlist items. Your full spending history is never sent. If the assistant server isn\'t connected, Hoot answers on your device and nothing is sent.',
       merchantsTitle: 'Merchants never see your finances',
       merchantsBody: 'Shopper mode and Business mode are kept separate. A merchant using the app can never see your budget, goals or spending.',
       linksTitle: 'Connections are link-only',
@@ -255,7 +255,7 @@ export const TRANSLATIONS = {
     },
     eslitec: {
       pitchTitle: 'Built to extend Eslitec',
-      pitchSub: 'The 2am Shoppers is the shopper-side companion to MantaGO — closing the loop between merchant-side conversational commerce and the people who actually shop.',
+      pitchSub: 'The 2am Shoppers is a shopper-side companion that helps people shop with intention — budget-aware, goal-driven and private by default.',
     },
     homeExtra: {
       canSpendWeek: 'You can spend this week',
@@ -873,8 +873,8 @@ export const TRANSLATIONS = {
       pageSub: 'わかりやすい回答、細かい但し書きはありません。',
       deviceTitle: 'あなたのお金の情報はこの端末に残ります',
       deviceBody: 'プロフィール、予算、貯金目標、ウィッシュリスト、支出は、この端末のこのブラウザに保存されます。当社のサーバーにアップロードされることはありません。',
-      assistantTitle: 'アシスタントが見るのは入力した内容だけ',
-      assistantBody: '2AM Assistantのチャットは MantaGO（Eslitec提供）を利用しています。入力したメッセージは返信を得るためにそちらへ送信されます。予算、貯金、支出の数字が添付されることは一切ありません。',
+      assistantTitle: 'アシスタントが見るのは必要な情報だけ',
+      assistantBody: '2AMアシスタントのHootは、Anthropic社のAIモデル「Claude」で動いています。チャットすると、あなたに合った回答のため、メッセージと短い要約（名前、興味、今期の残り予算、貯金目標、ウィッシュリスト）が送信されます。支出の全履歴が送られることはありません。アシスタントのサーバーに接続されていない場合、Hootは端末上で回答し、何も送信されません。',
       merchantsTitle: '販売者があなたの家計を見ることはありません',
       merchantsBody: 'ショッパーモードとビジネスモードは分離されています。アプリを使う販売者があなたの予算、目標、支出を見ることはできません。',
       linksTitle: '連携はリンクのみ',
@@ -937,7 +937,7 @@ export const TRANSLATIONS = {
     },
     eslitec: {
       pitchTitle: 'Eslitecを拡張する設計',
-      pitchSub: '2am ShoppersはMantaGOのショッパー側コンパニオン — 事業者向けの会話コマースと実際に買い物をする人々の間のループを閉じます。',
+      pitchSub: '2am Shoppersは、意図ある買い物を支えるショッパー向けの相棒です — 予算に寄り添い、目標を後押しし、プライバシーを守ります。',
     },
     homeExtra: {
       canSpendWeek: '今週使える金額',
@@ -1555,8 +1555,8 @@ export const TRANSLATIONS = {
       pageSub: '直白的答案，没有小字条款。',
       deviceTitle: '你的钱财信息留在你的设备上',
       deviceBody: '你的资料、预算、储蓄目标、愿望清单和支出都保存在本设备的这个浏览器中，不会上传到我们的服务器。',
-      assistantTitle: '助手只看到你输入的内容',
-      assistantBody: '2AM Assistant 聊天由 MantaGO（Eslitec 出品）提供支持。你输入的消息会发送到那里以获取回复。你的预算、储蓄和支出数字绝不会随之附上。',
+      assistantTitle: '助手只看它需要的信息',
+      assistantBody: '2AM 助手 Hoot 由 Anthropic 公司的 AI 模型 Claude 驱动。聊天时，你的消息会连同一份简短摘要一起发送，让回答更贴合你：你的名字、兴趣、本期剩余预算、储蓄目标和心愿单商品。你的完整消费记录绝不会被发送。如果助手服务器未连接，Hoot 会在你的设备上回答，不会发送任何内容。',
       merchantsTitle: '商家永远看不到你的财务',
       merchantsBody: '购物者模式和商家模式彼此独立。使用本应用的商家永远看不到你的预算、目标或消费。',
       linksTitle: '连接仅限链接',
@@ -1619,7 +1619,7 @@ export const TRANSLATIONS = {
     },
     eslitec: {
       pitchTitle: '为延伸 Eslitec 而设计',
-      pitchSub: '2am Shoppers 是 MantaGO 的消费者侧伴侣 — 打通商家侧对话式商务与实际购物者之间的闭环。',
+      pitchSub: '2am Shoppers 是帮助人们有计划购物的消费者伙伴——关注预算、助力目标，默认保护隐私。',
     },
     homeExtra: {
       canSpendWeek: '本周可支出',
@@ -2237,8 +2237,8 @@ export const TRANSLATIONS = {
       pageSub: 'คำตอบตรงไปตรงมา ไม่มีข้อความตัวเล็ก',
       deviceTitle: 'เรื่องเงินของคุณอยู่ในอุปกรณ์ของคุณ',
       deviceBody: 'โปรไฟล์ งบประมาณ เป้าหมายการออม ลิสต์ที่อยากได้ และค่าใช้จ่ายของคุณถูกบันทึกไว้ในเบราว์เซอร์นี้บนอุปกรณ์นี้ ไม่ได้ถูกอัปโหลดไปยังเซิร์ฟเวอร์ของเรา',
-      assistantTitle: 'ผู้ช่วยเห็นเฉพาะสิ่งที่คุณพิมพ์',
-      assistantBody: 'แชต 2AM Assistant ขับเคลื่อนโดย MantaGO (โดย Eslitec) ข้อความที่คุณพิมพ์จะถูกส่งไปที่นั่นเพื่อรับคำตอบ ตัวเลขงบประมาณ เงินออม และค่าใช้จ่ายของคุณจะไม่ถูกแนบไปด้วยเลย',
+      assistantTitle: 'ผู้ช่วยเห็นเฉพาะสิ่งที่จำเป็น',
+      assistantBody: 'Hoot ผู้ช่วย 2AM ขับเคลื่อนโดย Claude โมเดล AI ของ Anthropic เมื่อคุณแชต ข้อความของคุณจะถูกส่งพร้อมสรุปสั้น ๆ เพื่อให้คำตอบเหมาะกับคุณ ได้แก่ ชื่อ ความสนใจ งบที่เหลือในรอบนี้ เป้าหมายการออม และรายการในวิชลิสต์ ประวัติการใช้จ่ายทั้งหมดจะไม่ถูกส่งไป หากไม่ได้เชื่อมต่อเซิร์ฟเวอร์ผู้ช่วย Hoot จะตอบบนอุปกรณ์ของคุณและไม่ส่งข้อมูลใด ๆ',
       merchantsTitle: 'ร้านค้าไม่เห็นการเงินของคุณ',
       merchantsBody: 'โหมดผู้ซื้อและโหมดธุรกิจถูกแยกออกจากกัน ร้านค้าที่ใช้แอปไม่สามารถเห็นงบประมาณ เป้าหมาย หรือการใช้จ่ายของคุณได้',
       linksTitle: 'การเชื่อมต่อเป็นเพียงลิงก์',
@@ -2301,7 +2301,7 @@ export const TRANSLATIONS = {
     },
     eslitec: {
       pitchTitle: 'ออกแบบเพื่อต่อยอด Eslitec',
-      pitchSub: '2am Shoppers คือคู่หูฝั่งผู้ช้อปของ MantaGO — เชื่อมวงจรปิดระหว่างการพาณิชย์สนทนาฝั่งร้านค้ากับผู้ที่ช้อปจริง',
+      pitchSub: '2am Shoppers คือคู่หูฝั่งผู้ช้อปที่ช่วยให้ช้อปอย่างตั้งใจ ใส่ใจงบประมาณ ช่วยให้ถึงเป้าหมาย และรักษาความเป็นส่วนตัวเป็นค่าเริ่มต้น',
     },
     homeExtra: {
       canSpendWeek: 'คุณใช้จ่ายได้สัปดาห์นี้',
@@ -2919,8 +2919,8 @@ export const TRANSLATIONS = {
       pageSub: '쉬운 답변, 깨알 같은 약관은 없습니다.',
       deviceTitle: '당신의 돈 정보는 기기에 남습니다',
       deviceBody: '프로필, 예산, 저축 목표, 위시리스트, 지출은 이 기기의 이 브라우저에 저장됩니다. 당사 서버로 업로드되지 않습니다.',
-      assistantTitle: '어시스턴트는 입력한 내용만 봅니다',
-      assistantBody: '2AM Assistant 채팅은 MantaGO(Eslitec 제공)로 구동됩니다. 입력한 메시지는 답변을 받기 위해 그곳으로 전송됩니다. 예산, 저축, 지출 수치는 절대 함께 전송되지 않습니다.',
+      assistantTitle: '어시스턴트는 필요한 정보만 봅니다',
+      assistantBody: '2AM 어시스턴트 Hoot는 Anthropic의 AI 모델 Claude로 구동됩니다. 채팅하면 맞춤 답변을 위해 메시지와 함께 짧은 요약(이름, 관심사, 이번 기간 남은 예산, 저축 목표, 위시리스트 항목)이 전송됩니다. 전체 지출 기록은 절대 전송되지 않아요. 어시스턴트 서버가 연결되지 않으면 Hoot는 기기에서 답하며 아무것도 전송되지 않습니다.',
       merchantsTitle: '판매자는 당신의 재정을 볼 수 없습니다',
       merchantsBody: '쇼퍼 모드와 비즈니스 모드는 분리되어 있습니다. 앱을 사용하는 판매자는 당신의 예산, 목표, 지출을 절대 볼 수 없습니다.',
       linksTitle: '연동은 링크 전용',
@@ -2983,7 +2983,7 @@ export const TRANSLATIONS = {
     },
     eslitec: {
       pitchTitle: 'Eslitec을 확장하기 위해 제작',
-      pitchSub: '2am Shoppers는 MantaGO의 쇼퍼 측 동반자로서, 판매자 측 대화형 커머스와 실제로 쇼핑하는 사람들 사이의 고리를 완성합니다.',
+      pitchSub: '2am Shoppers는 의도 있는 쇼핑을 돕는 쇼퍼 측 동반자입니다 — 예산을 챙기고, 목표를 응원하며, 기본적으로 프라이버시를 지킵니다.',
     },
     homeExtra: {
       canSpendWeek: '이번 주 사용 가능액',

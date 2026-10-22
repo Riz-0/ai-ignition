@@ -6,7 +6,7 @@ import styles from './PrivacyPage.module.css';
 /**
  * "How we handle your data" — public so onboarding, Settings and the
  * Privacy First badge can all link here. Keep these claims in sync with
- * what the app actually does (see appStore persistence + config/mantago.js).
+ * what the app actually does (see appStore persistence + backend routes/assistant.js).
  */
 const SECTIONS = [
   { icon: '📱', key: 'device' },

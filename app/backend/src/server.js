@@ -9,6 +9,7 @@ import remindersRouter     from './routes/reminders.js';
 import savingsRouter       from './routes/savings.js';
 import expensesRouter      from './routes/expenses.js';
 import connectionsRouter   from './routes/connections.js';
+import assistantRouter     from './routes/assistant.js';
 
 // Business routes
 import catalogueRouter     from './routes/catalogue.js';
@@ -34,6 +35,7 @@ app.use('/api/reminders',     remindersRouter);
 app.use('/api/savings',       savingsRouter);     // goals + ledger
 app.use('/api/expenses',      expensesRouter);    // spending records + budget summary
 app.use('/api/connections',   connectionsRouter); // hub + saved links + import
+app.use('/api/assistant',     assistantRouter);   // Hoot chat (Claude)
 
 // ── Business ─────────────────────────────────────────────────
 app.use('/api/catalogue',     catalogueRouter);
