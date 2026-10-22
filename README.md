@@ -1,167 +1,138 @@
 # The 2am Shoppers
 
-**One app for thoughtful shopping, savings goals and personalised customer conversations.**
+**A budget-first shopping companion: shop smarter, spend less, save for what matters.**
 
-> Eslitec Hackathon · Problem Statement 1 · "One Less Thing"
+> **Team 2AM Deployers** · AI Ignition · Problem Statement 1 (Eslitec): personalised, automated e-commerce conversations that support retention
+
+Young shoppers browse across many platforms, often late at night, forget what they saved and overspend, because shopping apps are built to sell rather than protect budgets. The 2am Shoppers always knows what you can safely spend, turns impulse moments into wishlist items and "sleep on it" reminders, and gives you **Hoot**, an AI assistant that offers honest, budget-aware advice in a voice that suits you.
 
 ---
 
-## Repository layout
+## What's in this repository
 
 ```
 ai-ignition/
-├── website/          Presentation site — open index.html in any browser
-│   ├── index.html    Landing page: hero, features, savings, how it works, who it's for, get the app, FAQ
-│   ├── login.html    Log in page
-│   ├── signup.html   Create-account page (student / working adult)
-│   ├── styles.css    Design system (violet=student, coral=working)
-│   └── script.js     Nav, fade-in, typewriter, i18n, auth (shares localStorage with app)
+├── website/            Landing site / pitch deck (static HTML, no build step)
+│   ├── index.html      Hero, features, savings, how it works, who it's for,
+│   │                   what we tested, next steps, get the app, FAQ
+│   ├── login.html      Log in page   ─┐  hand the account over to the app
+│   ├── signup.html     Sign-up page  ─┘  at localhost:3003
+│   ├── styles.css      Design system (violet = student, coral = working adult)
+│   └── script.js       Nav, animations, 5-language translations, auth handoff
 │
 ├── app/
-│   ├── frontend/     React + Vite — three tailored interfaces
-│   └── backend/      Node.js + Express + SQLite API
+│   ├── frontend/       React + Vite app (installable PWA; Android via Capacitor)
+│   └── backend/        Node.js + Express API, incl. Hoot's AI route (Claude)
 │
-└── 2amdepoloyers.md  Full project brief and spec
+├── 2amdepoloyers.md    Original project brief and spec
+└── LAUNCH_GUIDE.md     Launch and partnership notes
 ```
-
----
-
-## Three modes
-
-| Mode | Who | Planning period | Colour |
-|------|-----|----------------|--------|
-| 🎓 Student | Students with weekly allowance | Weekly | Violet |
-| 💼 Working Adult | Working adults with monthly income | Monthly | Coral |
-| 🏪 Business | Merchants with existing customers | Campaign period | Amber |
-
-**Switching modes never merges personal finances with merchant records.**  
-Shopper budgets, goal balances and expense records are never visible on the business side.
 
 ---
 
 ## Quick start
 
-### Presentation website
-Open `website/index.html` directly in any browser. No build step needed.  
-The Log in / Sign up pages share `localStorage` with the app — create an account on the website and sign in from the app at `localhost:3003`.
+You need **Node.js 18+** (developed on Node 24).
 
-**Admin account:** username `user` · password `password`
-
----
-
-### App — frontend
+### 1. Run the app (required)
 
 ```powershell
 cd app\frontend
 npm install
-npm run dev          # opens at http://localhost:3003
+npm run dev          # http://localhost:3003
 ```
 
-The frontend is fully functional using Zustand + localStorage.  
-The backend is optional for the MVP demo.
+The app works fully on its own: accounts, budgets, goals, wishlist and the video feed are stored in the browser (localStorage). Without the backend, Hoot answers in **offline mode** (budget, goals, wishlist and product picks from data on the device).
 
----
-
-### App — backend
+### 2. Run the backend (optional — for Hoot's live AI replies)
 
 ```powershell
 cd app\backend
-Copy-Item .env.example .env   # fill in JWT_SECRET at minimum
+Copy-Item .env.example .env
+# edit .env: set JWT_SECRET, and ANTHROPIC_API_KEY for Hoot's AI replies
 npm install
-npm run dev          # runs at http://localhost:3001
+npm start            # http://localhost:3001
 ```
 
-The frontend proxies `/api/*` to the backend via Vite's dev proxy.
+The frontend's dev server forwards `/api/*` to the backend. Get an API key at <https://console.anthropic.com>. Never commit your `.env` file.
+
+### 3. Open the website (optional)
+
+Open `website/index.html` in a browser, or serve it:
+
+```powershell
+python -m http.server 8080 --directory website   # http://localhost:8080
+```
+
+Signing up or logging in on the website opens the app at `localhost:3003` with the same account, so keep the app running.
+
+### Demo accounts
+
+| Username | Password | What you get |
+|---|---|---|
+| `emily` | `emilypassword` | Student persona: beauty, fashion and travel; Hoot in **Bestie** voice |
+| `john` | `johnpassword` | Working-adult persona: fitness and grooming; Hoot in **Coach** voice |
+| `student` | `student` | Ready-made student account |
+| `working` | `working` | Ready-made working-adult account |
+| `business` | `business` | Merchant dashboard (demo data) |
+| `user` | `password` | Admin: can switch between all modes |
+
+These are demo credentials only. New sign-ups choose Student or Working Adult and are offered a short guided tour.
 
 ---
 
-## Frontend routes
+## Features
 
-| Path | Description |
-|------|-------------|
-| `/login` | Sign in |
-| `/signup` | Create account (Student / Working Adult / Business) |
-| `/` | Mode select — 3 cards |
-| `/customer/onboarding` | Student or working adult setup (6 steps) |
-| `/customer` | Home dashboard (branches by userType) |
-| `/customer/feed` | Discovery feed |
-| `/customer/savings` | Goal pockets + ledger |
-| `/customer/wishlist` | Wishlist with goal linking |
-| `/customer/chat` | AI shopping assistant |
-| `/customer/connections` | Connections Hub (5 platforms) |
-| `/customer/settings` | Profile and preferences |
-| `/business/onboarding` | Merchant setup (5 steps) |
-| `/business` | Overview dashboard |
-| `/business/customers` | Customer segments |
-| `/business/journeys` | Trigger-based journeys |
-| `/business/catalogue` | Product catalogue |
-| `/business/support` | Support handovers |
+| Feature | Status |
+|---|---|
+| Student (weekly) and Working Adult (monthly) modes with tailored wording, colours and budgets | ✅ Working |
+| Onboarding, budget calculation, savings goals, wishlist, reminders, expenses | ✅ Working |
+| **Discover**: vertical video feed per persona (20 clips), shop link on each, sound on/off, save to wishlist | ✅ Working |
+| Budget nudge while scrolling ("That's $40 but you have $20 left…") | ✅ Working |
+| Late-night saves (10pm–5am) set a "still want it?" reminder for the morning | ✅ Working |
+| **"Did you get it?"** check after visiting a shop link: Bought logs the spend, Still thinking adds to wishlist | ✅ Working |
+| **Hoot** AI assistant: per-persona voice, budget/goal/wishlist answers, product recommendation cards | ✅ Offline mode tested · live AI needs `ANTHROPIC_API_KEY` |
+| Phone and desktop notifications (due reminders, low budget), respecting quiet hours | ✅ Working while the app is open or in the background |
+| Guided tour for new sign-ups, privacy page, 5 languages (EN/JA/ZH/TH/KO), dark/light theme, installable PWA | ✅ Working |
+| Business dashboard (customers, journeys, catalogue, support) | 🟡 Demo data |
+| Marketplace connections (Shopee, SHEIN, TikTok Shop, Taobao, Pinduoduo) | 🟡 Link-only; live APIs need platform approval |
+| Purchase confirmation | 🟡 Self-reported by the user (no shop checkout data) |
 
 ---
 
-## Student interface
+## How the main pieces work
 
-**Navigation:** Home · Discover · Save · Wishlist · Assistant · Connections · Settings
+**Budgets** (`app/frontend/src/store/appStore.js`)
 
-**Weekly budget formula:**
 ```
-Remaining discretionary = allowance
-                        − essential reserves (food, transport, school)
-                        − savings allocation
-                        − recorded discretionary spending this week
+Student, weekly:   allowance − essentials − savings − spending in the last 7 days
+Working, monthly:  income − essentials − savings − buffer − spending this month
 ```
 
-**Savings:** Goal pockets with progress bars, contribution/planned/withdrawal ledger, icon picker, wishlist linking. Recording a contribution does not transfer funds.
+**Discover videos** (`app/frontend/src/data/feedVideos.js`, files in `app/frontend/public/videos/<emily|john|shared>/`)
+Each clip is matched to its product. `linkType` says how exact the link is: `product` (exact product page), `brand` (brand's shop) or `search` (a Shopee Singapore search for generic items; prices shown as "~$ typical price"). To add a video: put the MP4 (portrait 9:16, ideally under 5 MB) in the persona's folder and add an entry to that persona's list.
 
-**Gamification:** Optional badges, missions and progress milestones. Rewards saving and reflection — not purchases. Can be turned off in Settings. Skipping a day does not erase progress.
+**Hoot** (`app/frontend/src/components/assistant/`, `app/backend/src/routes/assistant.js`)
+The chat sends `POST /api/assistant/chat` with the conversation, the voice to use and a short summary (first name, interests, budget left, goals, wishlist) plus a catalogue of products it may recommend. The backend calls Claude (`claude-opus-5-5`) and asks for a structured reply (text + product ids); only products really in the catalogue are returned, so Hoot can't invent products or links. If the server or key isn't available, `localReplies.js` answers on the device in the same voice.
+
+**Notifications** (`app/frontend/src/lib/notifications.js`, `src/hooks/useNotificationScheduler.js`, `public/sw.js`)
+Turn them on in **Settings → Notifications**. Uses the Web Notifications API through the service worker. Works on desktop browsers and Android Chrome; on iPhone only after "Add to Home Screen". Alerts with the app fully closed would need a push server (not set up).
+
+**Purchase check** (`app/frontend/src/components/PurchaseCheck.jsx`)
+Opening a shop link from Discover, Hoot or the wishlist records a pending check (saved on the device). When the user comes back or reopens the app, it asks Bought / Still thinking / Didn't buy.
 
 ---
 
-## Working Adult interface
+## Android app
 
-**Navigation:** Overview · Spending · Savings · Shopping · Assistant · Connections · Settings
-
-**Monthly budget formula:**
-```
-Remaining discretionary = recorded income
-                        − essential reserves (bills, subscriptions, transport)
-                        − savings allocations
-                        − buffer
-                        − recorded discretionary spending this month
+```powershell
+cd app\frontend
+npm run build
+npx cap copy android
+npx cap open android      # then Run ▶ in Android Studio
 ```
 
-**Savings:** Multiple goals, planned contributions, projected completion, editable allocation rules.
-
----
-
-## Business interface
-
-**Navigation:** Overview · Products · Customers · Journeys · Catalogue · Support
-
-**Privacy rule:** The business view never shows shopper budgets, allowances or goal details. The app applies spending limits on the shopper side; businesses see only authorised customer context and permitted preferences.
-
-**Wording variants:** Journeys can use student ("Coffee check ☕ Need a refill?") or working adult ("Would you like to reorder your usual coffee?") wording based on the customer's authorised mode, not financial inference.
-
----
-
-## Connections Hub
-
-Five platforms, four integration routes:
-
-| Route | Status label | When to use |
-|-------|-------------|-------------|
-| Share / paste a link | ⚪ Link-only | Immediately for all 5 platforms |
-| Import a purchase record | 🔵 Imported records | Upload receipt, screenshot or order export |
-| Authorised merchant API | 🟢 Live connection | After platform approval (validate first) |
-| External purchase handoff | 🟢 Live connection | Via authorised callback or user confirmation |
-
-**Rule:** Never show "Connected" if only a product link was saved. Price and stock claims must come from verified catalogue data.
-
-**Platform validation required before live release:**
-- Shopee: Open Platform — regions, eligibility, catalogue/order permissions
-- SHEIN: Developer Platform — seller eligibility, supported scopes
-- TikTok Shop: Partner Center — app approval, shop scope, region
-- Taobao / Pinduoduo: Open Platforms — eligibility and permissions unverified at time of writing
+Repeat `npm run build` and `npx cap copy android` after every change. Browser notifications don't show inside the Android app; that needs the Capacitor Local Notifications plugin.
 
 ---
 
@@ -169,96 +140,66 @@ Five platforms, four integration routes:
 
 | Method | Path | Description |
 |--------|------|-------------|
+| POST | `/api/assistant/chat` | Hoot's reply from Claude (503 `not_configured` without an API key) |
 | GET/POST/PATCH/DELETE | `/api/wishlist` | Wishlist items |
-| GET/POST | `/api/conversations` | Conversation threads |
-| POST | `/api/conversations/:id/reply` | AI reply (rule-based or OpenAI) |
+| GET/POST | `/api/conversations` | Merchant conversation threads |
+| POST | `/api/conversations/:id/reply` | Merchant-side intent reply (rule-based, optional OpenAI) |
 | GET/POST/DELETE | `/api/reminders` | Reminders |
-| GET/POST/PATCH/DELETE | `/api/savings/goals` | Savings goal pockets |
-| GET/POST/DELETE | `/api/savings/ledger` | Ledger entries (contributions / planned / withdrawals) |
+| GET/POST/PATCH/DELETE | `/api/savings/goals` | Savings goals |
+| GET/POST/DELETE | `/api/savings/ledger` | Savings ledger entries |
 | GET/POST/DELETE | `/api/expenses` | Expense records |
-| GET | `/api/expenses/summary` | Deterministic budget summary |
+| GET | `/api/expenses/summary` | Budget summary |
 | GET/PATCH | `/api/connections` | Platform connection status |
 | GET/POST/DELETE | `/api/connections/links` | Saved product links |
-| POST | `/api/connections/:platform/import` | Simulated import (returns sample records for confirmation) |
+| POST | `/api/connections/:platform/import` | Simulated import |
 | GET/POST/PATCH/DELETE | `/api/catalogue` | Merchant catalogue |
 | GET/POST/PATCH | `/api/customers` | Merchant customer records |
 | GET/POST | `/api/journeys` | Customer journeys |
-| POST | `/api/journeys/:id/event` | Record customer response |
+| POST | `/api/journeys/:id/event` | Record a customer response |
 | GET | `/api/dashboard/summary` | Business KPI summary |
-| GET | `/api/dashboard/segments` | Segment breakdown |
 | GET | `/api/health` | Health check |
 
 ---
 
-## AI conversation
+## Demo script (about 5 minutes)
 
-**Default (no key):** Rule-based response map — too expensive → alternatives, remind me later → schedule, wrong style → update preferences, etc.
-
-**With OpenAI:** Set `OPENAI_API_KEY` in `.env`. The service calls `gpt-4o-mini` with rules from the spec grounding the prompt.
-
-**With AWS Bedrock:** Replace `getLLMReply()` in `app/backend/src/services/conversationService.js` with a `BedrockRuntimeClient` call.
-
----
-
-## Hackathon demo script
-
-1. Open `http://localhost:3003` → sign in as `user` / `password`
-2. Choose **Student** → complete onboarding (set $80 allowance, $45 essentials, $15 savings, goal: "New shoes $60")
-3. On Home, interact with the AI notification card
-4. Go to **Save** → record a $10 contribution toward the shoes goal
-5. Switch to **Working Adult** via mode select → onboard as Alicia ($2,400 income, $1,500 essentials, $400 savings, $200 buffer)
-6. Go to **Connections** → save a Shopee product link
-7. Switch to **Business** → load demo customers (Alicia, Ben, Chloe)
-8. Go to **Journeys** → start a replenishment journey for Alicia's coffee
-9. Record outcome as **Purchased**
-10. Check **Overview** — conv-to-purchase rate updates
-
-All simulated purchases, feeds and integrations are clearly labelled.
+1. Start the app (and the backend if you have an API key). Open `http://localhost:3003`.
+2. Log in as **emily / emilypassword**. Home shows what she can spend this week.
+3. Open **Discover**: scroll her videos, tap **🔇 Sound off** to turn sound on, tap **Find ↗** on a product.
+4. Come back to the app: answer **Did you get it?** with *Still thinking*, and see it on the **Wishlist**.
+5. Tap **Hoot** 🦉 (bottom-right) → *Recommend something cute ✨*. Hoot answers in Bestie voice with product cards.
+6. Log out and log in as **john / johnpassword**: different feed, monthly budget, Hoot in Coach voice.
+7. **Settings → Notifications → Turn on notifications → Send a test.**
 
 ---
 
-## Measurements (fill in after timed demo)
+## Troubleshooting
 
-| Metric | Result |
-|--------|--------|
-| Students able to see weekly discretionary budget | — |
-| Working adults able to complete monthly plan | — |
-| Business journey from trigger to confirmed purchase | — |
-| Time: manual coordination vs with app | — |
-
-> Hackathon sample data demonstrates the reporting process. It does not prove real retention improvements or customer lifetime value increases.
+- **Old screens or missing videos after an update:** the service worker may hold an old copy. Reload once or twice; if it persists, open DevTools → Application → Service workers → *Unregister*, then reload.
+- **Hoot says "Offline mode":** the backend isn't running or `ANTHROPIC_API_KEY` isn't set. Fix it, then reload the page.
+- **Notifications blocked:** allow notifications for the site in the browser's settings, then turn them on again in Settings.
 
 ---
 
-## Savings workspace — key rules
+## Privacy and data
 
-- **Planning ledger only.** Money stays in the user's existing accounts.
-- Recording "$10 saved" does not transfer funds, create a deposit or earn interest.
-- Label all figures as a recorded plan with last-update time and missing inputs shown.
-- Planned contributions remain separate from completed entries.
-- Forecast progress is a projection, not a guaranteed outcome.
-- Unused budget is not automatically "money saved" — the user confirms where it was allocated.
-- Shopping credit, loyalty points and vouchers are not cash savings.
+- Budgets, goals, wishlist and expenses are saved in the browser on the user's device.
+- Hoot receives a short summary with each message (first name, interests, budget left, goals, wishlist); full spending history is never sent.
+- Business mode never shows shopper budgets, goals or spending.
+- Marketplace connections are link-only; the app never asks for shop passwords.
 
 ---
 
-## Development tools
+## Notes and limitations
 
-| Tool | Role |
-|------|------|
-| **Kiro** | Plan and implement application, workflows and integrations |
-| **IBM Bob** | Analyse, debug, review and improve the implementation |
-| **Runtime AI** | Interprets customer intent and generates grounded conversations |
-| **Workflow logic** | Controls triggers, reminders, exits, permissions and approved actions |
+- **Demo videos:** the Discover clips are third-party TikTok videos used for a hackathon demo. Get the creators' permission before any public use, or replace them with brand-provided videos.
+- Accounts are stored per browser (no account server yet), and demo passwords are stored in plain text.
+- Product prices marked "~$" are typical prices, not live prices.
 
----
+## Next steps
 
-## Later enhancements
-
-- Additional live marketplace integrations (validate regions and permissions first)
-- Real short-video content and supported ad publishing
-- Group-buy checkout
-- Multilingual conversations
-- Light/dark mode
-- Broader analytics and product comparisons
-- Validated partner-backed money tracking or transfer features (separate future scope with explicit permissions)
+- Host the app and backend (HTTPS), with real accounts that sync across devices.
+- Shop affiliate tracking (Shopee, TikTok Shop) to confirm purchases automatically.
+- A push server so notifications arrive with the app closed.
+- Brand-uploaded videos and a "For You" feed that learns from what users watch, save and skip.
+- Pilot with students and working adults to measure impulse buys avoided and goals reached.
