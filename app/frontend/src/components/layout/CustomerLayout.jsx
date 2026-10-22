@@ -65,7 +65,7 @@ export default function CustomerLayout() {
     const mode = isStudent ? 'Student' : 'Working';
     const label = (id) => NAV.find(n => n.tour === id)?.label;
     return [
-      { title: t('tour.welcomeTitle', { name: shopperProfile?.name || 'there' }), body: t('tour.welcomeBody') },
+      { title: t('tour.welcomeTitle', { name: shopperProfile?.name || t('homeExtra.fallbackName') }), body: t('tour.welcomeBody') },
       { target: 'nav-home',        inSidebar: true, title: label('home'),        body: t(`tour.home${mode}`) },
       { target: 'nav-feed',        inSidebar: true, title: label('feed'),        body: t(`tour.feed${mode}`) },
       { target: 'nav-savings',     inSidebar: true, title: label('savings'),     body: t('tour.savings') },
@@ -97,7 +97,7 @@ export default function CustomerLayout() {
       {declinedNote && <div className={styles.toast} role="status">{t('tour.declined')}</div>}
       <aside className={`${styles.sidebar} ${open ? styles.open : ''}`}>
         <div className={styles.logo}>
-          <span>🛒</span><span>2am Shoppers</span>
+          <span>🛒</span><span>{t('layout.brand')}</span>
         </div>
         <div className={styles.modeChip}
           style={isStudent
@@ -128,12 +128,12 @@ export default function CustomerLayout() {
               {shopperProfile?.name?.[0]?.toUpperCase() ?? 'U'}
             </div>
             <div>
-              <div className={styles.userName}>{shopperProfile?.name ?? 'Shopper'}</div>
+              <div className={styles.userName}>{shopperProfile?.name ?? t('layout.shopperFallback')}</div>
               <div className={styles.userSub}>{isStudent ? t('mode.student') : t('mode.working')}</div>
             </div>
           </div>
           {isAdmin() && (
-            <button className={styles.switchBtn} title="Switch view"
+            <button className={styles.switchBtn} title={t('layout.switchView')}
               onClick={() => { switchMode(); navigate('/'); }}>⇄</button>
           )}
           <button className={styles.logoutBtn} title={t('common.signOut')}
@@ -151,7 +151,7 @@ export default function CustomerLayout() {
             <UIPrefsCluster />
             {dueReminders > 0 && (
               <NavLink to="/customer/wishlist" className={styles.alertBadge}>
-                🔔 {dueReminders} reminder{dueReminders !== 1 ? 's' : ''} due
+                {t(dueReminders !== 1 ? 'layout.remindersDue' : 'layout.reminderDue', { n: dueReminders })}
               </NavLink>
             )}
           </div>

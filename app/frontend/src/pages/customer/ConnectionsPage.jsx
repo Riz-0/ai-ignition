@@ -54,11 +54,11 @@ const PLATFORMS = [
 ];
 
 const STATUS_META = {
-  live:           { label: 'Live connection', color: 'var(--green-light)',   bg: 'rgba(5,150,105,.12)',  dot: '🟢' },
-  imported:       { label: 'Imported records', color: 'var(--teal-light)',   bg: 'rgba(8,145,178,.12)',  dot: '🔵' },
-  'link-only':    { label: 'Link-only',         color: 'var(--text-muted)',   bg: 'rgba(255,255,255,.05)', dot: '⚪' },
-  'needs-attention': { label: 'Needs attention', color: 'var(--amber-light)', bg: 'rgba(245,158,11,.1)',  dot: '🟡' },
-  demo:           { label: 'Demo data',          color: 'var(--violet-light)', bg: 'rgba(124,58,237,.1)', dot: '🟣' },
+  live:           { labelKey: 'connectionsExtra.statusLive',           color: 'var(--green-light)',   bg: 'rgba(5,150,105,.12)',  dot: '🟢' },
+  imported:       { labelKey: 'connectionsExtra.statusImported',       color: 'var(--teal-light)',    bg: 'rgba(8,145,178,.12)',  dot: '🔵' },
+  'link-only':    { labelKey: 'connectionsExtra.statusLinkOnly',       color: 'var(--text-muted)',    bg: 'rgba(255,255,255,.05)', dot: '⚪' },
+  'needs-attention': { labelKey: 'connectionsExtra.statusNeedsAttention', color: 'var(--amber-light)', bg: 'rgba(245,158,11,.1)',  dot: '🟡' },
+  demo:           { labelKey: 'connectionsExtra.statusDemo',           color: 'var(--violet-light)',  bg: 'rgba(124,58,237,.1)', dot: '🟣' },
 };
 
 export default function ConnectionsPage() {
@@ -85,7 +85,7 @@ export default function ConnectionsPage() {
   function simulateImport(platform) {
     setImportResult('');
     setTimeout(() => {
-      setImportResult(`✓ 3 sample records extracted for review. Confirm each before they update your spending plan. (Simulated — label: Demo data)`);
+      setImportResult(t('connectionsExtra.importResult'));
       updateConnection(platform, { status: 'imported' });
       setShowImport(null);
       setImportText('');
@@ -102,49 +102,49 @@ export default function ConnectionsPage() {
       <div className={styles.legend}>
         {Object.entries(STATUS_META).map(([key, m]) => (
           <span key={key} className={styles.legendChip} style={{ color: m.color, background: m.bg }}>
-            {m.dot} {m.label}
+            {m.dot} {t(m.labelKey)}
           </span>
         ))}
       </div>
 
       {/* Quick-save link */}
       <div className={styles.toolbar}>
-        <h2 className="section-title" style={{ margin: 0 }}>Platforms</h2>
+        <h2 className="section-title" style={{ margin: 0 }}>{t('connectionsExtra.platformsHeading')}</h2>
         <button className="btn btn-primary btn-sm" onClick={() => setShowLinkForm(v => !v)}>
-          {showLinkForm ? '✕ Cancel' : '+ Save a product link'}
+          {showLinkForm ? t('connectionsExtra.cancelToggle') : t('connectionsExtra.saveLinkToggle')}
         </button>
       </div>
 
       {showLinkForm && (
         <form className={`card ${styles.linkForm}`} onSubmit={saveLink}>
-          <h3 className={styles.formTitle}>Save a product link</h3>
+          <h3 className={styles.formTitle}>{t('connections.saveLinkTitle')}</h3>
           <div className={styles.formGrid}>
             <label className={styles.flabel}>
-              Platform *
+              {t('connectionsExtra.platformLabel')}
               <select className={styles.finput} required value={linkForm.platform}
                 onChange={e => setLinkForm(f => ({ ...f, platform: e.target.value }))}>
-                <option value="">— select —</option>
+                <option value="">{t('connectionsExtra.selectPh')}</option>
                 {PLATFORMS.map(p => <option key={p.key} value={p.key}>{p.name}</option>)}
               </select>
             </label>
             <label className={styles.flabel}>
-              Product URL *
+              {t('connectionsExtra.productUrlLabel')}
               <input className={styles.finput} type="url" required placeholder="https://..."
                 value={linkForm.url} onChange={e => setLinkForm(f => ({ ...f, url: e.target.value }))} />
             </label>
             <label className={styles.flabel}>
-              Product name
-              <input className={styles.finput} placeholder="e.g. Blue canvas sneakers"
+              {t('connectionsExtra.productNameLabel')}
+              <input className={styles.finput} placeholder={t('connectionsExtra.productNamePh')}
                 value={linkForm.title} onChange={e => setLinkForm(f => ({ ...f, title: e.target.value }))} />
             </label>
             <label className={styles.flabel}>
-              Listed price ($)
-              <input className={styles.finput} type="number" min="0" step="0.01" placeholder="e.g. 45.90"
+              {t('connectionsExtra.listedPriceLabel')}
+              <input className={styles.finput} type="number" min="0" step="0.01" placeholder={t('connectionsExtra.listedPricePh')}
                 value={linkForm.price} onChange={e => setLinkForm(f => ({ ...f, price: e.target.value }))} />
             </label>
           </div>
-          <p className={styles.fnote}>Sharing a link does not grant access to your platform account or confirm a current price.</p>
-          <button type="submit" className="btn btn-primary">Save link</button>
+          <p className={styles.fnote}>{t('connectionsExtra.fnote')}</p>
+          <button type="submit" className="btn btn-primary">{t('connectionsExtra.saveLinkBtn')}</button>
         </form>
       )}
 
@@ -163,9 +163,9 @@ export default function ConnectionsPage() {
                 <div className={styles.pInfo}>
                   <div className={styles.pName}>{p.name}</div>
                   <span className={styles.statusChip} style={{ color: meta.color, background: meta.bg }}>
-                    {meta.dot} {meta.label}
+                    {meta.dot} {t(meta.labelKey)}
                   </span>
-                  {links.length > 0 && <span className={styles.linkCount}>{links.length} link{links.length !== 1 ? 's' : ''} saved</span>}
+                  {links.length > 0 && <span className={styles.linkCount}>{t(links.length !== 1 ? 'connectionsExtra.linksSaved' : 'connectionsExtra.linkSaved', { n: links.length })}</span>}
                 </div>
                 <span className={styles.toggle}>{isOpen ? '▲' : '▼'}</span>
               </div>
@@ -174,11 +174,11 @@ export default function ConnectionsPage() {
                 <div className={styles.cardBody}>
                   <div className={styles.infoRow}>
                     <div className={styles.infoBlock}>
-                      <div className={styles.infoLabel}>Shopper route (MVP)</div>
+                      <div className={styles.infoLabel}>{t('connectionsExtra.shopperRoute')}</div>
                       <p>{p.shopper}</p>
                     </div>
                     <div className={styles.infoBlock}>
-                      <div className={styles.infoLabel}>Must validate before live</div>
+                      <div className={styles.infoLabel}>{t('connectionsExtra.mustValidate')}</div>
                       <p>{p.validate}</p>
                     </div>
                   </div>
@@ -191,16 +191,16 @@ export default function ConnectionsPage() {
                   <div className={styles.cardActions}>
                     <button className="btn btn-ghost btn-sm"
                       onClick={() => { setLinkForm(f => ({ ...f, platform: p.key })); setShowLinkForm(true); setExpanded(null); }}>
-                      + Save a link
+                      {t('connectionsExtra.saveALink')}
                     </button>
                     <button className="btn btn-ghost btn-sm"
                       onClick={() => setShowImport(showImport === p.key ? null : p.key)}>
-                      📥 Import records
+                      {t('connectionsExtra.importRecords')}
                     </button>
                     {conn.status !== 'demo' && (
                       <button className="btn btn-danger btn-sm"
                         onClick={() => updateConnection(p.key, { status: 'demo' })}>
-                        Disconnect
+                        {t('connectionsExtra.disconnect')}
                       </button>
                     )}
                   </div>
@@ -209,14 +209,14 @@ export default function ConnectionsPage() {
                   {showImport === p.key && (
                     <div className={styles.importPanel}>
                       <p className={styles.importNote}>
-                        Paste order export text, receipt content or upload a supported file. Extracted records are shown for confirmation before updating your spending plan.
-                        <strong> This is a simulated demo — real file parsing comes in a later build.</strong>
+                        {t('connectionsExtra.importNote')}
+                        <strong>{t('connectionsExtra.importNoteStrong')}</strong>
                       </p>
                       <textarea className={styles.importArea} rows={3}
-                        placeholder="Paste order data here…"
+                        placeholder={t('connectionsExtra.importPlaceholder')}
                         value={importText} onChange={e => setImportText(e.target.value)} />
                       <button className="btn btn-primary btn-sm" onClick={() => simulateImport(p.key)}>
-                        Extract and review
+                        {t('connectionsExtra.extractReview')}
                       </button>
                     </div>
                   )}
@@ -228,14 +228,14 @@ export default function ConnectionsPage() {
                   {/* Saved links */}
                   {links.length > 0 && (
                     <div className={styles.savedLinks}>
-                      <div className={styles.infoLabel}>Saved links</div>
+                      <div className={styles.infoLabel}>{t('connectionsExtra.savedLinksLabel')}</div>
                       {links.map(l => (
                         <div key={l.id} className={styles.linkRow}>
                           <a href={l.url} target="_blank" rel="noopener noreferrer" className={styles.linkUrl}>
                             {l.title || l.url}
                           </a>
                           {l.price && <span className={styles.linkPrice}>${l.price}</span>}
-                          <span className={styles.linkNote}>link-only · price unverified</span>
+                          <span className={styles.linkNote}>{t('connectionsExtra.linkOnlyUnverified')}</span>
                         </div>
                       ))}
                     </div>
@@ -251,7 +251,7 @@ export default function ConnectionsPage() {
       <InAppShop />
 
       <p className={styles.footer}>
-        Integration plan reviewed October 2026. Keep permissions and regional availability checks current when implementation starts. Never show "Connected" if only a product link was saved.
+        {t('connectionsExtra.footerNote')}
       </p>
     </div>
   );

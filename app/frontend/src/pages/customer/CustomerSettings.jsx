@@ -146,7 +146,7 @@ export default function CustomerSettings() {
           <label className={styles.label}>
             {t('settings.budgetLabel')}
             <input className={styles.input} type="number" min="0"
-              placeholder="Leave blank to not set"
+              placeholder={t('settings.budgetBlank')}
               value={form.budget}
               onChange={e => setForm({ ...form, budget: e.target.value })} />
           </label>
@@ -179,7 +179,7 @@ export default function CustomerSettings() {
           <label className={styles.label}>
             {isStudent ? t('settings.allowanceReminder') : t('settings.paydayReminder')}
             <input className={styles.input} type="number" min="1" max="31"
-              placeholder="e.g. 25"
+              placeholder={t('settings.reminderPh')}
               value={form.paydayDate}
               onChange={e => setForm({ ...form, paydayDate: e.target.value })} />
           </label>

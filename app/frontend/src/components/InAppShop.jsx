@@ -89,7 +89,7 @@ export default function InAppShop() {
 
       {/* Product grid */}
       {filtered.length === 0 ? (
-        <div className={styles.empty}>— {t('shop.search')}: "{query}" —</div>
+        <div className={styles.empty}>{t('shopExtra.noResults', { query })}</div>
       ) : (
         <div className={styles.grid}>
           {filtered.map((p) => (
@@ -100,7 +100,7 @@ export default function InAppShop() {
                   {PLATFORM_META[p.platform].emoji} {PLATFORM_META[p.platform].name}
                 </span>
                 <span>
-                  {p.bundle && <span className={styles.bundleChip}>🤝 Bundle</span>}
+                  {p.bundle && <span className={styles.bundleChip}>{t('shopExtra.bundle')}</span>}
                   <span className={styles.demoChip}>{t('shop.demoBadge')}</span>
                 </span>
               </div>

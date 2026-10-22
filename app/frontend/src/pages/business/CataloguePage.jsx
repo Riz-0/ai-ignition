@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import useAppStore from '../../store/appStore.js';
+import { useT } from '../../i18n/I18nProvider.jsx';
 import styles from './CataloguePage.module.css';
 
 const EMPTY = { name: '', category: '', price: '', description: '', inStock: true };
 
 export default function CataloguePage() {
   const { catalogue, addProduct, updateProduct } = useAppStore();
+  const t = useT();
   const [showForm, setShowForm] = useState(false);
   const [form, setForm]         = useState(EMPTY);
 
@@ -19,60 +21,60 @@ export default function CataloguePage() {
 
   return (
     <div>
-      <h1 className="page-title">Product Catalogue</h1>
-      <p className="page-sub">Products available for use in customer journeys. Prices and stock are verified before presenting offers.</p>
+      <h1 className="page-title">{t('catalogue.title')}</h1>
+      <p className="page-sub">{t('catalogue.sub')}</p>
 
       <div className={styles.toolbar}>
-        <span className={styles.count}>{catalogue.length} product{catalogue.length !== 1 ? 's' : ''}</span>
+        <span className={styles.count}>{t('catalogue.productCount', { n: catalogue.length })}</span>
         <button className="btn btn-primary btn-sm" onClick={() => setShowForm(v => !v)}>
-          {showForm ? '✕ Cancel' : '+ Add product'}
+          {showForm ? t('catalogue.cancel') : t('catalogue.addProduct')}
         </button>
       </div>
 
       {showForm && (
         <form className={`card ${styles.form}`} onSubmit={submit}>
-          <h3 className={styles.formTitle}>Add product</h3>
+          <h3 className={styles.formTitle}>{t('catalogue.addTitle')}</h3>
           <div className={styles.formGrid}>
             <label className={styles.label}>
-              Name * <input className={styles.input} required value={form.name}
-                onChange={e => setForm({ ...form, name: e.target.value })} placeholder="e.g. House Blend 250g" />
+              {t('catalogue.name')} <input className={styles.input} required value={form.name}
+                onChange={e => setForm({ ...form, name: e.target.value })} placeholder={t('catalogue.namePh')} />
             </label>
             <label className={styles.label}>
-              Category <input className={styles.input} value={form.category}
-                onChange={e => setForm({ ...form, category: e.target.value })} placeholder="e.g. Coffee" />
+              {t('catalogue.category')} <input className={styles.input} value={form.category}
+                onChange={e => setForm({ ...form, category: e.target.value })} placeholder={t('catalogue.categoryPh')} />
             </label>
             <label className={styles.label}>
-              Price ($) <input className={styles.input} type="number" min="0" step="0.01" value={form.price}
+              {t('catalogue.price')} <input className={styles.input} type="number" min="0" step="0.01" value={form.price}
                 onChange={e => setForm({ ...form, price: e.target.value })} />
             </label>
             <label className={`${styles.label} ${styles.checkLabel}`}>
-              <span>In stock</span>
+              <span>{t('catalogue.inStock')}</span>
               <input type="checkbox" checked={form.inStock}
                 onChange={e => setForm({ ...form, inStock: e.target.checked })} />
             </label>
             <label className={`${styles.label} ${styles.full}`}>
-              Description <input className={styles.input} value={form.description}
+              {t('catalogue.description')} <input className={styles.input} value={form.description}
                 onChange={e => setForm({ ...form, description: e.target.value })}
-                placeholder="Brief product description" />
+                placeholder={t('catalogue.descriptionPh')} />
             </label>
           </div>
-          <button type="submit" className="btn btn-primary">Add to catalogue</button>
-          <p className={styles.subtle}>Product claims must come from verified merchant information. Do not present unverified offers.</p>
+          <button type="submit" className="btn btn-primary">{t('catalogue.addBtn')}</button>
+          <p className={styles.subtle}>{t('catalogue.verifyNote')}</p>
         </form>
       )}
 
       {catalogue.length === 0 ? (
-        <div className={`card ${styles.empty}`}>No products yet. Add products above or load demo data during onboarding.</div>
+        <div className={`card ${styles.empty}`}>{t('catalogue.emptyBody')}</div>
       ) : (
         <div className={styles.grid}>
-          {catalogue.map(p => <ProductCard key={p.id} product={p} onUpdate={updateProduct} />)}
+          {catalogue.map(p => <ProductCard key={p.id} product={p} onUpdate={updateProduct} t={t} />)}
         </div>
       )}
     </div>
   );
 }
 
-function ProductCard({ product: p, onUpdate }) {
+function ProductCard({ product: p, onUpdate, t }) {
   return (
     <div className={`card ${styles.pCard}`}>
       <div className={styles.pHeader}>
@@ -85,13 +87,13 @@ function ProductCard({ product: p, onUpdate }) {
       {p.description && <p className={styles.pDesc}>{p.description}</p>}
       <div className={styles.pFooter}>
         <span className={`badge ${p.inStock ? 'badge-green' : 'badge-red'}`}>
-          {p.inStock ? 'In stock' : 'Out of stock'}
+          {p.inStock ? t('catalogue.inStockBadge') : t('catalogue.outOfStockBadge')}
         </span>
         <button
           className={`btn btn-ghost btn-sm`}
           onClick={() => onUpdate(p.id, { inStock: !p.inStock })}
         >
-          {p.inStock ? 'Mark out of stock' : 'Mark in stock'}
+          {p.inStock ? t('catalogue.markOutOfStock') : t('catalogue.markInStock')}
         </button>
       </div>
     </div>

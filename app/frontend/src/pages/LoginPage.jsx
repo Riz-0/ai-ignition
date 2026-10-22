@@ -98,7 +98,7 @@ export default function LoginPage() {
               />
               <button type="button" className={styles.togglePass}
                 onClick={() => setShowPass(v => !v)}
-                aria-label={showPass ? 'Hide password' : 'Show password'}>
+                aria-label={showPass ? t('authExtra.hidePassword') : t('authExtra.showPassword')}>
                 {showPass ? '🙈' : '👁️'}
               </button>
             </div>
@@ -119,7 +119,7 @@ export default function LoginPage() {
         {/* ── Secondary: quick demo logins ── */}
         <div className={styles.demoSection}>
           <button type="button" className={styles.demoToggle} onClick={() => setShowDemos(v => !v)}>
-            <span>⚡ Demo accounts</span>
+            <span>{t('authExtra.demoAccounts')}</span>
             <span className={styles.demoChevron}>{showDemos ? '▲' : '▼'}</span>
           </button>
 

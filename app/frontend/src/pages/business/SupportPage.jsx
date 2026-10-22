@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import useAppStore from '../../store/appStore.js';
+import { useT } from '../../i18n/I18nProvider.jsx';
 import styles from './SupportPage.module.css';
 
 export default function SupportPage() {
   const { supportHandovers, resolveHandover, addHandover, merchantProfile } = useAppStore();
+  const t = useT();
   const [showForm, setShowForm] = useState(false);
   const [form, setForm]         = useState({ customerName: '', reason: '', context: '' });
 
@@ -20,58 +22,57 @@ export default function SupportPage() {
 
   return (
     <div>
-      <h1 className="page-title">Support Handovers</h1>
+      <h1 className="page-title">{t('support.title')}</h1>
       <p className="page-sub">
-        Cases escalated from customer journeys. Review the context and resolve once addressed.
-        Sales prompts are paused for customers with open cases.
+        {t('support.sub')}
       </p>
 
       <div className={styles.toolbar}>
         <div className={styles.counts}>
-          <span className={`badge ${open.length > 0 ? 'badge-red' : 'badge-green'}`}>{open.length} open</span>
-          <span className="badge badge-teal">{resolved.length} resolved</span>
+          <span className={`badge ${open.length > 0 ? 'badge-red' : 'badge-green'}`}>{t('support.openCount', { n: open.length })}</span>
+          <span className="badge badge-teal">{t('support.resolvedCount', { n: resolved.length })}</span>
         </div>
         <button className="btn btn-ghost btn-sm" onClick={() => setShowForm(v => !v)}>
-          {showForm ? '✕ Cancel' : '+ Manual handover'}
+          {showForm ? t('support.cancel') : t('support.manualHandover')}
         </button>
       </div>
 
       {showForm && (
         <form className={`card ${styles.form}`} onSubmit={submit}>
-          <h3 className={styles.formTitle}>Create manual handover</h3>
+          <h3 className={styles.formTitle}>{t('support.createTitle')}</h3>
           <div className={styles.stack}>
             <label className={styles.label}>
-              Customer name * <input className={styles.input} required value={form.customerName}
+              {t('support.customerName')} <input className={styles.input} required value={form.customerName}
                 onChange={e => setForm({ ...form, customerName: e.target.value })} />
             </label>
             <label className={styles.label}>
-              Reason <input className={styles.input} value={form.reason}
+              {t('support.reason')} <input className={styles.input} value={form.reason}
                 onChange={e => setForm({ ...form, reason: e.target.value })}
-                placeholder="e.g. Unresolved complaint, refund request" />
+                placeholder={t('support.reasonPh')} />
             </label>
             <label className={styles.label}>
-              Conversation context <textarea className={`${styles.input} ${styles.textarea}`} rows={3}
+              {t('support.context')} <textarea className={`${styles.input} ${styles.textarea}`} rows={3}
                 value={form.context}
                 onChange={e => setForm({ ...form, context: e.target.value })}
-                placeholder="Paste relevant context here so the staff member has what they need" />
+                placeholder={t('support.contextPh')} />
             </label>
           </div>
-          <button type="submit" className="btn btn-primary">Create handover</button>
+          <button type="submit" className="btn btn-primary">{t('support.createBtn')}</button>
         </form>
       )}
 
       {open.length === 0 && (
         <div className={`card ${styles.allClear}`}>
-          ✅ No open support cases. All customers are on active or completed journeys.
+          {t('support.allClear')}
         </div>
       )}
 
       {open.length > 0 && (
         <>
-          <h2 className="section-title" style={{ marginTop: 4 }}>Open cases</h2>
+          <h2 className="section-title" style={{ marginTop: 4 }}>{t('support.openCases')}</h2>
           <div className={styles.list}>
             {open.map(h => (
-              <HandoverCard key={h.id} handover={h} onResolve={resolveHandover} supportEmail={merchantProfile?.supportEmail} />
+              <HandoverCard key={h.id} handover={h} onResolve={resolveHandover} supportEmail={merchantProfile?.supportEmail} t={t} />
             ))}
           </div>
         </>
@@ -79,14 +80,14 @@ export default function SupportPage() {
 
       {resolved.length > 0 && (
         <>
-          <h2 className="section-title" style={{ marginTop: 28 }}>Resolved</h2>
+          <h2 className="section-title" style={{ marginTop: 28 }}>{t('support.resolvedHeading')}</h2>
           <div className={styles.list}>
             {resolved.map(h => (
               <div key={h.id} className={`card ${styles.resolvedCard}`}>
                 <span className={styles.resolvedIcon}>✓</span>
                 <div>
                   <div className={styles.resolvedName}>{h.customerName}</div>
-                  <div className={styles.resolvedMeta}>{h.reason || 'No reason specified'} · Resolved {fmtDate(h.resolvedAt)}</div>
+                  <div className={styles.resolvedMeta}>{h.reason || t('support.noReason')} · {t('support.resolvedAt', { date: fmtDate(h.resolvedAt) })}</div>
                 </div>
               </div>
             ))}
@@ -97,43 +98,43 @@ export default function SupportPage() {
   );
 }
 
-function HandoverCard({ handover: h, onResolve, supportEmail }) {
+function HandoverCard({ handover: h, onResolve, supportEmail, t }) {
   return (
     <div className={`card ${styles.openCard}`}>
       <div className={styles.openHeader}>
         <span className={styles.openIcon}>🎧</span>
         <div className={styles.openInfo}>
           <div className={styles.openName}>{h.customerName}</div>
-          <div className={styles.openMeta}>Escalated {fmtDate(h.createdAt)}</div>
+          <div className={styles.openMeta}>{t('support.escalatedAt', { date: fmtDate(h.createdAt) })}</div>
         </div>
-        <span className="badge badge-red">Open</span>
+        <span className="badge badge-red">{t('support.openBadge')}</span>
       </div>
 
       {h.reason && (
-        <div className={styles.openReason}><strong>Reason:</strong> {h.reason}</div>
+        <div className={styles.openReason}><strong>{t('support.reasonInline')}</strong> {h.reason}</div>
       )}
 
       {h.context && (
         <div className={styles.openContext}>
-          <div className={styles.contextLabel}>Context for staff</div>
+          <div className={styles.contextLabel}>{t('support.contextForStaff')}</div>
           <div className={styles.contextText}>{h.context}</div>
         </div>
       )}
 
       <div className={styles.openActions}>
         {supportEmail && (
-          <a href={`mailto:${supportEmail}?subject=Support case: ${h.customerName}`}
+          <a href={`mailto:${supportEmail}?subject=${encodeURIComponent(t('support.emailSubject', { name: h.customerName }))}`}
             className="btn btn-ghost btn-sm">
-            📧 Email support
+            {t('support.emailSupport')}
           </a>
         )}
         <button className="btn btn-primary btn-sm" onClick={() => onResolve(h.id)}>
-          ✓ Mark resolved
+          {t('support.markResolved')}
         </button>
       </div>
 
       <p className={styles.pauseNote}>
-        ⏸ Sales prompts are paused for this customer until this case is resolved.
+        {t('support.pauseNote')}
       </p>
     </div>
   );

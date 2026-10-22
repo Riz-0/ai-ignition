@@ -80,24 +80,24 @@ export default function SignupPage() {
           <label className={styles.label}>
             {t('login.username')}
             <input className={styles.input} type="text" autoComplete="username"
-              placeholder="Choose a username" value={username}
+              placeholder={t('authExtra.chooseUsername')} value={username}
               onChange={e => { setUsername(e.target.value); setError(''); }} required />
           </label>
           <label className={styles.label}>
             {t('signup.email')}
             <input className={styles.input} type="email" autoComplete="email"
-              placeholder="you@example.com" value={email}
+              placeholder={t('authExtra.emailPh')} value={email}
               onChange={e => setEmail(e.target.value)} />
           </label>
           <label className={styles.label}>
             {t('login.password')}
             <div className={styles.passwordWrap}>
               <input className={styles.input} type={showPass ? 'text' : 'password'}
-                autoComplete="new-password" placeholder="At least 6 characters" value={password}
+                autoComplete="new-password" placeholder={t('authExtra.minChars')} value={password}
                 onChange={e => { setPassword(e.target.value); setError(''); }} required />
               <button type="button" className={styles.togglePass}
                 onClick={() => setShowPass(v => !v)}
-                aria-label={showPass ? 'Hide password' : 'Show password'}>
+                aria-label={showPass ? t('authExtra.hidePassword') : t('authExtra.showPassword')}>
                 {showPass ? '🙈' : '👁️'}
               </button>
             </div>
@@ -105,7 +105,7 @@ export default function SignupPage() {
           <label className={styles.label}>
             {t('signup.confirm')}
             <input className={styles.input} type={showPass ? 'text' : 'password'}
-              autoComplete="new-password" placeholder="Repeat password" value={confirm}
+              autoComplete="new-password" placeholder={t('authExtra.repeatPassword')} value={confirm}
               onChange={e => { setConfirm(e.target.value); setError(''); }} required />
           </label>
 

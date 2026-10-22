@@ -28,7 +28,7 @@ export default function BusinessLayout() {
     <div className={styles.shell}>
       <aside className={`${styles.sidebar} ${open ? styles.open : ''}`}>
         <div className={styles.logo}>
-          <span>🛒</span><span>2am Shoppers</span>
+          <span>🛒</span><span>{t('layout.brand')}</span>
         </div>
         <div className={styles.modeChip} style={{ background: 'rgba(245,158,11,.12)', color: 'var(--amber-light)', borderColor: 'rgba(245,158,11,.25)' }}>
           🏪 {t('mode.business')}
@@ -53,12 +53,12 @@ export default function BusinessLayout() {
               {merchantProfile?.name?.[0]?.toUpperCase() ?? 'M'}
             </div>
             <div>
-              <div className={styles.userName}>{merchantProfile?.name ?? 'Merchant'}</div>
+              <div className={styles.userName}>{merchantProfile?.name ?? t('layout.merchantFallback')}</div>
               <div className={styles.userSub}>{t('mode.business')}</div>
             </div>
           </div>
           {isAdmin() && (
-            <button className={styles.switchBtn} title="Switch view"
+            <button className={styles.switchBtn} title={t('layout.switchView')}
               onClick={() => { switchMode(); navigate('/'); }}
             >⇄</button>
           )}
@@ -75,7 +75,7 @@ export default function BusinessLayout() {
             <UIPrefsCluster />
             {openHandovers > 0 && (
               <NavLink to="/business/support" className={styles.alertBadge} style={{ borderColor: 'rgba(220,38,38,.35)', color: 'var(--red-light)' }}>
-                🎧 {openHandovers} handover{openHandovers !== 1 ? 's' : ''} open
+                {t(openHandovers !== 1 ? 'layout.handoversOpen' : 'layout.handoverOpen', { n: openHandovers })}
               </NavLink>
             )}
           </div>

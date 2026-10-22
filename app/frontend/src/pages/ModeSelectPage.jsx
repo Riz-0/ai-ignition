@@ -88,17 +88,16 @@ export default function ModeSelectPage() {
       <div className={styles.inner}>
         <div className={styles.logo}>⚡</div>
         <h1 className={styles.title}>
-          Admin <span className={styles.gradientText}>console</span>
+          {t('modeSelect.consolePre')}<span className={styles.gradientText}>{t('modeSelect.console')}</span>
         </h1>
         <p className={styles.sub}>
-          Pick an account to jump straight into its dashboard. All demo accounts
-          are pre-filled, so onboarding is skipped.
+          {t('modeSelect.sub')}
         </p>
 
         <div className={styles.adminBanner}>
           <span>⚡</span>
           <span>
-            You're signed in as admin. Choose any account below to impersonate it.
+            {t('modeSelect.banner')}
             <button className={styles.resetLink} onClick={() => reset()}>{t('common.reset')}</button>
           </span>
         </div>
@@ -122,7 +121,7 @@ export default function ModeSelectPage() {
         {/* Download / install entry point */}
         <a className={styles.downloadEntry} href="#/download">📱 {t('download.title')} →</a>
 
-        <p className={styles.hackathon}>Eslitec Hackathon · Problem Statement 1</p>
+        <p className={styles.hackathon}>{t('modeSelect.hackathon')}</p>
       </div>
     </div>
   );

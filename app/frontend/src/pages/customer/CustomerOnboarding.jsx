@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAppStore from '../../store/appStore.js';
+import { useT } from '../../i18n/I18nProvider.jsx';
 import PrivacyBadge from '../../components/PrivacyBadge.jsx';
 import styles from './CustomerOnboarding.module.css';
 
@@ -38,6 +39,11 @@ export default function CustomerOnboarding() {
   const [gamificationEnabled, setGamificationEnabled] = useState(true);
 
   const { setShopperProfile, addSavingsGoal, appMode } = useAppStore();
+  const t = useT();
+  const intLabel = (i) => {
+    const v = t('custOnboard.int_' + i);
+    return v === 'custOnboard.int_' + i ? i : v;
+  };
   const navigate = useNavigate();
 
   // Determine type from appMode if not yet set
@@ -83,8 +89,8 @@ export default function CustomerOnboarding() {
   };
 
   const titles = {
-    student:  ['What best describes you?', 'Tell us about yourself', 'Your weekly budget', 'Set a savings goal', 'Notifications', 'Ready to go!'],
-    working:  ['What best describes you?', 'Tell us about yourself', 'Your monthly plan', 'Set a savings goal', 'Notifications', 'Ready to go!'],
+    student:  [t('custOnboard.titleType'), t('custOnboard.titleAbout'), t('custOnboard.titleWeeklyBudget'), t('custOnboard.titleSavings'), t('custOnboard.titleNotifications'), t('custOnboard.titleReady')],
+    working:  [t('custOnboard.titleType'), t('custOnboard.titleAbout'), t('custOnboard.titleMonthlyPlan'), t('custOnboard.titleSavings'), t('custOnboard.titleNotifications'), t('custOnboard.titleReady')],
   };
 
   const stepTitles = titles[resolvedType] || titles.student;
@@ -94,12 +100,12 @@ export default function CustomerOnboarding() {
     <div className={styles.page}>
       <div className={styles.card}>
         <div className={styles.header}>
-          <div className={styles.logo}>🛒 2am Shoppers</div>
+          <div className={styles.logo}>🛒 {t('custOnboard.headerTitle')}</div>
           <div className={styles.progress}>
             {STEPS.map((_, i) => <div key={i} className={`${styles.dot} ${i <= step ? styles.dotOn : ''}`} />)}
           </div>
           <h1 className={styles.title}>{stepTitles[step]}</h1>
-          <p className={styles.stepLabel}>Step {step + 1} of {totalSteps}</p>
+          <p className={styles.stepLabel}>{t('custOnboard.stepLabel', { n: step + 1, total: totalSteps })}</p>
         </div>
 
         <div className={styles.body}>
@@ -110,14 +116,14 @@ export default function CustomerOnboarding() {
               <button className={`${styles.typeCard} ${resolvedType === 'student' ? styles.typeSelected : ''}`}
                 onClick={() => pickType('student')}>
                 <span className={styles.typeEmoji}>🎓</span>
-                <div className={styles.typeLabel}>Student</div>
-                <div className={styles.typeDesc}>Weekly allowance, goal pockets and budget-filtered picks.</div>
+                <div className={styles.typeLabel}>{t('custOnboard.typeStudent')}</div>
+                <div className={styles.typeDesc}>{t('custOnboard.typeStudentDesc')}</div>
               </button>
               <button className={`${styles.typeCard} ${resolvedType === 'working' ? styles.typeSelected : ''}`}
                 onClick={() => pickType('working')}>
                 <span className={styles.typeEmoji}>💼</span>
-                <div className={styles.typeLabel}>Working Adult</div>
-                <div className={styles.typeDesc}>Monthly income plan, multiple savings goals and smart reminders.</div>
+                <div className={styles.typeLabel}>{t('custOnboard.typeWorking')}</div>
+                <div className={styles.typeDesc}>{t('custOnboard.typeWorkingDesc')}</div>
               </button>
             </div>
           )}
@@ -125,18 +131,18 @@ export default function CustomerOnboarding() {
           {/* Step 1 — name + interests */}
           {step === 1 && (
             <div className={styles.stack}>
-              <div className={styles.typeBadge}>{isStudent ? '🎓 Student' : '💼 Working Adult'}</div>
+              <div className={styles.typeBadge}>{isStudent ? t('custOnboard.badgeStudent') : t('custOnboard.badgeWorking')}</div>
               <label className={styles.label}>
-                Your name
-                <input className={styles.input} placeholder="e.g. Alicia" value={name} onChange={e => setName(e.target.value)} />
+                {t('custOnboard.yourName')}
+                <input className={styles.input} placeholder={t('custOnboard.yourNamePh')} value={name} onChange={e => setName(e.target.value)} />
               </label>
               <div className={styles.label}>
-                What are you into? <span className={styles.hint}>(pick at least one)</span>
+                {t('custOnboard.intoWhat')} <span className={styles.hint}>{t('custOnboard.pickOne')}</span>
                 <div className={styles.interestGrid}>
                   {INTERESTS.map(i => (
                     <button key={i} type="button"
                       className={`${styles.interestChip} ${interests.includes(i) ? styles.selected : ''}`}
-                      onClick={() => toggleInterest(i)}>{i}</button>
+                      onClick={() => toggleInterest(i)}>{intLabel(i)}</button>
                   ))}
                 </div>
               </div>
@@ -149,80 +155,80 @@ export default function CustomerOnboarding() {
               <div><PrivacyBadge /></div>
               {isStudent ? (
                 <>
-                  <p className={styles.bodyText}>Tell us about your weekly allowance and what you need to keep aside. This stays on your device — we won't infer salary or income from your age.</p>
+                  <p className={styles.bodyText}>{t('custOnboard.studentBudgetNote')}</p>
                   <label className={styles.label}>
-                    Weekly allowance ($)
+                    {t('custOnboard.weeklyAllowance')}
                     <div className={styles.inputPrefix}><span>$</span>
-                      <input className={styles.input} type="number" min="0" placeholder="e.g. 80" value={allowance} onChange={e => setAllowance(e.target.value)} />
+                      <input className={styles.input} type="number" min="0" placeholder={t('custOnboard.weeklyAllowancePh')} value={allowance} onChange={e => setAllowance(e.target.value)} />
                     </div>
                   </label>
                   <label className={styles.label}>
-                    Essential reserves per week (food, transport, school) ($)
+                    {t('custOnboard.essentialWeek')}
                     <div className={styles.inputPrefix}><span>$</span>
-                      <input className={styles.input} type="number" min="0" placeholder="e.g. 45" value={essentialStudent} onChange={e => setEssentialStudent(e.target.value)} />
+                      <input className={styles.input} type="number" min="0" placeholder={t('custOnboard.essentialWeekPh')} value={essentialStudent} onChange={e => setEssentialStudent(e.target.value)} />
                     </div>
                   </label>
                   <label className={styles.label}>
-                    General shopping budget cap ($, optional)
+                    {t('custOnboard.shopCapStudent')}
                     <div className={styles.inputPrefix}><span>$</span>
-                      <input className={styles.input} type="number" min="0" placeholder="e.g. 30" value={budget} onChange={e => setBudget(e.target.value)} />
+                      <input className={styles.input} type="number" min="0" placeholder={t('custOnboard.shopCapStudentPh')} value={budget} onChange={e => setBudget(e.target.value)} />
                     </div>
                   </label>
                 </>
               ) : (
                 <>
-                  <p className={styles.bodyText}>Tell us about your monthly income plan. This is a planning ledger — money stays in your own accounts.</p>
+                  <p className={styles.bodyText}>{t('custOnboard.workingBudgetNote')}</p>
                   <label className={styles.label}>
-                    Recorded monthly income ($)
+                    {t('custOnboard.monthlyIncome')}
                     <div className={styles.inputPrefix}><span>$</span>
-                      <input className={styles.input} type="number" min="0" placeholder="e.g. 2400" value={income} onChange={e => setIncome(e.target.value)} />
+                      <input className={styles.input} type="number" min="0" placeholder={t('custOnboard.monthlyIncomePh')} value={income} onChange={e => setIncome(e.target.value)} />
                     </div>
                   </label>
                   <label className={styles.label}>
-                    Essential reserves (bills, transport, subscriptions) ($)
+                    {t('custOnboard.essentialMonth')}
                     <div className={styles.inputPrefix}><span>$</span>
-                      <input className={styles.input} type="number" min="0" placeholder="e.g. 1500" value={essentialWorking} onChange={e => setEssentialWorking(e.target.value)} />
+                      <input className={styles.input} type="number" min="0" placeholder={t('custOnboard.essentialMonthPh')} value={essentialWorking} onChange={e => setEssentialWorking(e.target.value)} />
                     </div>
                   </label>
                   <label className={styles.label}>
-                    Buffer ($)
+                    {t('custOnboard.buffer')}
                     <div className={styles.inputPrefix}><span>$</span>
-                      <input className={styles.input} type="number" min="0" placeholder="e.g. 200" value={buffer} onChange={e => setBuffer(e.target.value)} />
+                      <input className={styles.input} type="number" min="0" placeholder={t('custOnboard.bufferPh')} value={buffer} onChange={e => setBuffer(e.target.value)} />
                     </div>
                   </label>
                   <label className={styles.label}>
-                    General shopping budget cap ($, optional)
+                    {t('custOnboard.shopCapWorking')}
                     <div className={styles.inputPrefix}><span>$</span>
-                      <input className={styles.input} type="number" min="0" placeholder="e.g. 300" value={budget} onChange={e => setBudget(e.target.value)} />
+                      <input className={styles.input} type="number" min="0" placeholder={t('custOnboard.shopCapWorkingPh')} value={budget} onChange={e => setBudget(e.target.value)} />
                     </div>
                   </label>
                 </>
               )}
-              <p className={styles.subtle}>All values are user-entered planning estimates, not bank-verified balances.</p>
+              <p className={styles.subtle}>{t('custOnboard.budgetSubtle')}</p>
             </div>
           )}
 
           {/* Step 3 — savings goal */}
           {step === 3 && (
             <div className={styles.stack}>
-              <p className={styles.bodyText}>Set up a savings allocation and create your first goal pocket. You can add more goals any time.</p>
+              <p className={styles.bodyText}>{t('custOnboard.savingsNote')}</p>
               <label className={styles.label}>
-                {isStudent ? 'Weekly savings allocation ($)' : 'Monthly savings allocation ($)'}
+                {isStudent ? t('custOnboard.weeklySavings') : t('custOnboard.monthlySavings')}
                 <div className={styles.inputPrefix}><span>$</span>
-                  <input className={styles.input} type="number" min="0" placeholder="e.g. 15" value={savingsAlloc} onChange={e => setSavingsAlloc(e.target.value)} />
+                  <input className={styles.input} type="number" min="0" placeholder={t('custOnboard.savingsPh')} value={savingsAlloc} onChange={e => setSavingsAlloc(e.target.value)} />
                 </div>
               </label>
               <label className={styles.label}>
-                First goal name (optional)
-                <input className={styles.input} placeholder="e.g. New shoes" value={firstGoalName} onChange={e => setFirstGoalName(e.target.value)} />
+                {t('custOnboard.firstGoalName')}
+                <input className={styles.input} placeholder={t('custOnboard.firstGoalNamePh')} value={firstGoalName} onChange={e => setFirstGoalName(e.target.value)} />
               </label>
               <label className={styles.label}>
-                Target amount ($)
+                {t('custOnboard.targetAmount')}
                 <div className={styles.inputPrefix}><span>$</span>
-                  <input className={styles.input} type="number" min="0" placeholder="e.g. 60" value={firstGoalTarget} onChange={e => setFirstGoalTarget(e.target.value)} />
+                  <input className={styles.input} type="number" min="0" placeholder={t('custOnboard.targetAmountPh')} value={firstGoalTarget} onChange={e => setFirstGoalTarget(e.target.value)} />
                 </div>
               </label>
-              <p className={styles.subtle}>Recording a contribution does not transfer funds. Money stays in your existing account.</p>
+              <p className={styles.subtle}>{t('custOnboard.savingsSubtle')}</p>
             </div>
           )}
 
@@ -230,29 +236,29 @@ export default function CustomerOnboarding() {
           {step === 4 && (
             <div className={styles.stack}>
               <label className={styles.label}>
-                Notification frequency
+                {t('custOnboard.notifFreq')}
                 <select className={styles.input} value={notifFreq} onChange={e => setNotifFreq(e.target.value)}>
-                  <option value="frequent">Frequent — keep me updated</option>
-                  <option value="occasional">Occasional — only when relevant</option>
-                  <option value="minimal">Minimal — important alerts only</option>
+                  <option value="frequent">{t('custOnboard.freqFrequent')}</option>
+                  <option value="occasional">{t('custOnboard.freqOccasional')}</option>
+                  <option value="minimal">{t('custOnboard.freqMinimal')}</option>
                 </select>
               </label>
               <label className={styles.label}>
-                Quiet hours — start
+                {t('custOnboard.quietStart')}
                 <input className={styles.input} type="time" value={quietStart} onChange={e => setQuietStart(e.target.value)} />
               </label>
               <label className={styles.label}>
-                Quiet hours — end
+                {t('custOnboard.quietEnd')}
                 <input className={styles.input} type="time" value={quietEnd} onChange={e => setQuietEnd(e.target.value)} />
               </label>
               <label className={styles.label}>
-                {isStudent ? 'Allowance day reminder (day of month, optional)' : 'Payday reminder (day of month, optional)'}
-                <input className={styles.input} type="number" min="1" max="31" placeholder="e.g. 25" value={paydayDate} onChange={e => setPaydayDate(e.target.value)} />
+                {isStudent ? t('custOnboard.allowanceReminder') : t('custOnboard.paydayReminder')}
+                <input className={styles.input} type="number" min="1" max="31" placeholder={t('custOnboard.reminderPh')} value={paydayDate} onChange={e => setPaydayDate(e.target.value)} />
               </label>
               {isStudent && (
                 <label className={styles.checkLabel}>
                   <input type="checkbox" checked={gamificationEnabled} onChange={e => setGamificationEnabled(e.target.checked)} />
-                  Enable optional badges and missions (can be turned off any time)
+                  {t('custOnboard.gamification')}
                 </label>
               )}
             </div>
@@ -261,34 +267,34 @@ export default function CustomerOnboarding() {
           {/* Step 5 — review */}
           {step === 5 && (
             <div className={styles.review}>
-              <div className={styles.reviewRow}><span>Mode</span><strong>{isStudent ? '🎓 Student' : '💼 Working Adult'}</strong></div>
-              <div className={styles.reviewRow}><span>Name</span><strong>{name}</strong></div>
-              <div className={styles.reviewRow}><span>Interests</span><strong>{interests.join(', ') || '—'}</strong></div>
+              <div className={styles.reviewRow}><span>{t('custOnboard.rMode')}</span><strong>{isStudent ? t('custOnboard.badgeStudent') : t('custOnboard.badgeWorking')}</strong></div>
+              <div className={styles.reviewRow}><span>{t('custOnboard.rName')}</span><strong>{name}</strong></div>
+              <div className={styles.reviewRow}><span>{t('custOnboard.rInterests')}</span><strong>{interests.map(intLabel).join(', ') || '—'}</strong></div>
               {isStudent
-                ? <><div className={styles.reviewRow}><span>Weekly allowance</span><strong>{allowance ? `$${allowance}` : '—'}</strong></div>
-                    <div className={styles.reviewRow}><span>Essentials reserve</span><strong>{essentialStudent ? `$${essentialStudent}` : '—'}</strong></div></>
-                : <><div className={styles.reviewRow}><span>Monthly income</span><strong>{income ? `$${income}` : '—'}</strong></div>
-                    <div className={styles.reviewRow}><span>Essentials reserve</span><strong>{essentialWorking ? `$${essentialWorking}` : '—'}</strong></div>
-                    <div className={styles.reviewRow}><span>Buffer</span><strong>{buffer ? `$${buffer}` : '—'}</strong></div></>
+                ? <><div className={styles.reviewRow}><span>{t('custOnboard.rWeeklyAllowance')}</span><strong>{allowance ? `$${allowance}` : '—'}</strong></div>
+                    <div className={styles.reviewRow}><span>{t('custOnboard.rEssentials')}</span><strong>{essentialStudent ? `$${essentialStudent}` : '—'}</strong></div></>
+                : <><div className={styles.reviewRow}><span>{t('custOnboard.rMonthlyIncome')}</span><strong>{income ? `$${income}` : '—'}</strong></div>
+                    <div className={styles.reviewRow}><span>{t('custOnboard.rEssentials')}</span><strong>{essentialWorking ? `$${essentialWorking}` : '—'}</strong></div>
+                    <div className={styles.reviewRow}><span>{t('custOnboard.rBuffer')}</span><strong>{buffer ? `$${buffer}` : '—'}</strong></div></>
               }
-              <div className={styles.reviewRow}><span>Savings allocation</span><strong>{savingsAlloc ? `$${savingsAlloc}` : '—'}</strong></div>
-              {firstGoalName && <div className={styles.reviewRow}><span>First goal</span><strong>{firstGoalName} — ${firstGoalTarget}</strong></div>}
-              <div className={styles.reviewRow}><span>Notifications</span><strong>{notifFreq}</strong></div>
-              <div className={styles.reviewRow}><span>Quiet hours</span><strong>{quietStart} – {quietEnd}</strong></div>
-              <p className={styles.subtle} style={{ marginTop: 12 }}>You can change all of these in Settings at any time.</p>
+              <div className={styles.reviewRow}><span>{t('custOnboard.rSavingsAlloc')}</span><strong>{savingsAlloc ? `$${savingsAlloc}` : '—'}</strong></div>
+              {firstGoalName && <div className={styles.reviewRow}><span>{t('custOnboard.rFirstGoal')}</span><strong>{firstGoalName} — ${firstGoalTarget}</strong></div>}
+              <div className={styles.reviewRow}><span>{t('custOnboard.rNotifications')}</span><strong>{notifFreq}</strong></div>
+              <div className={styles.reviewRow}><span>{t('custOnboard.rQuietHours')}</span><strong>{quietStart} – {quietEnd}</strong></div>
+              <p className={styles.subtle} style={{ marginTop: 12 }}>{t('custOnboard.reviewSubtle')}</p>
             </div>
           )}
         </div>
 
         <div className={styles.footer}>
           {step > 0
-            ? <button className="btn btn-ghost" onClick={() => setStep(s => s - 1)}>← Back</button>
+            ? <button className="btn btn-ghost" onClick={() => setStep(s => s - 1)}>{t('custOnboard.back')}</button>
             : <div />}
           {step === 0
             ? <div />
             : step < totalSteps - 1
-              ? <button className="btn btn-primary" disabled={!canNext[step]} onClick={() => setStep(s => s + 1)}>Next →</button>
-              : <button className="btn btn-primary" onClick={finish}>🛒 Start shopping</button>
+              ? <button className="btn btn-primary" disabled={!canNext[step]} onClick={() => setStep(s => s + 1)}>{t('custOnboard.next')}</button>
+              : <button className="btn btn-primary" onClick={finish}>{t('custOnboard.startShopping')}</button>
           }
         </div>
       </div>

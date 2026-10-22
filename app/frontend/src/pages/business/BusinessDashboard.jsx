@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import useAppStore from '../../store/appStore.js';
+import { useT } from '../../i18n/I18nProvider.jsx';
 import styles from './BusinessDashboard.module.css';
 
 const SEG_BADGE = {
@@ -14,6 +15,14 @@ const SEG_BADGE = {
 
 export default function BusinessDashboard() {
   const { merchantProfile, customers, journeys, catalogue, supportHandovers } = useAppStore();
+  const t = useT();
+  const lookup = (key, fallback) => {
+    const v = t(key);
+    return v === key ? fallback : v;
+  };
+  const segLabel = (s) => lookup('customers.seg_' + s, s.replace(/_/g, ' '));
+  const outLabel = (o) => lookup('journeys.out_' + o, o.replace(/_/g, ' '));
+  const goalLabel = (g) => lookup('bizDash.goal_' + g, g.replace(/_/g, ' '));
 
   const activeJourneys = journeys.filter(j => j.status === 'active').length;
   const closedJourneys = journeys.filter(j => j.status === 'closed').length;
@@ -29,17 +38,17 @@ export default function BusinessDashboard() {
 
   // Suggested action
   const suggestedAction = openHandovers > 0
-    ? { icon: '🎧', text: `${openHandovers} customer${openHandovers !== 1 ? 's' : ''} need support. Sales prompts are paused for them.`, link: '/business/support', cta: 'View support →' }
+    ? { icon: '🎧', text: t(openHandovers !== 1 ? 'bizDash.actionSupport' : 'bizDash.actionSupportOne', { n: openHandovers }), link: '/business/support', cta: t('bizDash.viewSupport') }
     : activeJourneys === 0 && customers.length > 0
-    ? { icon: '🗺️', text: 'No active journeys. Start one for an eligible customer.', link: '/business/journeys', cta: 'Start a journey →' }
-    : { icon: '✅', text: 'Everything is up to date.', link: null, cta: null };
+    ? { icon: '🗺️', text: t('bizDash.actionNoJourneys'), link: '/business/journeys', cta: t('bizDash.startJourney') }
+    : { icon: '✅', text: t('bizDash.actionAllClear'), link: null, cta: null };
 
   return (
     <div>
-      <h1 className="page-title">{merchantProfile?.name ?? 'Business'} — Overview</h1>
+      <h1 className="page-title">{t('bizDash.overview', { name: merchantProfile?.name ?? t('bizDash.businessName') })}</h1>
       <p className="page-sub">
-        Goal: <strong>{merchantProfile?.goal?.replace(/_/g, ' ') ?? 'Not set'}</strong>
-        &nbsp;·&nbsp; Contact limit: <strong>{merchantProfile?.contactLimitPerDay ?? 2}/day</strong>
+        {t('bizDash.goalLabel')} <strong>{merchantProfile?.goal ? goalLabel(merchantProfile.goal) : t('bizDash.notSet')}</strong>
+        &nbsp;·&nbsp; {t('bizDash.contactLimit')} <strong>{merchantProfile?.contactLimitPerDay ?? 2}{t('bizDash.perDay')}</strong>
       </p>
 
       {/* Suggested action banner */}
@@ -55,79 +64,79 @@ export default function BusinessDashboard() {
       <div className={styles.kpiGrid}>
         <div className="card">
           <div className={styles.kpiVal}>{customers.length}</div>
-          <div className={styles.kpiLabel}>Customers</div>
-          <Link to="/business/customers" className={styles.kpiLink}>View →</Link>
+          <div className={styles.kpiLabel}>{t('bizDash.kpiCustomers')}</div>
+          <Link to="/business/customers" className={styles.kpiLink}>{t('bizDash.kpiView')}</Link>
         </div>
         <div className="card">
           <div className={styles.kpiVal}>{activeJourneys}</div>
-          <div className={styles.kpiLabel}>Active journeys</div>
-          <Link to="/business/journeys" className={styles.kpiLink}>View →</Link>
+          <div className={styles.kpiLabel}>{t('bizDash.kpiActiveJourneys')}</div>
+          <Link to="/business/journeys" className={styles.kpiLink}>{t('bizDash.kpiView')}</Link>
         </div>
         <div className={`card ${purchases > 0 ? styles.kpiHighlight : ''}`}>
           <div className={styles.kpiVal}>{purchases}</div>
-          <div className={styles.kpiLabel}>Confirmed repeat orders</div>
+          <div className={styles.kpiLabel}>{t('bizDash.kpiRepeatOrders')}</div>
         </div>
         <div className="card">
           <div className={styles.kpiVal}>{convRate}%</div>
-          <div className={styles.kpiLabel}>Conv-to-purchase rate</div>
-          <p className={styles.kpiNote}>estimated</p>
+          <div className={styles.kpiLabel}>{t('bizDash.kpiConvRate')}</div>
+          <p className={styles.kpiNote}>{t('bizDash.kpiEstimated')}</p>
         </div>
         <div className={`card ${openHandovers > 0 ? styles.kpiUrgent : ''}`}>
           <div className={styles.kpiVal}>{openHandovers}</div>
-          <div className={styles.kpiLabel}>Open support cases</div>
-          <Link to="/business/support" className={styles.kpiLink}>Review →</Link>
+          <div className={styles.kpiLabel}>{t('bizDash.kpiOpenCases')}</div>
+          <Link to="/business/support" className={styles.kpiLink}>{t('bizDash.kpiReview')}</Link>
         </div>
         <div className="card">
           <div className={styles.kpiVal}>{optOuts}</div>
-          <div className={styles.kpiLabel}>Opted out</div>
-          <p className={styles.kpiNote}>excluded from outreach</p>
+          <div className={styles.kpiLabel}>{t('bizDash.kpiOptedOut')}</div>
+          <p className={styles.kpiNote}>{t('bizDash.kpiExcluded')}</p>
         </div>
       </div>
 
       {/* Privacy reminder */}
       <div className={styles.privacyNote}>
-        🔒 Shoppers' private budgets, allowances and savings goals are never visible here. The app applies budget limits on the shopper side.
+        {t('bizDash.privacyNote')}
       </div>
 
       {/* Segment breakdown */}
-      <h2 className="section-title" style={{ marginTop: 28 }}>Customer segments</h2>
+      <h2 className="section-title" style={{ marginTop: 28 }}>{t('bizDash.segmentsHeading')}</h2>
       {customers.length === 0 ? (
-        <div className={`card ${styles.empty}`}>No customers yet. Import records during onboarding or add them on the <Link to="/business/customers">Customers</Link> page.</div>
+        <div className={`card ${styles.empty}`}>{t('bizDash.segEmptyPre')}<Link to="/business/customers">{t('bizDash.segEmptyLink')}</Link>{t('bizDash.segEmptyPost')}</div>
       ) : (
         <div className={styles.segGrid}>
           {Object.entries(segCounts).map(([seg, count]) => (
             <div key={seg} className={`card ${styles.segCard}`}>
               <div className={styles.segCount}>{count}</div>
-              <span className={`badge ${SEG_BADGE[seg] ?? 'badge-coral'}`}>{seg.replace(/_/g, ' ')}</span>
+              <span className={`badge ${SEG_BADGE[seg] ?? 'badge-coral'}`}>{segLabel(seg)}</span>
             </div>
           ))}
         </div>
       )}
 
       {/* Recent journeys */}
-      <h2 className="section-title" style={{ marginTop: 28 }}>Recent journeys</h2>
+      <h2 className="section-title" style={{ marginTop: 28 }}>{t('bizDash.recentJourneys')}</h2>
       {journeys.length === 0 ? (
-        <div className={`card ${styles.empty}`}>No journeys started yet. Go to <Link to="/business/journeys">Journeys</Link> to begin.</div>
+        <div className={`card ${styles.empty}`}>{t('bizDash.journeysEmptyPre')}<Link to="/business/journeys">{t('bizDash.journeysEmptyLink')}</Link>{t('bizDash.journeysEmptyPost')}</div>
       ) : (
         <div className={styles.journeyList}>
           {journeys.slice(0, 5).map(j => (
             <div key={j.id} className={`card ${styles.journeyRow}`}>
               <div>
-                <div className={styles.journeyTitle}>{j.customerName ?? 'Customer'} — {j.productName ?? 'Product'}</div>
+                <div className={styles.journeyTitle}>{j.customerName ?? t('bizDash.customerFallback')} — {j.productName ?? t('bizDash.productFallback')}</div>
                 {j.reason && <div className={styles.journeyReason}>{j.reason}</div>}
-                <div className={styles.journeyMeta}>{j.events?.length ?? 0} events · {fmtDate(j.createdAt)}</div>
+                <div className={styles.journeyMeta}>{t('journeys.eventsLabel', { n: j.events?.length ?? 0 })} · {fmtDate(j.createdAt)}</div>
               </div>
               <span className={`badge ${j.status === 'active' ? 'badge-green' : j.outcome === 'purchased' ? 'badge-teal' : 'badge-amber'}`}>
-                {j.status === 'closed' ? (j.outcome?.replace(/_/g, ' ') ?? 'closed') : j.status}
+                {j.status === 'closed' ? (j.outcome ? outLabel(j.outcome) : t('journeys.status_closed')) : t('journeys.active')}
               </span>
             </div>
           ))}
-          {journeys.length > 5 && <Link to="/business/journeys" className={styles.viewAll}>View all {journeys.length} journeys →</Link>}
+          {journeys.length > 5 && <Link to="/business/journeys" className={styles.viewAll}>{t('bizDash.viewAll', { n: journeys.length })}</Link>}
         </div>
       )}
 
       <div className={styles.pilotNote}>
-        <strong>Hackathon note:</strong> Sample data demonstrates the reporting process. These figures do not prove a real increase in retention or customer lifetime value. For a real pilot, compare eligible customers with a randomly assigned holdout group.
+        <strong>{t('bizDash.pilotNoteStrong')}</strong>{t('bizDash.pilotNote')}
       </div>
     </div>
   );
