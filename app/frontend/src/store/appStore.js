@@ -118,6 +118,18 @@ const useAppStore = create(
       // (null), the stale-profile bug. Pages read `shopperProfile` directly.
       setCustomerProfile: (p) => get().setShopperProfile(p),
 
+      // ── Coach-mark tour ──────────────────────────────────────
+      // toursSeen is keyed by account id so each account gets the tour
+      // once. tourActive is session-only (excluded from persistence).
+      toursSeen: {},
+      tourActive: false,
+      startTour: () => set({ tourActive: true }),
+      endTour: () =>
+        set((s) => ({
+          tourActive: false,
+          toursSeen: { ...s.toursSeen, [s.activeAccountId ?? 'local']: true },
+        })),
+
       // ── Feedback signals (explicit + implicit) ───────────────
       // Persisted so taps actually change future recommendations.
       // shape: { priceThreshold, dislikedCategories[], likedCategories[],
@@ -414,9 +426,13 @@ const useAppStore = create(
       reset: () => set((s) => {
         const next = { ...s.profilesByAccount };
         if (s.activeAccountId) delete next[s.activeAccountId];
+        const tours = { ...s.toursSeen };
+        delete tours[s.activeAccountId ?? 'local'];
         return {
           appMode: null,
           profilesByAccount: next,
+          toursSeen: tours,
+          tourActive: false,
           shopperProfile: null,
           merchantProfile: null,
           feedback: { priceThreshold: null, dislikedCategories: [], likedCategories: [], skippedFeedIds: [], lastResponse: null },
@@ -433,7 +449,11 @@ const useAppStore = create(
         };
       }),
     }),
-    { name: '2am-shoppers-store' }
+    {
+      name: '2am-shoppers-store',
+      // eslint-disable-next-line no-unused-vars
+      partialize: ({ tourActive, ...rest }) => rest,
+    }
   )
 );
 

@@ -1,0 +1,85 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.catcher {
+  position: absolute;
+  inset: 0;
+}
+.dim { background: rgba(0,0,0,.65); }
+
+/* The huge shadow dims everything except the spotlight hole */
+.spotlight {
+  position: absolute;
+  border-radius: var(--radius);
+  box-shadow: 0 0 0 9999px rgba(0,0,0,.65);
+  outline: 2px solid var(--coral-light);
+  outline-offset: 2px;
+  pointer-events: none;
+  transition: top .25s ease, left .25s ease, width .25s ease, height .25s ease;
+}
+
+.tip {
+  position: absolute;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 16px 18px 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.45);
+  outline: none;
+  animation: tipIn .2s ease;
+}
+.centered {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes tipIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 99px;
+  background: var(--border-light);
+  transition: all .2s;
+}
+.dotOn { width: 16px; background: var(--coral); }
+.count {
+  margin-left: auto;
+  font-size: .72rem;
+  color: var(--text-dim);
+}
+
+.title { font-size: 1rem; margin-bottom: 6px; }
+.body  { font-size: .86rem; line-height: 1.5; }
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  gap: 8px;
+}
+.navBtns { display: flex; gap: 8px; margin-left: auto; }
+
+.skip {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: .8rem;
+  cursor: pointer;
+  font-family: var(--font);
+  padding: 4px 0;
+}
+.skip:hover { color: var(--text); }

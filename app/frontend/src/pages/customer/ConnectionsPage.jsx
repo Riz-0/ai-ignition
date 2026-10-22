@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import useAppStore from '../../store/appStore.js';
 import { useT } from '../../i18n/I18nProvider.jsx';
 import InAppShop from '../../components/InAppShop.jsx';
+import PrivacyBadge from '../../components/PrivacyBadge.jsx';
 import styles from './ConnectionsPage.module.css';
 
 const PLATFORMS = [
@@ -95,6 +96,7 @@ export default function ConnectionsPage() {
     <div>
       <h1 className="page-title">{t('connections.title')}</h1>
       <p className="page-sub">{t('connections.sub')}</p>
+      <div style={{ marginBottom: 18 }}><PrivacyBadge /></div>
 
       {/* Status legend */}
       <div className={styles.legend}>

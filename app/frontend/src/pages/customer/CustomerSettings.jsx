@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAppStore from '../../store/appStore.js';
 import { useT, useI18n } from '../../i18n/I18nProvider.jsx';
 import styles from './CustomerSettings.module.css';
@@ -8,7 +8,7 @@ const STUDENT_INTERESTS = ['Fashion', 'Coffee', 'Beauty', 'Stationery & Study', 
 const WORKING_INTERESTS = ['Fashion', 'Coffee', 'Beauty', 'Workday Essentials', 'Electronics', 'Food & Snacks', 'Home & Living', 'Gadgets'];
 
 export default function CustomerSettings() {
-  const { shopperProfile, setShopperProfile, reset, theme, setTheme } = useAppStore();
+  const { shopperProfile, setShopperProfile, reset, theme, setTheme, startTour } = useAppStore();
   const t = useT();
   const { lang, setLang, languages } = useI18n();
   const navigate = useNavigate();
@@ -80,6 +80,20 @@ export default function CustomerSettings() {
               onClick={() => setTheme('light')}>☀️ {t('settings.themeLight')}</button>
           </div>
         </label>
+      </section>
+
+      {/* Help & privacy — replay the coach-mark tour, read the data policy */}
+      <section className={styles.section}>
+        <h2 className={styles.sectionHead}>{t('settings.help')}</h2>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={startTour}>
+            🧭 {t('settings.replayTour')}
+          </button>
+          <Link to="/privacy" className="btn btn-ghost btn-sm">
+            🔒 {t('settings.privacyLink')}
+          </Link>
+        </div>
+        <p className={styles.subtle}>{t('settings.replayHint')}</p>
       </section>
 
       <form className={styles.form} onSubmit={save}>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAppStore from '../../store/appStore.js';
+import PrivacyBadge from '../../components/PrivacyBadge.jsx';
 import styles from './CustomerOnboarding.module.css';
 
 const STUDENT_INTERESTS  = ['Fashion', 'Coffee', 'Beauty', 'Stationery & Study', 'Electronics', 'Food & Snacks', 'Sports', 'Books'];
@@ -145,6 +146,7 @@ export default function CustomerOnboarding() {
           {/* Step 2 — budget / income */}
           {step === 2 && (
             <div className={styles.stack}>
+              <div><PrivacyBadge /></div>
               {isStudent ? (
                 <>
                   <p className={styles.bodyText}>Tell us about your weekly allowance and what you need to keep aside. This stays on your device — we won't infer salary or income from your age.</p>

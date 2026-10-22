@@ -5,6 +5,7 @@ import LoginPage            from './pages/LoginPage.jsx';
 import SignupPage           from './pages/SignupPage.jsx';
 import ModeSelectPage       from './pages/ModeSelectPage.jsx';
 import DownloadPage         from './pages/DownloadPage.jsx';
+import PrivacyPage          from './pages/PrivacyPage.jsx';
 
 // Customer (student + working adult)
 import CustomerOnboarding   from './pages/customer/CustomerOnboarding.jsx';
@@ -64,6 +65,7 @@ export default function App() {
       <Route path="/login"    element={<LoginPage />} />
       <Route path="/signup"   element={<SignupPage />} />
       <Route path="/download" element={<DownloadPage />} />
+      <Route path="/privacy"  element={<PrivacyPage />} />
 
       {/* ── Landing: admin → mode select, others → their view ── */}
       <Route path="/" element={<RequireAuth><LandingRouter /></RequireAuth>} />
