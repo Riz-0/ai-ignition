@@ -1,58 +1,133 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import useAppStore from '../../store/appStore.js';
-import { useT, useI18n } from '../../i18n/I18nProvider.jsx';
-import {
-  notificationPermission, requestNotificationPermission, showNotification,
-} from '../../lib/notifications.js';
-import styles from './CustomerSettings.module.css';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useAppStore from "../../store/appStore.js";
+import { useT, useI18n } from "../../i18n/I18nProvider.jsx";
+import { notificationPermission, requestNotificationPermission, showNotification } from "../../lib/notifications.js";
+import styles from "./CustomerSettings.module.css";
 
-const STUDENT_INTERESTS = ['Fashion', 'Coffee', 'Beauty', 'Stationery & Study', 'Electronics', 'Food & Snacks', 'Sports', 'Books'];
-const WORKING_INTERESTS = ['Fashion', 'Coffee', 'Beauty', 'Workday Essentials', 'Electronics', 'Food & Snacks', 'Home & Living', 'Gadgets'];
+const STUDENT_INTERESTS = [
+  "Fashion",
+  "Coffee",
+  "Beauty",
+  "Stationery & Study",
+  "Electronics",
+  "Food & Snacks",
+  "Sports",
+  "Books",
+];
+const WORKING_INTERESTS = [
+  "Fashion",
+  "Coffee",
+  "Beauty",
+  "Workday Essentials",
+  "Electronics",
+  "Food & Snacks",
+  "Home & Living",
+  "Gadgets",
+];
 
 export default function CustomerSettings() {
-  const { shopperProfile, setShopperProfile, reset, theme, setTheme, startTour,
-          suggestionsEnabled, setSuggestionsEnabled,
-          notificationsEnabled, setNotificationsEnabled } = useAppStore();
+  const {
+    shopperProfile,
+    setShopperProfile,
+    reset,
+    theme,
+    setTheme,
+    startTour,
+    suggestionsEnabled,
+    setSuggestionsEnabled,
+    notificationsEnabled,
+    setNotificationsEnabled,
+  } = useAppStore();
   const t = useT();
   const { lang, setLang, languages } = useI18n();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    name:        shopperProfile?.name        ?? '',
-    userType:    shopperProfile?.userType    ?? 'student',
-    interests:   shopperProfile?.interests   ?? [],
-    budget:      shopperProfile?.budget      ?? '',
-    quietStart:  shopperProfile?.quietStart  ?? '22:00',
-    quietEnd:    shopperProfile?.quietEnd    ?? '08:00',
-    paydayDate:  shopperProfile?.paydayDate  ?? '',
-    notifFreq:   shopperProfile?.notifFreq   ?? 'occasional',
+    name: shopperProfile?.name ?? "",
+    userType: shopperProfile?.userType ?? "student",
+    interests: shopperProfile?.interests ?? [],
+    budget: shopperProfile?.budget ?? "",
+    quietStart: shopperProfile?.quietStart ?? "22:00",
+    quietEnd: shopperProfile?.quietEnd ?? "08:00",
+    paydayDate: shopperProfile?.paydayDate ?? "",
+    notifFreq: shopperProfile?.notifFreq ?? "occasional",
   });
+
   const [saved, setSaved] = useState(false);
-  const [permission, setPermission] = useState(notificationPermission());
-  const pushOn = notificationsEnabled && permission === 'granted';
+  const [permission, setPermission] = useState("default");
+  const [notificationMessage, setNotificationMessage] = useState("");
+
+  const pushOn = notificationsEnabled && permission === "granted";
+
+  useEffect(() => {
+    let cancelled = false;
+
+    notificationPermission().then((result) => {
+      if (!cancelled) setPermission(result);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function turnOnNotifications() {
+    setNotificationMessage("");
+
     const result = await requestNotificationPermission();
     setPermission(result);
-    if (result === 'granted') {
+
+    if (result === "granted") {
       setNotificationsEnabled(true);
-      showNotification({ title: '🦉 Hoot here!', body: t('settings.pushWelcome'), tag: 'welcome' });
+
+      const success = await showNotification({
+        title: "🦉 Hoot here!",
+        body: t("settings.pushWelcome"),
+        tag: "welcome",
+      });
+
+      setNotificationMessage(
+        success
+          ? "Notifications enabled! A test notification was sent."
+          : "Permission granted, but the test notification could not be shown.",
+      );
+    } else if (result === "denied") {
+      setNotificationsEnabled(false);
+      setNotificationMessage("Notifications are blocked. Enable them in your device or browser settings.");
+    } else {
+      setNotificationMessage("Notifications are unavailable on this device.");
     }
   }
 
-  const INTERESTS = form.userType === 'working' ? WORKING_INTERESTS : STUDENT_INTERESTS;
-  const isStudent = form.userType === 'student';
+  async function sendTestNotification() {
+    setNotificationMessage("");
+
+    const success = await showNotification({
+      title: "🦉 Hoot here!",
+      body: t("settings.pushTestBody"),
+      tag: "test",
+    });
+
+    setNotificationMessage(
+      success
+        ? "Test notification sent! Check your notifications."
+        : "Could not show the notification. Check permissions and the console.",
+    );
+  }
+
+  const INTERESTS = form.userType === "working" ? WORKING_INTERESTS : STUDENT_INTERESTS;
+  const isStudent = form.userType === "student";
 
   function toggleInterest(i) {
-    setForm(f => ({
+    setForm((f) => ({
       ...f,
-      interests: f.interests.includes(i) ? f.interests.filter(x => x !== i) : [...f.interests, i],
+      interests: f.interests.includes(i) ? f.interests.filter((x) => x !== i) : [...f.interests, i],
     }));
   }
 
   function switchType(t) {
-    setForm(f => ({ ...f, userType: t, interests: [] }));
+    setForm((f) => ({ ...f, userType: t, interests: [] }));
   }
 
   function save(e) {
@@ -63,93 +138,104 @@ export default function CustomerSettings() {
   }
 
   function handleReset() {
-    if (window.confirm(t('settings.resetConfirm'))) {
+    if (window.confirm(t("settings.resetConfirm"))) {
       reset();
-      navigate('/');
+      navigate("/");
     }
   }
 
   return (
     <div>
-      <h1 className="page-title">{t('settings.title')}</h1>
-      <p className="page-sub">{t('settings.sub')}</p>
+      <h1 className="page-title">{t("settings.title")}</h1>
+      <p className="page-sub">{t("settings.sub")}</p>
 
       {/* Appearance — language + theme */}
       <section className={styles.section}>
-        <h2 className={styles.sectionHead}>{t('settings.appearance')}</h2>
+        <h2 className={styles.sectionHead}>{t("settings.appearance")}</h2>
         <label className={styles.label}>
-          {t('settings.language')}
-          <select className={styles.input} value={lang}
-            onChange={e => setLang(e.target.value)}>
-            {languages.map(l => <option key={l.code} value={l.code}>{l.native} — {l.label}</option>)}
+          {t("settings.language")}
+          <select className={styles.input} value={lang} onChange={(e) => setLang(e.target.value)}>
+            {languages.map((l) => (
+              <option key={l.code} value={l.code}>
+                {l.native} — {l.label}
+              </option>
+            ))}
           </select>
         </label>
-        <p className={styles.subtle}>{t('settings.languageHint')}</p>
+        <p className={styles.subtle}>{t("settings.languageHint")}</p>
         <label className={styles.label} style={{ marginTop: 14 }}>
-          {t('settings.theme')}
+          {t("settings.theme")}
           <div className={styles.row}>
-            <button type="button"
-              className={`${styles.typeBtn} ${theme === 'dark' ? styles.typeBtnOn : ''}`}
-              onClick={() => setTheme('dark')}>🌙 {t('settings.themeDark')}</button>
-            <button type="button"
-              className={`${styles.typeBtn} ${theme === 'light' ? styles.typeBtnOn : ''}`}
-              onClick={() => setTheme('light')}>☀️ {t('settings.themeLight')}</button>
+            <button
+              type="button"
+              className={`${styles.typeBtn} ${theme === "dark" ? styles.typeBtnOn : ""}`}
+              onClick={() => setTheme("dark")}>
+              🌙 {t("settings.themeDark")}
+            </button>
+            <button
+              type="button"
+              className={`${styles.typeBtn} ${theme === "light" ? styles.typeBtnOn : ""}`}
+              onClick={() => setTheme("light")}>
+              ☀️ {t("settings.themeLight")}
+            </button>
           </div>
         </label>
       </section>
 
       {/* Help & privacy — replay the coach-mark tour, read the data policy */}
       <section className={styles.section}>
-        <h2 className={styles.sectionHead}>{t('settings.help')}</h2>
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        <h2 className={styles.sectionHead}>{t("settings.help")}</h2>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           <button type="button" className="btn btn-ghost btn-sm" onClick={startTour}>
-            🧭 {t('settings.replayTour')}
+            🧭 {t("settings.replayTour")}
           </button>
           <Link to="/privacy" className="btn btn-ghost btn-sm">
-            🔒 {t('settings.privacyLink')}
+            🔒 {t("settings.privacyLink")}
           </Link>
         </div>
-        <p className={styles.subtle}>{t('settings.replayHint')}</p>
+        <p className={styles.subtle}>{t("settings.replayHint")}</p>
       </section>
 
       <form className={styles.form} onSubmit={save}>
-
         <section className={styles.section}>
-          <h2 className={styles.sectionHead}>{t('settings.accountType')}</h2>
+          <h2 className={styles.sectionHead}>{t("settings.accountType")}</h2>
           <div className={styles.row}>
             <button
               type="button"
-              className={`${styles.typeBtn} ${form.userType === 'student' ? styles.typeBtnOn : ''}`}
-              onClick={() => switchType('student')}
-            >
-              🎓 {t('mode.student')}
+              className={`${styles.typeBtn} ${form.userType === "student" ? styles.typeBtnOn : ""}`}
+              onClick={() => switchType("student")}>
+              🎓 {t("mode.student")}
             </button>
             <button
               type="button"
-              className={`${styles.typeBtn} ${form.userType === 'working' ? styles.typeBtnOn : ''}`}
-              onClick={() => switchType('working')}
-            >
-              💼 {t('mode.working')}
+              className={`${styles.typeBtn} ${form.userType === "working" ? styles.typeBtnOn : ""}`}
+              onClick={() => switchType("working")}>
+              💼 {t("mode.working")}
             </button>
           </div>
-          <p className={styles.subtle}>{t('settings.budgetHint')}</p>
+          <p className={styles.subtle}>{t("settings.budgetHint")}</p>
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.sectionHead}>{t('settings.profile')}</h2>
+          <h2 className={styles.sectionHead}>{t("settings.profile")}</h2>
           <label className={styles.label}>
-            {t('settings.name')}
-            <input className={styles.input} value={form.name}
-              onChange={e => setForm({ ...form, name: e.target.value })} />
+            {t("settings.name")}
+            <input
+              className={styles.input}
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
           </label>
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.sectionHead}>{t('settings.interests')}</h2>
+          <h2 className={styles.sectionHead}>{t("settings.interests")}</h2>
           <div className={styles.interestGrid}>
-            {INTERESTS.map(i => (
-              <button key={i} type="button"
-                className={`${styles.chip} ${form.interests.includes(i) ? styles.chipOn : ''}`}
+            {INTERESTS.map((i) => (
+              <button
+                key={i}
+                type="button"
+                className={`${styles.chip} ${form.interests.includes(i) ? styles.chipOn : ""}`}
                 onClick={() => toggleInterest(i)}>
                 {i}
               </button>
@@ -158,104 +244,135 @@ export default function CustomerSettings() {
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.sectionHead}>{t('settings.budget')}</h2>
+          <h2 className={styles.sectionHead}>{t("settings.budget")}</h2>
           <label className={styles.label}>
-            {t('settings.budgetLabel')}
-            <input className={styles.input} type="number" min="0"
-              placeholder={t('settings.budgetBlank')}
+            {t("settings.budgetLabel")}
+            <input
+              className={styles.input}
+              type="number"
+              min="0"
+              placeholder={t("settings.budgetBlank")}
               value={form.budget}
-              onChange={e => setForm({ ...form, budget: e.target.value })} />
+              onChange={(e) => setForm({ ...form, budget: e.target.value })}
+            />
           </label>
-          <p className={styles.subtle}>{t('settings.budgetHint')}</p>
+          <p className={styles.subtle}>{t("settings.budgetHint")}</p>
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.sectionHead}>{t('settings.notifications')}</h2>
+          <h2 className={styles.sectionHead}>{t("settings.notifications")}</h2>
           {/* Phone & desktop notifications */}
           <div className={styles.pushBox}>
-            <strong className={styles.pushTitle}>🔔 {t('settings.pushTitle')}</strong>
+            <strong className={styles.pushTitle}>🔔 {t("settings.pushTitle")}</strong>
             <p className={styles.subtle}>
-              {permission === 'unsupported' ? t('settings.pushUnsupported')
-                : permission === 'denied' ? t('settings.pushBlocked')
-                : pushOn ? t('settings.pushEnabled')
-                : t('settings.pushHint')}
+              {permission === "unsupported"
+                ? t("settings.pushUnsupported")
+                : permission === "denied"
+                  ? t("settings.pushBlocked")
+                  : pushOn
+                    ? t("settings.pushEnabled")
+                    : t("settings.pushHint")}
             </p>
-            {permission !== 'unsupported' && permission !== 'denied' && (
+            {permission !== "unsupported" && permission !== "denied" && (
               <div className={styles.pushActions}>
                 {pushOn ? (
                   <>
-                    <button type="button" className="btn btn-ghost btn-sm"
-                      onClick={() => showNotification({ title: '🦉 Hoot here!', body: t('settings.pushTestBody'), tag: 'test' })}>
-                      {t('settings.pushTest')}
+                    <button type="button" className="btn btn-ghost btn-sm" onClick={sendTestNotification}>
+                      {t("settings.pushTest")}
                     </button>
-                    <button type="button" className="btn btn-ghost btn-sm" onClick={() => setNotificationsEnabled(false)}>
-                      {t('settings.pushOff')}
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm"
+                      onClick={() => setNotificationsEnabled(false)}>
+                      {t("settings.pushOff")}
                     </button>
                   </>
                 ) : (
                   <button type="button" className="btn btn-primary btn-sm" onClick={turnOnNotifications}>
-                    {t('settings.pushOn')}
+                    {t("settings.pushOn")}
                   </button>
                 )}
               </div>
             )}
-            <p className={styles.subtle}>{t('settings.pushIos')}</p>
+            <p className={styles.subtle}>{t("settings.pushIos")}</p>
+            {notificationMessage && (
+              <p className={styles.subtle} role="status" aria-live="polite">
+                {notificationMessage}
+              </p>
+            )}
           </div>
 
           <label className={styles.label}>
-            {t('settings.frequency')}
-            <select className={styles.input} value={form.notifFreq}
-              onChange={e => setForm({ ...form, notifFreq: e.target.value })}>
-              <option value="frequent">{t('settings.frequent')}</option>
-              <option value="occasional">{t('settings.occasional')}</option>
-              <option value="minimal">{t('settings.minimal')}</option>
+            {t("settings.frequency")}
+            <select
+              className={styles.input}
+              value={form.notifFreq}
+              onChange={(e) => setForm({ ...form, notifFreq: e.target.value })}>
+              <option value="frequent">{t("settings.frequent")}</option>
+              <option value="occasional">{t("settings.occasional")}</option>
+              <option value="minimal">{t("settings.minimal")}</option>
             </select>
           </label>
           <div className={styles.row}>
             <label className={styles.label}>
-              {t('settings.quietStart')}
-              <input className={styles.input} type="time" value={form.quietStart}
-                onChange={e => setForm({ ...form, quietStart: e.target.value })} />
+              {t("settings.quietStart")}
+              <input
+                className={styles.input}
+                type="time"
+                value={form.quietStart}
+                onChange={(e) => setForm({ ...form, quietStart: e.target.value })}
+              />
             </label>
             <label className={styles.label}>
-              {t('settings.quietEnd')}
-              <input className={styles.input} type="time" value={form.quietEnd}
-                onChange={e => setForm({ ...form, quietEnd: e.target.value })} />
+              {t("settings.quietEnd")}
+              <input
+                className={styles.input}
+                type="time"
+                value={form.quietEnd}
+                onChange={(e) => setForm({ ...form, quietEnd: e.target.value })}
+              />
             </label>
           </div>
           <label className={styles.label}>
-            {isStudent ? t('settings.allowanceReminder') : t('settings.paydayReminder')}
-            <input className={styles.input} type="number" min="1" max="31"
-              placeholder={t('settings.reminderPh')}
+            {isStudent ? t("settings.allowanceReminder") : t("settings.paydayReminder")}
+            <input
+              className={styles.input}
+              type="number"
+              min="1"
+              max="31"
+              placeholder={t("settings.reminderPh")}
               value={form.paydayDate}
-              onChange={e => setForm({ ...form, paydayDate: e.target.value })} />
+              onChange={(e) => setForm({ ...form, paydayDate: e.target.value })}
+            />
           </label>
         </section>
 
         {/* Suggestions — control the 2AM Assistant's proactive budget nudges */}
         <section className={styles.section}>
-          <h2 className={styles.sectionHead}>{t('settings.suggestions')}</h2>
+          <h2 className={styles.sectionHead}>{t("settings.suggestions")}</h2>
           <div className={styles.row}>
-            <button type="button"
-              className={`${styles.typeBtn} ${suggestionsEnabled !== false ? styles.typeBtnOn : ''}`}
+            <button
+              type="button"
+              className={`${styles.typeBtn} ${suggestionsEnabled !== false ? styles.typeBtnOn : ""}`}
               onClick={() => setSuggestionsEnabled(true)}>
-              ✨ {t('settings.suggestionsOn')}
+              ✨ {t("settings.suggestionsOn")}
             </button>
-            <button type="button"
-              className={`${styles.typeBtn} ${suggestionsEnabled === false ? styles.typeBtnOn : ''}`}
+            <button
+              type="button"
+              className={`${styles.typeBtn} ${suggestionsEnabled === false ? styles.typeBtnOn : ""}`}
               onClick={() => setSuggestionsEnabled(false)}>
-              🔕 {t('settings.suggestionsOff')}
+              🔕 {t("settings.suggestionsOff")}
             </button>
           </div>
-          <p className={styles.subtle}>{t('settings.suggestionsHint')}</p>
+          <p className={styles.subtle}>{t("settings.suggestionsHint")}</p>
         </section>
 
         <div className={styles.actions}>
           <button type="submit" className="btn btn-primary">
-            {saved ? t('common.saved') : t('common.saveChanges')}
+            {saved ? t("common.saved") : t("common.saveChanges")}
           </button>
           <button type="button" className="btn btn-danger btn-sm" onClick={handleReset}>
-            {t('common.reset')}
+            {t("common.reset")}
           </button>
         </div>
       </form>
